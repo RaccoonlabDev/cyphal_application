@@ -18,8 +18,10 @@ extern "C" {
 IntegerDesc_t __attribute__((weak)) integer_desc_pool[] = {
     // name                                 min     max     default
     {(uint8_t*)"id",                        0,      127,    50},
-    {(uint8_t*)"uavcan.pub.readiness.id",   0,      65535,  65535},
-    {(uint8_t*)"uavcan.pub.setpoint.id",    0,      65535,  65535},
+    {(uint8_t*)"uavcan.sub.setpoint.id",    0,      65535,  65535},
+    {(uint8_t*)"uavcan.sub.readiness.id",   0,      65535,  65535},
+    {(uint8_t*)"pwm1_ch",                   -1,     4,      -1},
+    {(uint8_t*)"pwm2_ch",                   -1,     4,      -1},
 };
 IntegerParamValue_t integer_values_pool[sizeof(integer_desc_pool) / sizeof(IntegerDesc_t)];
 
