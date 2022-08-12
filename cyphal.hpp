@@ -15,8 +15,6 @@
 #include "canard.h"
 #include "o1heap.h"
 #include "uavcan/node/GetInfo_1_0.h"
-#include "reg/udral/service/actuator/common/sp/Scalar_0_1.h"
-#include "reg/udral/service/actuator/common/sp/Vector4_0_1.h"
 
 #define HEAP_SIZE           2048
 
@@ -36,10 +34,6 @@ struct NodeGetInfoSubscriber: public CyphalSubscriber {
     void callback(const CanardRxTransfer& transfer) override;
 };
 
-struct SetpointSubscriber: public CyphalSubscriber {
-    SetpointSubscriber(Cyphal* driver_, CanardPortID port_id_) : CyphalSubscriber(driver_, port_id_) {};
-    void callback(const CanardRxTransfer& transfer) override;
-};
 
 class Cyphal {
 public:

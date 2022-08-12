@@ -11,6 +11,7 @@
 #include "cyphal.hpp"
 #include "main.h"
 #include "cyphal_registers.hpp"
+#include "cyphal_servo.hpp"
 #include "uavcan/node/Heartbeat_1_0.h"
 #include "uavcan/node/Health_1_0.h"
 
