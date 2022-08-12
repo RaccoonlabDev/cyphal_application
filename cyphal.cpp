@@ -10,6 +10,7 @@
 
 #include "cyphal.hpp"
 #include "main.h"
+#include "cyphal_subscribers.hpp"
 #include "cyphal_registers.hpp"
 #include "cyphal_servo.hpp"
 #include "uavcan/node/Heartbeat_1_0.h"
@@ -186,6 +187,13 @@ int8_t Cyphal::subscribeApplication() {
     static RegisterAccessRequest register_access_response(this, uavcan_register_Access_1_0_FIXED_PORT_ID_);
     if (subscribe(&register_access_response,
                   uavcan_register_Access_Request_1_0_EXTENT_BYTES_,
+                  CanardTransferKindRequest) < 0) {
+        return -1;
+    }
+
+    static ExecuteCommandSubscriber execute_cmd_response(this, uavcan_node_ExecuteCommand_1_0_FIXED_PORT_ID_);
+    if (subscribe(&execute_cmd_response,
+                  uavcan_node_ExecuteCommand_Request_1_0_EXTENT_BYTES_,
                   CanardTransferKindRequest) < 0) {
         return -1;
     }

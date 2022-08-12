@@ -11,7 +11,7 @@
 #ifndef LIBCYPHAL_CYPHAL_REGISTERS_HPP_
 #define LIBCYPHAL_CYPHAL_REGISTERS_HPP_
 
-#include "cyphal.hpp"
+#include "cyphal_subscribers.hpp"
 #include "uavcan/_register/Access_1_0.h"
 #include "uavcan/_register/List_1_0.h"
 

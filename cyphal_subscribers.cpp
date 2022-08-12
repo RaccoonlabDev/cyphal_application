@@ -8,8 +8,12 @@
  * @date Aug 12, 2022
  */
 
+#include "cyphal_subscribers.hpp"
 #include "cyphal.hpp"
-#include "uavcan/node/GetInfo_1_0.h"
+#include "stm32f1xx_hal.h"
+extern "C" {
+#include "storage.h"
+}
 
 
 void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
@@ -47,5 +51,31 @@ void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
         if (result < 0) {
             asm("NOP");
         }
+    }
+}
+
+void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
+    const uint8_t* payload = static_cast<const uint8_t*>(transfer.payload);
+    size_t payload_len = transfer.payload_size;
+    uavcan_node_ExecuteCommand_Request_1_0 msg;
+    if (uavcan_node_ExecuteCommand_Request_1_0_deserialize_(&msg, payload, &payload_len) < 0) {
+        return;
+    }
+
+    switch (msg.command) {
+        case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_RESTART:
+            HAL_NVIC_SystemReset();
+            break;
+
+        case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_STORE_PERSISTENT_STATES:
+            paramsLoadToFlash();
+            break;
+
+        case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_POWER_OFF:
+        case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_BEGIN_SOFTWARE_UPDATE:
+        case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_FACTORY_RESET:
+        case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_EMERGENCY_STOP:
+        default:
+            break;
     }
 }

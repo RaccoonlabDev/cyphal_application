@@ -12,28 +12,12 @@
 #define LIBCYPHAL_CYPHAL_HPP_
 
 #include "cyphal_transport_can.hpp"
+#include "cyphal_subscribers.hpp"
 #include "canard.h"
 #include "o1heap.h"
 #include "uavcan/node/GetInfo_1_0.h"
 
 #define HEAP_SIZE           2048
-
-class Cyphal;
-
-class CyphalSubscriber {
-public:
-    CyphalSubscriber(Cyphal* driver_, CanardPortID port_id_) : driver(driver_), port_id(port_id_) {}
-    virtual void callback(const CanardRxTransfer& transfer) = 0;
-    CanardRxSubscription subscription;
-    Cyphal* driver;
-    CanardPortID port_id;
-};
-
-struct NodeGetInfoSubscriber: public CyphalSubscriber {
-    NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_id_) : CyphalSubscriber(driver_, port_id_) {};
-    void callback(const CanardRxTransfer& transfer) override;
-};
-
 
 class Cyphal {
 public:
@@ -53,7 +37,6 @@ private:
     ///< application
     int8_t subscribeApplication();
     void publishHeartbeat();
-    // void publishNodeGetInfoResponse(const CanardRxTransfer& transfer);
 
     CyphalTransportCan transport;
     CanardInstance canard_instance;

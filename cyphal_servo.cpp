@@ -8,6 +8,7 @@
  * @date Aug 12, 2022
  */
 
+#include "cyphal.hpp"
 #include "cyphal_servo.hpp"
 #include "stm32f1xx_hal.h"
 extern "C" {

@@ -11,7 +11,7 @@
 #ifndef LIBCYPHAL_CYPHAL_SERVO_HPP_
 #define LIBCYPHAL_CYPHAL_SERVO_HPP_
 
-#include "cyphal.hpp"
+#include "cyphal_subscribers.hpp"
 #include "reg/udral/service/actuator/common/sp/Scalar_0_1.h"
 #include "reg/udral/service/actuator/common/sp/Vector4_0_1.h"
 
