@@ -21,7 +21,6 @@ extern "C" {
 
 #define TX_QUEUE_FRAME_SIZE 200
 
-
 ///< wrappers
 static void* memAllocate(CanardInstance* const canard, const size_t amount);
 static void memFree(CanardInstance* const canard, void* const pointer);
@@ -31,6 +30,11 @@ static uint32_t getCurrentMicroseconds();
 O1HeapInstance* my_allocator;
 
 int Cyphal::init() {
+    node_id = paramsGetValue(static_cast<ParamIndex_t>(RegistersIndexes::ID));
+    if (node_id == 0 || node_id > 127) {
+        node_id = 42;
+    }
+
     if (!transport.init()) {
         return -1;
     }

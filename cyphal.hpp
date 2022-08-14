@@ -22,7 +22,6 @@
 class Cyphal {
 public:
     Cyphal() {};
-    Cyphal(uint8_t id) : node_id(id) {};
     int init();
     void process();
     int32_t push(const CanardTransferMetadata *metadata, size_t payload_size, const void *payload);
@@ -45,7 +44,7 @@ private:
     uint8_t my_message_transfer_id;
     uavcan_node_GetInfo_Response_1_0 node_status;
     uint32_t error_counter = 0;
-    uint8_t node_id{42};
+    uint8_t node_id;
 
     static constexpr size_t MAX_SUB_NUM = 10;
     CyphalSubscriber* _sub_info[MAX_SUB_NUM];
