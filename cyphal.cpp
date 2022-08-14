@@ -12,7 +12,7 @@
 #include "main.h"
 #include "cyphal_subscribers.hpp"
 #include "cyphal_registers.hpp"
-#include "cyphal_servo.hpp"
+#include "servo.hpp"
 #include "uavcan/node/Heartbeat_1_0.h"
 #include "uavcan/node/Health_1_0.h"
 extern "C" {
@@ -162,15 +162,6 @@ void Cyphal::spinTransmit() {
 }
 
 int8_t Cyphal::subscribeApplication() {
-    // reg.udral.service.actuator.common.sp.Vector4.0.1
-    uint16_t sp_port_id = paramsGetValue(static_cast<uint32_t>(RegistersIndexes::SETPOINT_ID));
-    static SetpointSubscriber setpoint_response(this, sp_port_id);
-    if (subscribe(&setpoint_response,
-                  reg_udral_service_actuator_common_sp_Vector4_0_1_EXTENT_BYTES_,
-                  CanardTransferKindMessage) < 0) {
-        return -1;
-    }
-
     // uavcan.node.GetInfo.Response
     static NodeGetInfoSubscriber node_get_info_response(this, uavcan_node_GetInfo_1_0_FIXED_PORT_ID_);
     if (subscribe(&node_get_info_response,
