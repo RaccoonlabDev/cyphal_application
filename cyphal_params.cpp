@@ -8,6 +8,6 @@ enum class IntParamsIndexes {
     ID,
 };
 
-IntegerDesc_t integer_desc_pool[] = {
+static IntegerDesc_t integer_desc_pool[] __attribute__((unused)) = {
     {(uint8_t*)"id",                        0,      127,    50},
 };
