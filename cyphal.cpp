@@ -12,7 +12,6 @@
 #include "main.h"
 #include "cyphal_subscribers.hpp"
 #include "cyphal_registers.hpp"
-#include "servo.hpp"
 #include "uavcan/node/Heartbeat_1_0.h"
 #include "uavcan/node/Health_1_0.h"
 extern "C" {
@@ -65,7 +64,12 @@ void Cyphal::process() {
     // 2. spin application
     static uint32_t next_pub_time_ms = 0;
     if (next_pub_time_ms < HAL_GetTick()) {
+#ifdef INTERNAL_LED_1_GPIO_Port
         HAL_GPIO_TogglePin(INTERNAL_LED_1_GPIO_Port, INTERNAL_LED_1_Pin);
+#endif
+#ifdef INTERNAL_LED_2_GPIO_Port
+        HAL_GPIO_TogglePin(INTERNAL_LED_2_GPIO_Port, INTERNAL_LED_2_Pin);
+#endif
         next_pub_time_ms += 500;
 
         publishHeartbeat();
