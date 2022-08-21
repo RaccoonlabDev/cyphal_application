@@ -54,6 +54,15 @@ int Cyphal::init() {
     return 0;
 }
 
+void blinkLed() {
+#ifdef INTERNAL_LED_1_GPIO_Port
+    HAL_GPIO_TogglePin(INTERNAL_LED_1_GPIO_Port, INTERNAL_LED_1_Pin);
+#endif
+#ifdef INTERNAL_LED_2_GPIO_Port
+    HAL_GPIO_TogglePin(INTERNAL_LED_2_GPIO_Port, INTERNAL_LED_2_Pin);
+#endif
+}
+
 void Cyphal::process() {
     // 1. spin recv
     CanardFrame rx_frame;
@@ -64,15 +73,14 @@ void Cyphal::process() {
     // 2. spin application
     static uint32_t next_pub_time_ms = 0;
     if (next_pub_time_ms < HAL_GetTick()) {
-#ifdef INTERNAL_LED_1_GPIO_Port
-        HAL_GPIO_TogglePin(INTERNAL_LED_1_GPIO_Port, INTERNAL_LED_1_Pin);
-#endif
-#ifdef INTERNAL_LED_2_GPIO_Port
-        HAL_GPIO_TogglePin(INTERNAL_LED_2_GPIO_Port, INTERNAL_LED_2_Pin);
-#endif
+        blinkLed();
         next_pub_time_ms += 500;
-
-        publishHeartbeat();
+        uavcan_node_Heartbeat_1_0 heartbeat_msg;
+        heartbeat_msg.health.value = uavcan_node_Health_1_0_NOMINAL;
+        heartbeat_msg.mode.value = uavcan_node_Mode_1_0_OPERATIONAL;
+        heartbeat_msg.uptime = HAL_GetTick() / 1000;
+        heartbeat_msg.vendor_specific_status_code = 0;
+        heartbeat_pub.publish(heartbeat_msg);
     }
 
     // 3. spin tx
@@ -114,46 +122,6 @@ void Cyphal::processReceivedTransfer(const uint8_t redundant_interface_index,
     for (size_t sub_idx = 0; sub_idx < _sub_num; sub_idx++) {
         if (PORT_ID == _sub_info[sub_idx]->port_id) {
             _sub_info[sub_idx]->callback(transfer);
-        }
-    }
-}
-
-void Cyphal::publishHeartbeat() {
-    static uint8_t heartbeat_transfer_id = 0;
-    uavcan_node_Health_1_0 health = {
-        .value = uavcan_node_Health_1_0_WARNING
-    };
-    uavcan_node_Mode_1_0 mode = {
-        .value = uavcan_node_Mode_1_0_INITIALIZATION
-    };
-    const uavcan_node_Heartbeat_1_0 msg = {
-        .uptime = HAL_GetTick() / 1000,
-        .health = health,
-        .mode = mode,
-        .vendor_specific_status_code = static_cast<uint8_t>(0)
-    };
-    const CanardTransferMetadata transfer_metadata = {
-        .priority       = CanardPriorityNominal,
-        .transfer_kind  = CanardTransferKindMessage,
-        .port_id        = uavcan_node_Heartbeat_1_0_FIXED_PORT_ID_,
-        .remote_node_id = CANARD_NODE_ID_UNSET,
-        .transfer_id    = heartbeat_transfer_id,
-    };
-    heartbeat_transfer_id++;
-
-    static uint8_t heartbeat_buffer[64];
-    size_t heartbeat_buffer_size = 64;
-    int32_t result;
-    result = uavcan_node_Heartbeat_1_0_serialize_(&msg, heartbeat_buffer, &heartbeat_buffer_size);
-    if (NUNAVUT_SUCCESS == result) {
-        result = canardTxPush(&queue,
-                              &canard_instance,
-                              0,
-                              &transfer_metadata,
-                              heartbeat_buffer_size,
-                              heartbeat_buffer);
-        if (result < 0) {
-            error_counter++;
         }
     }
 }

@@ -13,6 +13,7 @@
 
 #include "cyphal_transport_can.hpp"
 #include "cyphal_subscribers.hpp"
+#include "cyphal_publishers.hpp"
 #include "canard.h"
 #include "o1heap.h"
 #include "uavcan/node/GetInfo_1_0.h"
@@ -21,7 +22,7 @@
 
 class Cyphal {
 public:
-    Cyphal() {};
+    Cyphal(): heartbeat_pub(this) {};
     int init();
     void process();
     int32_t push(const CanardTransferMetadata *metadata, size_t payload_size, const void *payload);
@@ -35,7 +36,6 @@ private:
 
     ///< application
     int8_t subscribeApplication();
-    void publishHeartbeat();
 
     CyphalTransportCan transport;
     CanardInstance canard_instance;
@@ -49,6 +49,8 @@ private:
     static constexpr size_t MAX_SUB_NUM = 10;
     CyphalSubscriber* _sub_info[MAX_SUB_NUM];
     size_t _sub_num{0};
+
+    HeartbeatPublisher heartbeat_pub;
 };
 
 #endif  // LIBCYPHAL_CYPHAL_HPP_
