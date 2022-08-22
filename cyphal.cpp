@@ -54,15 +54,6 @@ int Cyphal::init() {
     return 0;
 }
 
-void blinkLed() {
-#ifdef INTERNAL_LED_1_GPIO_Port
-    HAL_GPIO_TogglePin(INTERNAL_LED_1_GPIO_Port, INTERNAL_LED_1_Pin);
-#endif
-#ifdef INTERNAL_LED_2_GPIO_Port
-    HAL_GPIO_TogglePin(INTERNAL_LED_2_GPIO_Port, INTERNAL_LED_2_Pin);
-#endif
-}
-
 void Cyphal::process() {
     // 1. spin recv
     CanardFrame rx_frame;
@@ -73,7 +64,6 @@ void Cyphal::process() {
     // 2. spin application
     static uint32_t next_pub_time_ms = 0;
     if (next_pub_time_ms < HAL_GetTick()) {
-        blinkLed();
         next_pub_time_ms += 500;
         uavcan_node_Heartbeat_1_0 heartbeat_msg;
         heartbeat_msg.health.value = uavcan_node_Health_1_0_NOMINAL;
