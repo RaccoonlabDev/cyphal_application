@@ -42,8 +42,8 @@ void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
     };
     transfer_id++;
 
-    static uint8_t buffer[512];
-    size_t buffer_size = 512;
+    static uint8_t buffer[uavcan_node_GetInfo_Response_1_0_EXTENT_BYTES_];
+    size_t buffer_size = uavcan_node_GetInfo_Response_1_0_EXTENT_BYTES_;
     int32_t result;
     result = uavcan_node_GetInfo_Response_1_0_serialize_(&node_status, buffer, &buffer_size);
     if (NUNAVUT_SUCCESS == result) {
