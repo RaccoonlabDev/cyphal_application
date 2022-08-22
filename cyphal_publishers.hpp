@@ -20,8 +20,9 @@ class Cyphal;
 class CyphalPublisher {
 public:
     CyphalPublisher(Cyphal* driver_, CanardPortID port_id_) : driver(driver_) {
-        transfer_metadata.port_id = port_id_;
+        setPortId(port_id_);
     }
+    void setPortId(CanardPortID port_id);
 protected:
     Cyphal* driver;
     CanardTransferMetadata transfer_metadata = {

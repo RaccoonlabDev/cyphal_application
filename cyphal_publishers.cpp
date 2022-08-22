@@ -15,6 +15,10 @@ extern "C" {
 #include "storage.h"
 }
 
+void CyphalPublisher::setPortId(CanardPortID port_id) {
+    transfer_metadata.port_id = port_id;
+}
+
 void HeartbeatPublisher::publish(const uavcan_node_Heartbeat_1_0& msg) {
     transfer_metadata.transfer_id++;
 
@@ -25,3 +29,4 @@ void HeartbeatPublisher::publish(const uavcan_node_Heartbeat_1_0& msg) {
         driver->push(&transfer_metadata, buffer_size, buffer);
     }
 }
+
