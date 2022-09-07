@@ -13,6 +13,7 @@
 #include "stm32f1xx_hal.h"
 extern "C" {
 #include "storage.h"
+#include "git_hash.h"
 }
 
 
@@ -20,18 +21,25 @@ void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
     static uint8_t transfer_id = 0;
 
     // init node status
-    uavcan_node_GetInfo_Response_1_0 node_status;
-    static auto node_name = "Raccoon";
-    memcpy(node_status.name.elements, node_name, 7);
-    node_status.name.count = 7;
-    node_status.protocol_version.major = CANARD_CYPHAL_SPECIFICATION_VERSION_MAJOR;
-    node_status.protocol_version.minor = CANARD_CYPHAL_SPECIFICATION_VERSION_MINOR;
-    node_status.hardware_version.major = 0;
-    node_status.hardware_version.minor = 1;
-    node_status.software_version.major = 0;
-    node_status.software_version.minor = 1;
-    node_status.certificate_of_authenticity.count = 0;
-    node_status.software_image_crc.count = 0;
+    uavcan_node_GetInfo_Response_1_0 get_info_response = {};
+
+    static auto node_name = "Raccoon :)";
+    memcpy(get_info_response.name.elements, node_name, 7);
+    get_info_response.name.count = 10;
+
+    get_info_response.protocol_version.major = CANARD_CYPHAL_SPECIFICATION_VERSION_MAJOR;
+    get_info_response.protocol_version.minor = CANARD_CYPHAL_SPECIFICATION_VERSION_MINOR;
+
+    get_info_response.hardware_version.major = 1;
+    get_info_response.hardware_version.minor = 2;
+
+    get_info_response.software_version.major = 0;
+    get_info_response.software_version.minor = 1;
+
+    get_info_response.certificate_of_authenticity.count = 0;
+
+    get_info_response.software_vcs_revision_id = GIT_HASH;
+
 
     const CanardTransferMetadata transfer_metadata = {
         .priority       = CanardPriorityNominal,
@@ -42,10 +50,10 @@ void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
     };
     transfer_id++;
 
-    static uint8_t buffer[uavcan_node_GetInfo_Response_1_0_EXTENT_BYTES_];
+    static uint8_t buffer[uavcan_node_GetInfo_Response_1_0_EXTENT_BYTES_] = {};
     size_t buffer_size = uavcan_node_GetInfo_Response_1_0_EXTENT_BYTES_;
     int32_t result;
-    result = uavcan_node_GetInfo_Response_1_0_serialize_(&node_status, buffer, &buffer_size);
+    result = uavcan_node_GetInfo_Response_1_0_serialize_(&get_info_response, buffer, &buffer_size);
     if (NUNAVUT_SUCCESS == result) {
         result = driver->push(&transfer_metadata, buffer_size, buffer);
         if (result < 0) {

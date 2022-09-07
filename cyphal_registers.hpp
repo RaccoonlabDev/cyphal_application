@@ -25,12 +25,16 @@ private:
 };
 
 struct RegisterAccessRequest: public CyphalSubscriber {
-    RegisterAccessRequest(Cyphal* driver_, CanardPortID port_id_) : CyphalSubscriber(driver_, port_id_) {};
+    RegisterAccessRequest(Cyphal* driver_, CanardPortID port_id_);
     void callback(const CanardRxTransfer& transfer) override;
 private:
     uint16_t parseRequest(const CanardRxTransfer& transfer);
     void makeResponse(const CanardRxTransfer& transfer, int8_t reg_index);
+    void writeParam(int8_t reg_index);
+    void readParam(uavcan_register_Access_Response_1_0& response_msg, int8_t reg_index);
+
     uavcan_register_Access_Request_1_0 _request_msg;
+    CanardTransferMetadata _transfer_metadata;
 };
 
 

@@ -30,7 +30,7 @@ O1HeapInstance* my_allocator;
 
 int Cyphal::init() {
     node_id = paramsGetValue(static_cast<ParamIndex_t>(IntParamsIndexes::ID));
-    if (node_id == 0 || node_id > 127) {
+    if (node_id == 0 || node_id > 126) {
         node_id = 42;
     }
 
