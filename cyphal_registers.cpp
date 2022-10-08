@@ -17,7 +17,7 @@ extern "C" {
 uint8_t strlenSafely(const uint8_t* str, uint8_t max_possible_length) {
     uint8_t length;
     for (length = 0; length < max_possible_length; length++) {
-        if (str[length] == '\0') {
+        if (str[length] == '\0' || str[length] == 255) {
             break;
         }
     }
@@ -64,6 +64,7 @@ void RegisterListRequest::makeResponse(const CanardRxTransfer& transfer, uint16_
 }
 
 
+constexpr uint8_t EMPTY_TAG = 0;
 constexpr uint8_t STRING_TAG = 1;
 constexpr uint8_t NATURAL16_TAG = 10;
 
@@ -89,6 +90,9 @@ uint16_t RegisterAccessRequest::parseRequest(const CanardRxTransfer& transfer) {
 }
 
 void RegisterAccessRequest::writeParam(int8_t reg_index) {
+    if (_request_msg.value._tag_ == EMPTY_TAG) {
+        return;
+    }
     auto param_type = paramsGetType(reg_index);
     if (param_type == CELL_TYPE_INTEGER &&
             _request_msg.value._tag_ == NATURAL16_TAG &&

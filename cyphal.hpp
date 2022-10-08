@@ -18,7 +18,7 @@
 #include "o1heap.h"
 #include "uavcan/node/GetInfo_1_0.h"
 
-#define HEAP_SIZE           2048
+#define HEAP_SIZE           (1024*3)
 
 class Cyphal {
 public:
