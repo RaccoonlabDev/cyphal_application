@@ -11,6 +11,7 @@
 #include "cyphal_subscribers.hpp"
 #include "cyphal.hpp"
 #include "stm32f1xx_hal.h"
+#include "params.hpp"
 extern "C" {
 #include "storage.h"
 #include "git_hash.h"
@@ -18,13 +19,11 @@ extern "C" {
 
 
 void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
-    static uint8_t transfer_id = 0;
-
     // init node status
     uavcan_node_GetInfo_Response_1_0 get_info_response = {};
 
-    static auto node_name = "Raccoon :)";
-    memcpy(get_info_response.name.elements, node_name, 7);
+    auto node_name = paramsGetStringValue(static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT));
+    memcpy(get_info_response.name.elements, node_name, 10);
     get_info_response.name.count = 10;
 
     get_info_response.protocol_version.major = CANARD_CYPHAL_SPECIFICATION_VERSION_MAJOR;
@@ -46,19 +45,16 @@ void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
         .transfer_kind  = CanardTransferKindResponse,
         .port_id        = uavcan_node_GetInfo_1_0_FIXED_PORT_ID_,
         .remote_node_id = transfer.metadata.remote_node_id,
-        .transfer_id    = transfer_id,
+        .transfer_id    = _transfer_id,
     };
-    transfer_id++;
+    _transfer_id++;
 
-    static uint8_t buffer[uavcan_node_GetInfo_Response_1_0_EXTENT_BYTES_] = {};
-    size_t buffer_size = uavcan_node_GetInfo_Response_1_0_EXTENT_BYTES_;
+    static uint8_t buffer[uavcan_node_GetInfo_Response_1_0_SERIALIZATION_BUFFER_SIZE_BYTES_] = {};
+    size_t buffer_size = uavcan_node_GetInfo_Response_1_0_SERIALIZATION_BUFFER_SIZE_BYTES_;
     int32_t result;
     result = uavcan_node_GetInfo_Response_1_0_serialize_(&get_info_response, buffer, &buffer_size);
     if (NUNAVUT_SUCCESS == result) {
         result = driver->push(&transfer_metadata, buffer_size, buffer);
-        if (result < 0) {
-            asm("NOP");
-        }
     }
 }
 
@@ -70,13 +66,17 @@ void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
         return;
     }
 
+    uavcan_node_ExecuteCommand_Response_1_0 cmd_response = {};
+
     switch (msg.command) {
         case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_RESTART:
             HAL_NVIC_SystemReset();
+            cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_SUCCESS;
             break;
 
         case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_STORE_PERSISTENT_STATES:
             paramsLoadToFlash();
+            cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_SUCCESS;
             break;
 
         case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_POWER_OFF:
@@ -84,6 +84,25 @@ void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
         case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_FACTORY_RESET:
         case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_EMERGENCY_STOP:
         default:
+            cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_BAD_COMMAND;
             break;
+    }
+
+    const CanardTransferMetadata transfer_metadata = {
+        .priority       = CanardPriorityNominal,
+        .transfer_kind  = CanardTransferKindResponse,
+        .port_id        = uavcan_node_ExecuteCommand_1_0_FIXED_PORT_ID_,
+        .remote_node_id = transfer.metadata.remote_node_id,
+        .transfer_id    = _transfer_id,
+    };
+    _transfer_id++;
+
+
+    uint8_t buffer[uavcan_node_ExecuteCommand_Response_1_0_SERIALIZATION_BUFFER_SIZE_BYTES_] = {};
+    size_t buffer_size = uavcan_node_ExecuteCommand_Response_1_0_SERIALIZATION_BUFFER_SIZE_BYTES_;
+    int32_t result;
+    result = uavcan_node_ExecuteCommand_Response_1_0_serialize_(&cmd_response, buffer, &buffer_size);
+    if (NUNAVUT_SUCCESS == result) {
+        result = driver->push(&transfer_metadata, buffer_size, buffer);
     }
 }

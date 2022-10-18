@@ -29,11 +29,15 @@ public:
 struct NodeGetInfoSubscriber: public CyphalSubscriber {
     NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_id_) : CyphalSubscriber(driver_, port_id_) {};
     void callback(const CanardRxTransfer& transfer) override;
+private:
+    uint8_t _transfer_id = 0;
 };
 
 struct ExecuteCommandSubscriber: public CyphalSubscriber {
     ExecuteCommandSubscriber(Cyphal* driver_, CanardPortID port_id_) : CyphalSubscriber(driver_, port_id_) {};
     void callback(const CanardRxTransfer& transfer) override;
+private:
+    uint8_t _transfer_id = 0;
 };
 
 #endif  // LIBCYPHAL_CYPHAL_SUBSCRIBERS_HPP_
