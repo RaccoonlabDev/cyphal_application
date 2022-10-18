@@ -17,15 +17,8 @@ extern "C" {
 #include "git_hash.h"
 }
 
-
-void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
-    // init node status
-    uavcan_node_GetInfo_Response_1_0 get_info_response = {};
-
-    auto node_name = paramsGetStringValue(static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT));
-    memcpy(get_info_response.name.elements, node_name, 10);
-    get_info_response.name.count = 10;
-
+NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_id_) :
+        CyphalSubscriber(driver_, port_id_) {
     get_info_response.protocol_version.major = CANARD_CYPHAL_SPECIFICATION_VERSION_MAJOR;
     get_info_response.protocol_version.minor = CANARD_CYPHAL_SPECIFICATION_VERSION_MINOR;
 
@@ -37,8 +30,32 @@ void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
 
     get_info_response.certificate_of_authenticity.count = 0;
 
-    get_info_response.software_vcs_revision_id = GIT_HASH;
+    auto uid_u32 = HAL_GetUIDw0();
+    get_info_response.unique_id[0] = uid_u32 & 0xFF;
+    get_info_response.unique_id[1] = (uid_u32 >> 8) & 0xFF;
+    get_info_response.unique_id[2] = (uid_u32 >> 16) & 0xFF;
+    get_info_response.unique_id[3] = (uid_u32 >> 24) & 0xFF;
 
+    uid_u32 = HAL_GetUIDw1();
+    get_info_response.unique_id[4] = uid_u32 & 0xFF;
+    get_info_response.unique_id[5] = (uid_u32 >> 8) & 0xFF;
+    get_info_response.unique_id[6] = (uid_u32 >> 16) & 0xFF;
+    get_info_response.unique_id[7] = (uid_u32 >> 24) & 0xFF;
+
+    uid_u32 = HAL_GetUIDw2();
+    get_info_response.unique_id[8] = uid_u32 & 0xFF;
+    get_info_response.unique_id[9] = (uid_u32 >> 8) & 0xFF;
+    get_info_response.unique_id[10] = (uid_u32 >> 16) & 0xFF;
+    get_info_response.unique_id[11] = (uid_u32 >> 24) & 0xFF;
+
+    get_info_response.software_vcs_revision_id = GIT_HASH;
+};
+
+
+void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
+    auto node_name = paramsGetStringValue(static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT));
+    memcpy(get_info_response.name.elements, node_name, 10);
+    get_info_response.name.count = 10;
 
     const CanardTransferMetadata transfer_metadata = {
         .priority       = CanardPriorityNominal,

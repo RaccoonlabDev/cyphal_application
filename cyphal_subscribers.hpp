@@ -27,9 +27,10 @@ public:
 };
 
 struct NodeGetInfoSubscriber: public CyphalSubscriber {
-    NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_id_) : CyphalSubscriber(driver_, port_id_) {};
+    NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_id_);
     void callback(const CanardRxTransfer& transfer) override;
 private:
+    uavcan_node_GetInfo_Response_1_0 get_info_response = {};
     uint8_t _transfer_id = 0;
 };
 
