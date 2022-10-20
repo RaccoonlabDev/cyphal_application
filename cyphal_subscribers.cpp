@@ -12,6 +12,7 @@
 #include "cyphal.hpp"
 #include "stm32f1xx_hal.h"
 #include "params.hpp"
+#include "algorithms.hpp"
 extern "C" {
 #include "storage.h"
 #include "git_hash.h"
@@ -54,8 +55,7 @@ NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_
 
 void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
     auto node_name = paramsGetStringValue(static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT));
-    memcpy(get_info_response.name.elements, node_name, 10);
-    get_info_response.name.count = 10;
+    get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)node_name, 15);
 
     const CanardTransferMetadata transfer_metadata = {
         .priority       = CanardPriorityNominal,
@@ -96,9 +96,13 @@ void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
             cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_SUCCESS;
             break;
 
+        case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_FACTORY_RESET:
+            paramsResetToDefault();
+            cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_SUCCESS;
+            break;
+
         case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_POWER_OFF:
         case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_BEGIN_SOFTWARE_UPDATE:
-        case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_FACTORY_RESET:
         case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_EMERGENCY_STOP:
         default:
             cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_BAD_COMMAND;

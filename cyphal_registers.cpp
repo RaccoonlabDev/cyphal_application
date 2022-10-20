@@ -10,18 +10,9 @@
 
 #include "cyphal_registers.hpp"
 #include "cyphal.hpp"
+#include "algorithms.hpp"
 extern "C" {
 #include "storage.h"
-}
-
-uint8_t strlenSafely(const uint8_t* str, uint8_t max_possible_length) {
-    uint8_t length;
-    for (length = 0; length < max_possible_length; length++) {
-        if (str[length] == '\0' || str[length] == 255) {
-            break;
-        }
-    }
-    return length;
 }
 
 void RegisterListRequest::callback(const CanardRxTransfer& transfer) {
