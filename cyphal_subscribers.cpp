@@ -57,7 +57,7 @@ void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
     auto node_name = paramsGetStringValue(static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT));
     get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)node_name, 15);
 
-    const CanardTransferMetadata transfer_metadata = {
+    CanardTransferMetadata transfer_metadata = {
         .priority       = CanardPriorityNominal,
         .transfer_kind  = CanardTransferKindResponse,
         .port_id        = uavcan_node_GetInfo_1_0_FIXED_PORT_ID_,
@@ -109,7 +109,7 @@ void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
             break;
     }
 
-    const CanardTransferMetadata transfer_metadata = {
+    CanardTransferMetadata transfer_metadata = {
         .priority       = CanardPriorityNominal,
         .transfer_kind  = CanardTransferKindResponse,
         .port_id        = uavcan_node_ExecuteCommand_1_0_FIXED_PORT_ID_,

@@ -25,7 +25,7 @@ public:
     Cyphal(): heartbeat_pub(this) {};
     int init();
     void process();
-    int32_t push(const CanardTransferMetadata *metadata, size_t payload_size, const void *payload);
+    int32_t push(CanardTransferMetadata *metadata, size_t payload_size, const void *payload);
     int8_t subscribe(CyphalSubscriber* sub_info, size_t size, CanardTransferKind kind);
 private:
     void spinReceivedFrame(const CanardMicrosecond rx_timestamp_usec,

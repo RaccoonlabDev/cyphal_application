@@ -77,8 +77,10 @@ void Cyphal::process() {
     spinTransmit();
 }
 
-int32_t Cyphal::push(const CanardTransferMetadata *metadata, size_t payload_size, const void *payload) {
-    return canardTxPush(&queue, &canard_instance, 0, metadata, payload_size, payload);
+int32_t Cyphal::push(CanardTransferMetadata* metadata, size_t payload_size, const void *payload) {
+    auto res = canardTxPush(&queue, &canard_instance, 0, metadata, payload_size, payload);
+    metadata->transfer_id++;
+    return res;
 }
 
 

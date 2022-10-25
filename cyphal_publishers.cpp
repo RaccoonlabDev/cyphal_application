@@ -26,8 +26,6 @@ bool CyphalPublisher::isEnabled() {
 }
 
 void HeartbeatPublisher::publish(const uavcan_node_Heartbeat_1_0& msg) {
-    transfer_metadata.transfer_id++;
-
     static uint8_t buffer[uavcan_node_Heartbeat_1_0_EXTENT_BYTES_];
     size_t buffer_size = uavcan_node_Heartbeat_1_0_EXTENT_BYTES_;
     int32_t result = uavcan_node_Heartbeat_1_0_serialize_(&msg, buffer, &buffer_size);
