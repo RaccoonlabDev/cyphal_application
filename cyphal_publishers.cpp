@@ -19,6 +19,12 @@ void CyphalPublisher::setPortId(CanardPortID port_id) {
     transfer_metadata.port_id = port_id;
 }
 
+bool CyphalPublisher::isEnabled() {
+    constexpr uint16_t MAX_PORT_ID = 8191;
+    uint16_t port_id = transfer_metadata.port_id;
+    return (port_id == 0 || port_id > MAX_PORT_ID) ? false : true;
+}
+
 void HeartbeatPublisher::publish(const uavcan_node_Heartbeat_1_0& msg) {
     transfer_metadata.transfer_id++;
 

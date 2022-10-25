@@ -23,6 +23,7 @@ public:
         setPortId(port_id_);
     }
     void setPortId(CanardPortID port_id);
+    bool isEnabled();
 protected:
     Cyphal* driver;
     CanardTransferMetadata transfer_metadata = {
