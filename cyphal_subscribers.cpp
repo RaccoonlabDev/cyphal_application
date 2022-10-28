@@ -10,7 +10,7 @@
 
 #include "cyphal_subscribers.hpp"
 #include "cyphal.hpp"
-#include "stm32f1xx_hal.h"
+#include "main.h"
 #include "params.hpp"
 #include "algorithms.hpp"
 extern "C" {

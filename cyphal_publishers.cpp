@@ -10,7 +10,7 @@
 
 #include "cyphal_publishers.hpp"
 #include "cyphal.hpp"
-#include "stm32f1xx_hal.h"
+#include "main.h"
 extern "C" {
 #include "storage.h"
 }

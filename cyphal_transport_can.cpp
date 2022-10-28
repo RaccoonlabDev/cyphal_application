@@ -11,7 +11,7 @@
 #include "cyphal_transport_can.hpp"
 #include <string.h>
 #include "bxcan.h"
-#include "stm32f1xx_hal.h"
+#include "main.h"
 
 
 bool CyphalTransportCan::init() {
