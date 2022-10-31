@@ -34,7 +34,7 @@ int Cyphal::init() {
         node_id = 42;
     }
 
-    if (!transport.init()) {
+    if (!transport.init(1000000, 0)) {
         return -1;
     }
 

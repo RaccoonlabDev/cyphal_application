@@ -16,9 +16,12 @@
 class CyphalTransportCan {
 public:
     CyphalTransportCan() {};
-    bool init();
+    bool init(uint32_t can_speed, uint8_t can_driver_idx);
     bool receive(CanardFrame* can_frame);
     bool transmit(const CanardTxQueueItem* transfer);
+private:
+    uint8_t _out_payload[256];
+    uint8_t _can_driver_idx;
 };
 
 #endif  // LIBCYPHAL_CYPHAL_TRANSPORT_CAN_HPP_

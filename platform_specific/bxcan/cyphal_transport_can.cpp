@@ -14,12 +14,11 @@
 #include "main.h"
 
 
-bool CyphalTransportCan::init() {
+bool CyphalTransportCan::init(uint32_t can_speed, uint8_t can_driver_idx) {
     BxCANTimings timings;
-    uint32_t target_bitrate = 1000000;
     uint32_t peripheral_clock_rate = HAL_RCC_GetPCLK1Freq();
 
-    if (!bxCANComputeTimings(peripheral_clock_rate, target_bitrate, &timings) ||
+    if (!bxCANComputeTimings(peripheral_clock_rate, can_speed, &timings) ||
             !bxCANConfigure(0, timings, false)) {
         return false;
     }
