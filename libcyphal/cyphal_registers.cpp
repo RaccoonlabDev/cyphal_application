@@ -32,19 +32,20 @@ void RegisterListRequest::makeResponse(const CanardRxTransfer& transfer, uint16_
     CanardTransferMetadata _transfer_metadata;
     uavcan_register_List_Response_1_0 _response_msg = {};
 
+    if (paramsGetType(index) != CELL_TYPE_UNDEFINED) {
+        char* param_name = paramsGetParamName(index);
+        _response_msg.name.name.count = strlen(param_name);
+        memcpy(_response_msg.name.name.elements, param_name, _response_msg.name.name.count);
+    } else {
+        _response_msg.name.name.count = 0;
+    }
+
     _transfer_metadata.priority = CanardPriorityNominal;
     _transfer_metadata.transfer_kind = CanardTransferKindResponse;
     _transfer_metadata.port_id = port_id;
     _transfer_metadata.remote_node_id = transfer.metadata.remote_node_id;
     _transfer_metadata.transfer_id = transfer.metadata.transfer_id;
 
-    /// No need to manually clean elements because we explicitly get buffer size
-    char* param_name = paramsGetParamName(index);
-    _response_msg.name.name.count = strlen(param_name);
-    memcpy(_response_msg.name.name.elements, param_name, _response_msg.name.name.count);
-
-    /// It is not enough memory on stack, so use buffer as static
-    /// No need to manually clean it because we explicitly get buffer size
     static uint8_t buf[uavcan_register_List_Response_1_0_SERIALIZATION_BUFFER_SIZE_BYTES_];
     size_t buf_size = uavcan_register_List_Response_1_0_SERIALIZATION_BUFFER_SIZE_BYTES_;
 

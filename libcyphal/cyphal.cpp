@@ -58,7 +58,7 @@ void Cyphal::process() {
     // 1. spin recv
     CanardFrame rx_frame;
     if (transport.receive(&rx_frame)) {
-        spinReceivedFrame(HAL_GetTick(), &rx_frame);
+        spinReceivedFrame(HAL_GetTick() * 1000, &rx_frame);
     }
 
     // 2. spin application
@@ -78,6 +78,9 @@ void Cyphal::process() {
 }
 
 int32_t Cyphal::push(CanardTransferMetadata* metadata, size_t payload_size, const void *payload) {
+    if (metadata->port_id == 0) {
+        return 0;
+    }
     auto res = canardTxPush(&queue, &canard_instance, 0, metadata, payload_size, payload);
     metadata->transfer_id++;
     return res;
