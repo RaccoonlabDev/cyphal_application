@@ -1,1 +1,2 @@
-id : ["Integer", "ID",      True,   50,  0,  127]
+id   : ["Integer",  "ID",               True,   50,  0,  127]
+name : ["String",   "PARAM_NODE_NAME",  True,   ""]
