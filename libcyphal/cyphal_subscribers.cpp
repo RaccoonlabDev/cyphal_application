@@ -13,21 +13,25 @@
 #include "main.h"
 #include "params.hpp"
 #include "algorithms.hpp"
+#include "CircuitStatus/hardware_version.hpp"
 extern "C" {
 #include "storage.h"
 #include "git_hash.h"
+#include "git_software_version.h"
 }
+
+HardwareVersion hw_type{"Unknown", 0, 0};
 
 NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_id_) :
         CyphalSubscriber(driver_, port_id_) {
     get_info_response.protocol_version.major = CANARD_CYPHAL_SPECIFICATION_VERSION_MAJOR;
     get_info_response.protocol_version.minor = CANARD_CYPHAL_SPECIFICATION_VERSION_MINOR;
 
-    get_info_response.hardware_version.major = 1;
-    get_info_response.hardware_version.minor = 2;
+    get_info_response.hardware_version.major = hw_type.hw_major;
+    get_info_response.hardware_version.minor = hw_type.hw_minor;
 
-    get_info_response.software_version.major = 0;
-    get_info_response.software_version.minor = 1;
+    get_info_response.software_version.major = APP_VERSION_MAJOR;
+    get_info_response.software_version.minor = APP_VERSION_MINOR;
 
     get_info_response.certificate_of_authenticity.count = 0;
 
@@ -54,8 +58,12 @@ NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_
 
 
 void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
-    auto node_name = paramsGetStringValue(static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT));
-    get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)node_name, 15);
+    auto node_name_param_idx = static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT);
+    auto node_name = (const uint8_t*)paramsGetStringValue(node_name_param_idx);
+    get_info_response.name.count = strcpySafely(get_info_response.name.elements, node_name, 15);
+    if (get_info_response.name.count == 0) {
+        get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)hw_type.name, 15);
+    }
 
     CanardTransferMetadata transfer_metadata = {
         .priority       = CanardPriorityNominal,

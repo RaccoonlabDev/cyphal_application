@@ -62,7 +62,7 @@ void Cyphal::process() {
     }
 
     // 2. spin application
-    static uint32_t next_pub_time_ms = 0;
+    static uint32_t next_pub_time_ms = 50;  // a little timeout to initialize the internal state
     if (next_pub_time_ms < HAL_GetTick()) {
         next_pub_time_ms += 500;
         uavcan_node_Heartbeat_1_0 heartbeat_msg;
