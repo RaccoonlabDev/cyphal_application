@@ -23,8 +23,10 @@ class CyphalPublisher {
 public:
     CyphalPublisher(Cyphal* driver_, CanardPortID port_id_) : driver(driver_) {
         setPortId(port_id_);
-        publishers[publishers_amount] = this;
-        publishers_amount++;
+        if (publishers_amount <= 14) {
+            publishers[publishers_amount] = this;
+            publishers_amount++;
+        }
     }
     void setPortId(CanardPortID port_id);
     CanardPortID getPortId();
@@ -39,7 +41,7 @@ protected:
         .transfer_id    = 0,
     };
 
-    static std::array<CyphalPublisher*, 10> publishers;
+    static std::array<CyphalPublisher*, 15> publishers;
     static uint8_t publishers_amount;
 };
 

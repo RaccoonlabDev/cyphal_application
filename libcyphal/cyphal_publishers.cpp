@@ -11,11 +11,9 @@
 #include "cyphal_publishers.hpp"
 #include "cyphal.hpp"
 #include "main.h"
-extern "C" {
 #include "storage.h"
-}
 
-std::array<CyphalPublisher*, 10> CyphalPublisher::publishers;
+std::array<CyphalPublisher*, 15> CyphalPublisher::publishers;
 uint8_t CyphalPublisher::publishers_amount{0};
 
 

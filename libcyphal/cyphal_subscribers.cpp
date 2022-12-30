@@ -14,8 +14,8 @@
 #include "params.hpp"
 #include "algorithms.hpp"
 #include "CircuitStatus/hardware_version.hpp"
-extern "C" {
 #include "storage.h"
+extern "C" {
 #include "git_hash.h"
 #include "git_software_version.h"
 }

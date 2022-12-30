@@ -14,9 +14,7 @@
 #include "cyphal_registers.hpp"
 #include "uavcan/node/Heartbeat_1_0.h"
 #include "uavcan/node/Health_1_0.h"
-extern "C" {
 #include "storage.h"
-}
 
 #define TX_QUEUE_FRAME_SIZE 320  ///< we need 314 bytes for port.List
 

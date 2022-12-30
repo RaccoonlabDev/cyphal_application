@@ -11,9 +11,7 @@
 #include "cyphal_registers.hpp"
 #include "cyphal.hpp"
 #include "algorithms.hpp"
-extern "C" {
 #include "storage.h"
-}
 
 void RegisterListRequest::callback(const CanardRxTransfer& transfer) {
     auto index = parseRequest(transfer);
