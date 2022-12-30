@@ -22,11 +22,15 @@
 
 class Cyphal {
 public:
-    Cyphal(): heartbeat_pub(this) {};
+    Cyphal(): heartbeat_pub(this), port_list_pub(this) {};
     int init();
     void process();
     int32_t push(CanardTransferMetadata *metadata, size_t payload_size, const void *payload);
     int8_t subscribe(CyphalSubscriber* sub_info, size_t size, CanardTransferKind kind);
+
+    static constexpr size_t MAX_SUB_NUM = 10;
+    CyphalSubscriber* _sub_info[MAX_SUB_NUM];
+    size_t _sub_num{0};
 private:
     void spinReceivedFrame(const CanardMicrosecond rx_timestamp_usec,
                            const CanardFrame* const received_frame);
@@ -46,11 +50,8 @@ private:
     uint32_t error_counter = 0;
     uint8_t node_id;
 
-    static constexpr size_t MAX_SUB_NUM = 10;
-    CyphalSubscriber* _sub_info[MAX_SUB_NUM];
-    size_t _sub_num{0};
-
     HeartbeatPublisher heartbeat_pub;
+    PortListPublisher port_list_pub;
 };
 
 #endif  // LIBCYPHAL_CYPHAL_HPP_

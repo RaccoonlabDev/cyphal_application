@@ -18,7 +18,7 @@ extern "C" {
 #include "storage.h"
 }
 
-#define TX_QUEUE_FRAME_SIZE 200
+#define TX_QUEUE_FRAME_SIZE 320  ///< we need 314 bytes for port.List
 
 ///< wrappers
 static void* memAllocate(CanardInstance* const canard, const size_t amount);
@@ -71,6 +71,8 @@ void Cyphal::process() {
         heartbeat_msg.uptime = HAL_GetTick() / 1000;
         heartbeat_msg.vendor_specific_status_code = 0;
         heartbeat_pub.publish(heartbeat_msg);
+
+        port_list_pub.publish();
     }
 
     // 3. spin tx

@@ -21,6 +21,7 @@ class CyphalSubscriber {
 public:
     CyphalSubscriber(Cyphal* driver_, CanardPortID port_id_) : driver(driver_), port_id(port_id_) {}
     virtual void callback(const CanardRxTransfer& transfer) = 0;
+    bool isEnabled();
     CanardRxSubscription subscription;
     Cyphal* driver;
     CanardPortID port_id;

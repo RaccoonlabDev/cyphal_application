@@ -22,6 +22,11 @@ extern "C" {
 
 HardwareVersion hw_type{"Unknown", 0, 0};
 
+bool CyphalSubscriber::isEnabled() {
+    constexpr uint16_t MAX_PORT_ID = 8191;
+    return (port_id == 0 || port_id > MAX_PORT_ID) ? false : true;
+}
+
 NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_id_) :
         CyphalSubscriber(driver_, port_id_) {
     get_info_response.protocol_version.major = CANARD_CYPHAL_SPECIFICATION_VERSION_MAJOR;
