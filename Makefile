@@ -28,6 +28,7 @@ C_INCLUDES += -I${LIBPARAMS_PATH}/libparams/ \
 			  -I${LIBPARAMS_PATH}/platform_specific/${LIBPARAMS_PLATFORM}/
 C_SOURCES += $(wildcard ${LIBPARAMS_PATH}/libparams/*.c) \
              $(wildcard ${LIBPARAMS_PATH}/platform_specific/${LIBPARAMS_PLATFORM}/*.c)
+CPP_SOURCES += $(wildcard ${LIBPARAMS_PATH}/platform_specific/${LIBPARAMS_PLATFORM}/*.cpp)
 
 # Platform specific implementation
 include ${CYPHAL_EXAMPLE_ABS_DIR}/platform_specific/${LIBCYPHAL_PLATFORM}/Makefile
