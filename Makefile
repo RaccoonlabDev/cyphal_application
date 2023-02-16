@@ -1,11 +1,14 @@
 # Copyright (c) 2022 Dmitry Ponomarev
 # Distributed under the MIT License, available in the file LICENSE.
 # Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
-ifndef LIBCYPHAL_PLATFORM
-$(error LIBCYPHAL_PLATFORM is not set)
-endif
-
 CYPHAL_EXAMPLE_ABS_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+
+ifndef LIBCYPHAL_PLATFORM
+$(error LIBCYPHAL_PLATFORM must be specified: $(notdir $(wildcard $(CYPHAL_EXAMPLE_ABS_DIR)/platform_specific/*)))
+endif
+ifndef LIBPARAMS_PLATFORM
+$(error LIBPARAMS_PLATFORM must be specified: $(notdir $(wildcard $(CYPHAL_EXAMPLE_ABS_DIR)/Libs/libparams/platform_specific/*)))
+endif
 
 # This library source code
 C_INCLUDES += -I${CYPHAL_EXAMPLE_ABS_DIR}/libcyphal
