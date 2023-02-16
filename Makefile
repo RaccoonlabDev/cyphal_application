@@ -23,7 +23,7 @@ C_SOURCES += ${CYPHAL_EXAMPLE_ABS_DIR}/Libs/libcanard/libcanard/canard.c
 C_INCLUDES += -I${CYPHAL_EXAMPLE_ABS_DIR}/Libs/libcanard/libcanard
 
 # libparams
-LIBPARAMS_PATH=${REPOSITORY_PATH}/Libs/libparams
+LIBPARAMS_PATH=${CYPHAL_EXAMPLE_ABS_DIR}/Libs/libparams
 C_INCLUDES += -I${LIBPARAMS_PATH}/libparams/ \
 			  -I${LIBPARAMS_PATH}/platform_specific/${LIBPARAMS_PLATFORM}/
 C_SOURCES += $(wildcard ${LIBPARAMS_PATH}/libparams/*.c) \
