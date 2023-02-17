@@ -48,7 +48,7 @@ INC += -I${UBUNTU_TESTS_ABS_DIR}
 CPP_SOURCES += params.cpp main.cpp
 
 COMMON_LIBS=-lpthread -pthread -lgtest
-CPPFLAGS = -Wall -std=c++11
+CPPFLAGS = -Wall -std=c++14
 
 build: build_other_c_sources build_other_cpp_sources build_executable
 
