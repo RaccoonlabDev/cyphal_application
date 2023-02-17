@@ -9,4 +9,4 @@ SOCKETCAN_LIB_DIR := $(CYPHAL_DIR)/Libs/platform_specific_components/socketcan/l
 
 CPP_SOURCES += $(wildcard ${SOCKETCAN_IMPLEMENTATION_DIR}/*.cpp)
 C_SOURCES += ${SOCKETCAN_LIB_DIR}/socketcan.c
-C_INCLUDES += -I${SOCKETCAN_LIB_DIR}
+INC += -I${SOCKETCAN_LIB_DIR}

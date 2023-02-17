@@ -8,4 +8,4 @@ FDCAN_LIB_DIR := $(CYPHAL_DIR)/Libs/platform_specific_components/stm32
 
 CPP_SOURCES += $(wildcard ${BXCAN_IMPLEMENTATION_DIR}/*.cpp)
 C_SOURCES += ${FDCAN_LIB_DIR}/libcanard/bxcan/src/bxcan.c
-C_INCLUDES += -I${FDCAN_LIB_DIR}/libcanard/bxcan/src
+INC += -I${FDCAN_LIB_DIR}/libcanard/bxcan/src

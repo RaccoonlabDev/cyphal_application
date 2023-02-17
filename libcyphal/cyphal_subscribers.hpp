@@ -30,9 +30,11 @@ public:
 struct NodeGetInfoSubscriber: public CyphalSubscriber {
     NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_id_);
     void callback(const CanardRxTransfer& transfer) override;
+    static void setHardwareVersion(uint8_t major, uint8_t minor);
 private:
     uavcan_node_GetInfo_Response_1_0 get_info_response = {};
     uint8_t _transfer_id = 0;
+    static uavcan_node_Version_1_0 hw_version;
 };
 
 struct ExecuteCommandSubscriber: public CyphalSubscriber {

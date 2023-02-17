@@ -13,14 +13,13 @@
 #include "main.h"
 #include "params.hpp"
 #include "algorithms.hpp"
-#include "CircuitStatus/hardware_version.hpp"
 #include "storage.h"
 extern "C" {
 #include "git_hash.h"
 #include "git_software_version.h"
 }
 
-HardwareVersion hw_type{"Unknown", 0, 0};
+uavcan_node_Version_1_0 NodeGetInfoSubscriber::hw_version;
 
 bool CyphalSubscriber::isEnabled() {
     constexpr uint16_t MAX_PORT_ID = 8191;
@@ -32,8 +31,8 @@ NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_
     get_info_response.protocol_version.major = CANARD_CYPHAL_SPECIFICATION_VERSION_MAJOR;
     get_info_response.protocol_version.minor = CANARD_CYPHAL_SPECIFICATION_VERSION_MINOR;
 
-    get_info_response.hardware_version.major = hw_type.hw_major;
-    get_info_response.hardware_version.minor = hw_type.hw_minor;
+    get_info_response.hardware_version.major = hw_version.major;
+    get_info_response.hardware_version.minor = hw_version.minor;
 
     get_info_response.software_version.major = APP_VERSION_MAJOR;
     get_info_response.software_version.minor = APP_VERSION_MINOR;
@@ -67,7 +66,8 @@ void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
     auto node_name = (const uint8_t*)paramsGetStringValue(node_name_param_idx);
     get_info_response.name.count = strcpySafely(get_info_response.name.elements, node_name, 15);
     if (get_info_response.name.count == 0) {
-        get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)hw_type.name, 15);
+        get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)"Unknown", 15);
+        // get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)hw_type.name, 15);
     }
 
     CanardTransferMetadata transfer_metadata = {
@@ -86,6 +86,11 @@ void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
     if (NUNAVUT_SUCCESS == result) {
         result = driver->push(&transfer_metadata, buffer_size, buffer);
     }
+}
+
+void NodeGetInfoSubscriber::setHardwareVersion(uint8_t major, uint8_t minor) {
+    hw_version.major = major;
+    hw_version.minor = minor;
 }
 
 void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
