@@ -60,15 +60,23 @@ NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_
     get_info_response.software_vcs_revision_id = GIT_HASH;
 };
 
-
-void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
+void NodeGetInfoSubscriber::updateNodeName() {
     auto node_name_param_idx = static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT);
     auto node_name = (const uint8_t*)paramsGetStringValue(node_name_param_idx);
-    get_info_response.name.count = strcpySafely(get_info_response.name.elements, node_name, 15);
-    if (get_info_response.name.count == 0) {
-        get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)"Unknown", 15);
-        // get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)hw_type.name, 15);
+
+    if (node_name != NULL) {
+        get_info_response.name.count = strcpySafely(get_info_response.name.elements, node_name, 15);
+        if (get_info_response.name.count == 0) {
+            return;
+        }
     }
+
+    // get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)hw_type.name, 15);
+    get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)"Unknown", 15);
+}
+
+void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
+    updateNodeName();
 
     CanardTransferMetadata transfer_metadata = {
         .priority       = CanardPriorityNominal,

@@ -33,12 +33,12 @@ int Cyphal::init() {
     }
 
     if (!transport.init(1000000, 0)) {
-        return -1;
+        return -CYPHAL_TRANSPORT_INIT_ERROR;
     }
 
     my_allocator = o1heapInit(base, HEAP_SIZE);
     if (NULL == my_allocator) {
-        return -1;
+        return -CYPHAL_HEAP_INIT_ERROR;
     }
 
     canard_instance = canardInit(&memAllocate, &memFree);
@@ -46,7 +46,7 @@ int Cyphal::init() {
     queue = canardTxInit(TX_QUEUE_FRAME_SIZE, CANARD_MTU_CAN_CLASSIC);
 
     if (subscribeApplication() < 0) {
-        return -1;
+        return -CYPHAL_SUB_APPLICATION_INIT_ERROR;
     }
 
     return 0;

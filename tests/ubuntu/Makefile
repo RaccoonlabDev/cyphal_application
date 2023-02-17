@@ -11,9 +11,13 @@ NUNAVUT_BUILD_DIR=$(BUILD_DIR)/nunavut_out
 BUILD_OBJ_DIR=$(BUILD_DIR)/obj
 BUILD_EXECUTABLE_PATH=$(BUILD_DIR)/shell
 
+INC =
+C_DEFS =
+
 # Config
 LIBCYPHAL_PLATFORM=socketcan
 LIBPARAMS_PLATFORM=ubuntu
+C_DEFS += -DFLASH_DRIVER_STORAGE_FILE=\"../../Boards/${SW_TARGET}/default_params.yml\"
 
 define build_c_objects
 	mkdir -p ${BUILD_OBJ_DIR}
@@ -28,9 +32,6 @@ define build_cpp_objects
 		g++ $(C_DEFS) $(CPPFLAGS) -c -fPIC $(INC) $$src_file -o ${BUILD_OBJ_DIR}/$${src_file##*/}.o; \
 	done
 endef
-
-
-INC =
 
 # This library
 include $(REPOSITORY_DIR)/Makefile
@@ -60,10 +61,10 @@ build_other_c_sources:
 build_other_cpp_sources:
 	$(call build_cpp_objects,$(CPP_SOURCES))
 
-build_executable:
+build_executable: build_other_c_sources build_other_cpp_sources
 	g++ $(CPPFLAGS) $(COMMON_LIBS) -o $(BUILD_EXECUTABLE_PATH) $(wildcard ${BUILD_OBJ_DIR}/*.o)
 
-execute:
+execute: build_executable
 	$(BUILD_EXECUTABLE_PATH)
 
 clean:

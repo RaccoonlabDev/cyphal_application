@@ -20,6 +20,10 @@
 
 #define HEAP_SIZE           (1024*3)
 
+#define CYPHAL_TRANSPORT_INIT_ERROR         2
+#define CYPHAL_HEAP_INIT_ERROR              3
+#define CYPHAL_SUB_APPLICATION_INIT_ERROR   4
+
 class Cyphal {
 public:
     Cyphal(): heartbeat_pub(this), port_list_pub(this) {};
