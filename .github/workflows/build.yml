@@ -20,5 +20,13 @@ jobs:
           sudo apt-get install -y make gcc-arm-none-eabi
           pip install -U nunavut
 
+      - name: Install gtest
+        run: |
+          sudo apt-get install libgtest-dev cmake                                   &&  \
+          cd /usr/src/gtest                                                         &&  \
+          sudo cmake CMakeLists.txt                                                 &&  \
+          sudo make                                                                 &&  \
+          sudo cp ./lib/libgtest*.a /usr/lib
+
       - run: ./repository/scripts/nnvg_generate_c_headers.sh
       - run: cd repository/tests/ubuntu && make -s build
