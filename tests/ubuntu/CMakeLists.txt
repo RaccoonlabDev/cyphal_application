@@ -5,4 +5,5 @@ set(PLATFORM socketcan)
 
 include(../../CMakeLists.txt)
 
-add_executable(application ${SRC})
+include_directories(.)
+add_executable(application main.cpp params.cpp ${SRC})

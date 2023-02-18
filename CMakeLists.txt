@@ -2,29 +2,35 @@ cmake_minimum_required(VERSION 3.15.3)
 
 project(cyphal_example)
 
-FILE(GLOB libcyphalSources                  ../../libcyphal/*.cpp)
-FILE(GLOB libcanardSources                  ../../Libs/libcanard/libcanard/*.c)
-FILE(GLOB libparamsSources                  ../../Libs/libparams/libparams/*.c)
-FILE(GLOB o1heapSources                     ../../Libs/o1heap/o1heap/*.c)
+FILE(GLOB libcyphalSources                  ${CMAKE_CURRENT_LIST_DIR}/libcyphal/*.cpp)
+FILE(GLOB libcanardSources                  ${CMAKE_CURRENT_LIST_DIR}/Libs/libcanard/libcanard/*.c)
+FILE(GLOB libparamsSources                  ${CMAKE_CURRENT_LIST_DIR}/Libs/libparams/libparams/*.c)
+FILE(GLOB o1heapSources                     ${CMAKE_CURRENT_LIST_DIR}/Libs/o1heap/o1heap/*.c)
 
 if(PLATFORM STREQUAL "bxcan")
-	message(SEND_ERROR "bxcan support coming soon!")
+    FILE(GLOB libcyphalPlatformSpecificSources  ${CMAKE_CURRENT_LIST_DIR}/platform_specific/bxcan/*.cpp)
+    FILE(GLOB libparamsPlatformSpecificSources  ${CMAKE_CURRENT_LIST_DIR}/Libs/libparams/platform_specific/stm32f103/*.c)
+    FILE(GLOB transportPlatformSpecificSources  ${CMAKE_CURRENT_LIST_DIR}/Libs/platform_specific_components/stm32/libcanard/bxcan/src/*.c)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/platform_specific/bxcan)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/Libs/libparams/platform_specific/stm32f103)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/Libs/platform_specific_components/stm32/libcanard/bxcan/src)
 elseif(PLATFORM STREQUAL "fdcan")
-	message(SEND_ERROR "fdcan support coming soon!")
+    FILE(GLOB libparamsPlatformSpecificSources  ${CMAKE_CURRENT_LIST_DIR}/Libs/libparams/platform_specific/stm32g0b1/*.c)
+    FILE(GLOB transportPlatformSpecificSources  ${CMAKE_CURRENT_LIST_DIR}/Libs/platform_specific_components/stm32/libcanard/bxcan/src/*.c)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/Libs/libparams/platform_specific/stm32g0b1)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/Libs/platform_specific_components/stm32/libcanard/bxcan/src)
 elseif(PLATFORM STREQUAL "socketcan")
-    FILE(GLOB libcyphalPlatformSpecificSources  ../../platform_specific/socketcan/*.cpp)
-    FILE(GLOB libparamsPlatformSpecificSources  ../../Libs/libparams/platform_specific/ubuntu/*.cpp)
-    FILE(GLOB transportPlatformSpecificSources  ../../Libs/platform_specific_components/socketcan/libcanard/src/*.c)
-    include_directories(../../platform_specific/socketcan)
-    include_directories(../../Libs/libparams/platform_specific/ubuntu)
-    include_directories(../../Libs/platform_specific_components/socketcan/libcanard/src)
+    FILE(GLOB libcyphalPlatformSpecificSources  ${CMAKE_CURRENT_LIST_DIR}/platform_specific/socketcan/*.cpp)
+    FILE(GLOB libparamsPlatformSpecificSources  ${CMAKE_CURRENT_LIST_DIR}/Libs/libparams/platform_specific/ubuntu/*.cpp)
+    FILE(GLOB transportPlatformSpecificSources  ${CMAKE_CURRENT_LIST_DIR}/Libs/platform_specific_components/socketcan/libcanard/src/*.c)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/platform_specific/socketcan)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/Libs/libparams/platform_specific/ubuntu)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/Libs/platform_specific_components/socketcan/libcanard/src)
 else()
 	message(SEND_ERROR "Platform is not specified!")
 endif()
 
 set(SRC
-    main.cpp
-    params.cpp
     ${libcyphalSources}
     ${libcanardSources}
     ${libparamsSources}
@@ -34,9 +40,8 @@ set(SRC
     ${transportPlatformSpecificSources}
 )
 
-include_directories(.)
-include_directories(../../libcyphal)
-include_directories(../../Libs/libcanard/libcanard)
-include_directories(../../Libs/libparams/libparams)
-include_directories(../../Libs/o1heap/o1heap)
-include_directories(../../build/nunavut_out)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/libcyphal)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/Libs/libcanard/libcanard)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/Libs/libparams/libparams)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/Libs/o1heap/o1heap)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/build/nunavut_out)
