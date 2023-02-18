@@ -27,7 +27,7 @@ int main (int argc, char *argv[]) {
     }
 
     std::cout << "Hello, world." << std::endl;
-    while(HAL_GetTick() < 25000) {
+    while(true) {
         cyphal.process();
     }
 }
