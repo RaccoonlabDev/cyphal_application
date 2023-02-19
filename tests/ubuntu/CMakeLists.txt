@@ -6,4 +6,4 @@ set(PLATFORM socketcan)
 include(../../CMakeLists.txt)
 
 include_directories(.)
-add_executable(application main.cpp params.cpp ${SRC})
+add_executable(application main.cpp params.cpp ${CYPHAL_SRC})

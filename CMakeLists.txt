@@ -30,7 +30,7 @@ else()
 	message(SEND_ERROR "Platform is not specified!")
 endif()
 
-set(SRC
+set(CYPHAL_SRC
     ${cyphalSources}
     ${libcanardSources}
     ${libparamsSources}
