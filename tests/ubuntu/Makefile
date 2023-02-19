@@ -15,7 +15,7 @@ INC =
 C_DEFS =
 
 # Config
-LIBCYPHAL_PLATFORM=socketcan
+CYPHAL_PLATFORM=socketcan
 LIBPARAMS_PLATFORM=ubuntu
 C_DEFS += -DFLASH_DRIVER_STORAGE_FILE=\"../../Boards/${SW_TARGET}/default_params.yml\"
 

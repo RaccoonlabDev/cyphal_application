@@ -20,9 +20,29 @@ void application_entry_point() {
     paramsLoadFromFlash();
 
     Cyphal cyphal;
-    cyphal.init();
+    int res = cyphal.init();
+
+    
+    HAL_GPIO_WritePin(INTERNAL_LED_BLUE_GPIO_Port, INTERNAL_LED_BLUE_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(INTERNAL_LED_GREEN_GPIO_Port, INTERNAL_LED_GREEN_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(INTERNAL_LED_RED_GPIO_Port, INTERNAL_LED_RED_Pin, GPIO_PIN_SET);
 
     while (true) {
+        GPIO_PinState state;
+
+        if (HAL_GetTick() % 1000 > 500) {
+            state = GPIO_PIN_SET;
+        } else {
+            state = GPIO_PIN_RESET;
+        }
+    
+        if (res >= 0) {
+            HAL_GPIO_WritePin(INTERNAL_LED_BLUE_GPIO_Port, INTERNAL_LED_BLUE_Pin, state);
+        } else {
+            HAL_GPIO_WritePin(INTERNAL_LED_RED_GPIO_Port, INTERNAL_LED_RED_Pin, state);
+        }
+        // HAL_GPIO_WritePin(INTERNAL_LED_GREEN_GPIO_Port, INTERNAL_LED_GREEN_Pin, state);
+
         cyphal.process();
     }
 }

@@ -8,8 +8,8 @@
  * @date Dec 28, 2021
  */
 
-#ifndef LIBCYPHAL_CYPHAL_REGISTERS_HPP_
-#define LIBCYPHAL_CYPHAL_REGISTERS_HPP_
+#ifndef CYPHAL_CYPHAL_REGISTERS_HPP_
+#define CYPHAL_CYPHAL_REGISTERS_HPP_
 
 #include "cyphal_subscribers.hpp"
 #include "uavcan/_register/Access_1_0.h"
@@ -38,4 +38,4 @@ private:
 };
 
 
-#endif  // LIBCYPHAL_CYPHAL_REGISTERS_HPP_
+#endif  // CYPHAL_CYPHAL_REGISTERS_HPP_

@@ -8,8 +8,8 @@
  * @date Dec 28, 2021
  */
 
-#ifndef LIBCYPHAL_CYPHAL_HPP_
-#define LIBCYPHAL_CYPHAL_HPP_
+#ifndef CYPHAL_CYPHAL_HPP_
+#define CYPHAL_CYPHAL_HPP_
 
 #include "cyphal_transport_can.hpp"
 #include "cyphal_subscribers.hpp"
@@ -58,4 +58,4 @@ private:
     PortListPublisher port_list_pub;
 };
 
-#endif  // LIBCYPHAL_CYPHAL_HPP_
+#endif  // CYPHAL_CYPHAL_HPP_

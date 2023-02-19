@@ -3,16 +3,16 @@
 # Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 CYPHAL_EXAMPLE_ABS_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
-ifndef LIBCYPHAL_PLATFORM
-$(error LIBCYPHAL_PLATFORM must be specified: $(notdir $(wildcard $(CYPHAL_EXAMPLE_ABS_DIR)/platform_specific/*)))
+ifndef CYPHAL_PLATFORM
+$(error CYPHAL_PLATFORM must be specified: $(notdir $(wildcard $(CYPHAL_EXAMPLE_ABS_DIR)/platform_specific/*)))
 endif
 ifndef LIBPARAMS_PLATFORM
 $(error LIBPARAMS_PLATFORM must be specified: $(notdir $(wildcard $(CYPHAL_EXAMPLE_ABS_DIR)/Libs/libparams/platform_specific/*)))
 endif
 
 # This library source code
-INC += -I${CYPHAL_EXAMPLE_ABS_DIR}/libcyphal
-CPP_SOURCES += $(wildcard ${CYPHAL_EXAMPLE_ABS_DIR}/libcyphal/*.cpp)
+INC += -I${CYPHAL_EXAMPLE_ABS_DIR}/Cyphal
+CPP_SOURCES += $(wildcard ${CYPHAL_EXAMPLE_ABS_DIR}/Cyphal/*.cpp)
 
 # o1heap
 C_SOURCES += ${CYPHAL_EXAMPLE_ABS_DIR}/Libs/o1heap/o1heap/o1heap.c
@@ -31,4 +31,4 @@ C_SOURCES += $(wildcard ${LIBPARAMS_PATH}/libparams/*.c) \
 CPP_SOURCES += $(wildcard ${LIBPARAMS_PATH}/platform_specific/${LIBPARAMS_PLATFORM}/*.cpp)
 
 # Platform specific implementation
-include ${CYPHAL_EXAMPLE_ABS_DIR}/platform_specific/${LIBCYPHAL_PLATFORM}/Makefile
+include ${CYPHAL_EXAMPLE_ABS_DIR}/platform_specific/${CYPHAL_PLATFORM}/Makefile

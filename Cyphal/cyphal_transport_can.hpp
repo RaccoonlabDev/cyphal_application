@@ -8,8 +8,8 @@
  * @date Jul 07, 2022
  */
 
-#ifndef LIBCYPHAL_CYPHAL_TRANSPORT_CAN_HPP_
-#define LIBCYPHAL_CYPHAL_TRANSPORT_CAN_HPP_
+#ifndef CYPHAL_CYPHAL_TRANSPORT_CAN_HPP_
+#define CYPHAL_CYPHAL_TRANSPORT_CAN_HPP_
 
 #include "canard.h"
 
@@ -24,4 +24,4 @@ private:
     uint8_t _can_driver_idx;
 };
 
-#endif  // LIBCYPHAL_CYPHAL_TRANSPORT_CAN_HPP_
+#endif  // CYPHAL_CYPHAL_TRANSPORT_CAN_HPP_

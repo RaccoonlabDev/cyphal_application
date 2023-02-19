@@ -8,8 +8,8 @@
  * @date Aug 22, 2022
  */
 
-#ifndef LIBCYPHAL_CYPHAL_PUBLISHERS_HPP_
-#define LIBCYPHAL_CYPHAL_PUBLISHERS_HPP_
+#ifndef CYPHAL_CYPHAL_PUBLISHERS_HPP_
+#define CYPHAL_CYPHAL_PUBLISHERS_HPP_
 
 #include <array>
 #include "canard.h"
@@ -57,4 +57,4 @@ private:
     uint32_t next_pub_time_ms = 1000;
 };
 
-#endif  // LIBCYPHAL_CYPHAL_PUBLISHERS_HPP_
+#endif  // CYPHAL_CYPHAL_PUBLISHERS_HPP_

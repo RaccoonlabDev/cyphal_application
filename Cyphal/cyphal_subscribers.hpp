@@ -8,8 +8,8 @@
  * @date Dec 28, 2021
  */
 
-#ifndef LIBCYPHAL_CYPHAL_SUBSCRIBERS_HPP_
-#define LIBCYPHAL_CYPHAL_SUBSCRIBERS_HPP_
+#ifndef CYPHAL_CYPHAL_SUBSCRIBERS_HPP_
+#define CYPHAL_CYPHAL_SUBSCRIBERS_HPP_
 
 #include "canard.h"
 #include "uavcan/node/GetInfo_1_0.h"
@@ -45,4 +45,4 @@ private:
     uint8_t _transfer_id = 0;
 };
 
-#endif  // LIBCYPHAL_CYPHAL_SUBSCRIBERS_HPP_
+#endif  // CYPHAL_CYPHAL_SUBSCRIBERS_HPP_
