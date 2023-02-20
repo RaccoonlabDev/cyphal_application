@@ -37,7 +37,7 @@ bool CyphalTransportCan::receive(CanardFrame* can_frame) {
                                payload_buffer_size,
                                payload_buffer,
                                timeout_usec,
-                               NULL);
+                               nullptr);
 
     if (res > 0) {
         can_frame->payload = payload_buffer;

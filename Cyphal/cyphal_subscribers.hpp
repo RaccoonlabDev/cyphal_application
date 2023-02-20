@@ -21,14 +21,14 @@ class CyphalSubscriber {
 public:
     CyphalSubscriber(Cyphal* driver_, CanardPortID port_id_) : driver(driver_), port_id(port_id_) {}
     virtual void callback(const CanardRxTransfer& transfer) = 0;
-    bool isEnabled();
+    bool isEnabled() const;
     CanardRxSubscription subscription;
     Cyphal* driver;
     CanardPortID port_id;
 };
 
 struct NodeGetInfoSubscriber: public CyphalSubscriber {
-    NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_id_);
+    explicit NodeGetInfoSubscriber(Cyphal* driver_);
     void callback(const CanardRxTransfer& transfer) override;
     static void setHardwareVersion(uint8_t major, uint8_t minor);
 private:
@@ -39,7 +39,8 @@ private:
 };
 
 struct ExecuteCommandSubscriber: public CyphalSubscriber {
-    ExecuteCommandSubscriber(Cyphal* driver_, CanardPortID port_id_) : CyphalSubscriber(driver_, port_id_) {};
+    explicit ExecuteCommandSubscriber(Cyphal* driver_) :
+        CyphalSubscriber(driver_, uavcan_node_ExecuteCommand_1_0_FIXED_PORT_ID_) {};
     void callback(const CanardRxTransfer& transfer) override;
 private:
     uint8_t _transfer_id = 0;

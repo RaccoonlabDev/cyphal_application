@@ -21,13 +21,13 @@ extern "C" {
 
 uavcan_node_Version_1_0 NodeGetInfoSubscriber::hw_version;
 
-bool CyphalSubscriber::isEnabled() {
+bool CyphalSubscriber::isEnabled() const {
     constexpr uint16_t MAX_PORT_ID = 8191;
     return (port_id == 0 || port_id > MAX_PORT_ID) ? false : true;
 }
 
-NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_, CanardPortID port_id_) :
-        CyphalSubscriber(driver_, port_id_) {
+NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_) :
+        CyphalSubscriber(driver_, uavcan_node_GetInfo_1_0_FIXED_PORT_ID_) {
     get_info_response.protocol_version.major = CANARD_CYPHAL_SPECIFICATION_VERSION_MAJOR;
     get_info_response.protocol_version.minor = CANARD_CYPHAL_SPECIFICATION_VERSION_MINOR;
 
@@ -64,7 +64,7 @@ void NodeGetInfoSubscriber::updateNodeName() {
     auto node_name_param_idx = static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT);
     auto node_name = (const uint8_t*)paramsGetStringValue(node_name_param_idx);
 
-    if (node_name != NULL) {
+    if (node_name != nullptr) {
         get_info_response.name.count = strcpySafely(get_info_response.name.elements, node_name, 15);
         if (get_info_response.name.count == 0) {
             return;
@@ -92,7 +92,7 @@ void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
     int32_t result;
     result = uavcan_node_GetInfo_Response_1_0_serialize_(&get_info_response, buffer, &buffer_size);
     if (NUNAVUT_SUCCESS == result) {
-        result = driver->push(&transfer_metadata, buffer_size, buffer);
+        driver->push(&transfer_metadata, buffer_size, buffer);
     }
 }
 
@@ -102,7 +102,7 @@ void NodeGetInfoSubscriber::setHardwareVersion(uint8_t major, uint8_t minor) {
 }
 
 void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
-    const uint8_t* payload = static_cast<const uint8_t*>(transfer.payload);
+    auto payload = static_cast<const uint8_t*>(transfer.payload);
     size_t payload_len = transfer.payload_size;
     uavcan_node_ExecuteCommand_Request_1_0 msg;
     if (uavcan_node_ExecuteCommand_Request_1_0_deserialize_(&msg, payload, &payload_len) < 0) {
@@ -127,9 +127,6 @@ void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
             cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_SUCCESS;
             break;
 
-        case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_POWER_OFF:
-        case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_BEGIN_SOFTWARE_UPDATE:
-        case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_EMERGENCY_STOP:
         default:
             cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_BAD_COMMAND;
             break;
@@ -150,6 +147,6 @@ void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
     int32_t result;
     result = uavcan_node_ExecuteCommand_Response_1_0_serialize_(&cmd_response, buffer, &buffer_size);
     if (NUNAVUT_SUCCESS == result) {
-        result = driver->push(&transfer_metadata, buffer_size, buffer);
+        driver->push(&transfer_metadata, buffer_size, buffer);
     }
 }
