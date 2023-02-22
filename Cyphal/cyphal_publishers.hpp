@@ -29,10 +29,16 @@ public:
         }
     }
     void setPortId(CanardPortID port_id);
-    CanardPortID getPortId();
-    bool isEnabled();
+    CanardPortID getPortId() const;
+    bool isEnabled() const;
+    int32_t push(size_t payload_size, const uint8_t* payload);\
+
 protected:
     Cyphal* driver;
+    static std::array<CyphalPublisher*, 15> publishers;
+    static uint8_t publishers_amount;
+
+private:
     CanardTransferMetadata transfer_metadata = {
         .priority       = CanardPriorityNominal,
         .transfer_kind  = CanardTransferKindMessage,
@@ -40,21 +46,20 @@ protected:
         .remote_node_id = CANARD_NODE_ID_UNSET,
         .transfer_id    = 0,
     };
-
-    static std::array<CyphalPublisher*, 15> publishers;
-    static uint8_t publishers_amount;
 };
 
 struct HeartbeatPublisher: public CyphalPublisher {
-    HeartbeatPublisher(Cyphal* driver_) : CyphalPublisher(driver_, uavcan_node_Heartbeat_1_0_FIXED_PORT_ID_) {};
+    explicit HeartbeatPublisher(Cyphal* driver_) : CyphalPublisher(driver_, uavcan_node_Heartbeat_1_0_FIXED_PORT_ID_) {};
     void publish(const uavcan_node_Heartbeat_1_0& msg);
 };
 
 struct PortListPublisher: public CyphalPublisher {
-    PortListPublisher(Cyphal* driver_) : CyphalPublisher(driver_, uavcan_node_port_List_0_1_FIXED_PORT_ID_) {};
+    explicit PortListPublisher(Cyphal* driver_) : CyphalPublisher(driver_, uavcan_node_port_List_0_1_FIXED_PORT_ID_) {};
     void publish();
+#if PORT_LIST_PUBLISHER
 private:
     uint32_t next_pub_time_ms = 1000;
+#endif  // PORT_LIST_PUBLISHER
 };
 
 #endif  // CYPHAL_CYPHAL_PUBLISHERS_HPP_

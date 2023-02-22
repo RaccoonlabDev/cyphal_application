@@ -15,7 +15,7 @@
 
 class CyphalTransportCan {
 public:
-    CyphalTransportCan() {};
+    CyphalTransportCan() = default;
     bool init(uint32_t can_speed, uint8_t can_driver_idx);
     bool receive(CanardFrame* can_frame);
     bool transmit(const CanardTxQueueItem* transfer);

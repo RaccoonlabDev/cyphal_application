@@ -15,8 +15,9 @@
 #include "uavcan/node/Heartbeat_1_0.h"
 #include "uavcan/node/Health_1_0.h"
 #include "storage.h"
+#include "params.hpp"
 
-#define TX_QUEUE_FRAME_SIZE 320  ///< we need 314 bytes for port.List
+static const constexpr size_t TX_QUEUE_FRAME_SIZE = 320;  ///< we need 314 bytes for port.List
 
 ///< wrappers
 static void* memAllocate(CanardInstance* const canard, const size_t amount);
@@ -24,10 +25,10 @@ static void memFree(CanardInstance* const canard, void* const pointer);
 static uint32_t getCurrentMicroseconds();
 
 
-O1HeapInstance* my_allocator;
+static O1HeapInstance* my_allocator;
 
 int Cyphal::init() {
-    node_id = paramsGetValue(static_cast<ParamIndex_t>(IntParamsIndexes::ID));
+    node_id = static_cast<uint8_t>(paramsGetValue(IntParamsIndexes::ID));
     if (node_id == 0 || node_id > 126) {
         node_id = 42;
     }
@@ -37,7 +38,7 @@ int Cyphal::init() {
     }
 
     my_allocator = o1heapInit(base, HEAP_SIZE);
-    if (NULL == my_allocator) {
+    if (nullptr == my_allocator) {
         return -CYPHAL_HEAP_INIT_ERROR;
     }
 
@@ -54,13 +55,11 @@ int Cyphal::init() {
 
 void Cyphal::process() {
     // 1. spin recv
-    CanardFrame rx_frame;
-    if (transport.receive(&rx_frame)) {
+    if (CanardFrame rx_frame; transport.receive(&rx_frame)) {
         spinReceivedFrame(HAL_GetTick() * 1000, &rx_frame);
     }
 
     // 2. spin application
-    static uint32_t next_pub_time_ms = 50;  // a little timeout to initialize the internal state
     if (next_pub_time_ms < HAL_GetTick()) {
         next_pub_time_ms += 500;
         uavcan_node_Heartbeat_1_0 heartbeat_msg;
@@ -77,7 +76,7 @@ void Cyphal::process() {
     spinTransmit();
 }
 
-int32_t Cyphal::push(CanardTransferMetadata* metadata, size_t payload_size, const void *payload) {
+int32_t Cyphal::push(CanardTransferMetadata* metadata, size_t payload_size, const uint8_t* payload) {
     if (metadata->port_id == 0) {
         return 0;
     }
@@ -107,57 +106,47 @@ int8_t Cyphal::subscribe(CyphalSubscriber* sub_info, size_t size, CanardTransfer
 }
 
 
-void Cyphal::processReceivedTransfer(const uint8_t redundant_interface_index,
-                                     const CanardRxTransfer& transfer) {
-    const CanardPortID PORT_ID = transfer.metadata.port_id;
-    if (PORT_ID == uavcan_node_Heartbeat_1_0_FIXED_PORT_ID_) {
-        asm("NOP");
-    }
-
+void Cyphal::processReceivedTransfer([[maybe_unused]] const uint8_t redundant_interface_index,
+                                     const CanardRxTransfer& transfer) const {
     for (size_t sub_idx = 0; sub_idx < _sub_num; sub_idx++) {
-        if (PORT_ID == _sub_info[sub_idx]->port_id) {
+        if (transfer.metadata.port_id == _sub_info[sub_idx]->port_id) {
             _sub_info[sub_idx]->callback(transfer);
         }
     }
 }
 
+bool Cyphal::isTxQueueItemFresh(const CanardTxQueueItem* ti) const {
+    return (0U == ti->tx_deadline_usec) || (ti->tx_deadline_usec > getCurrentMicroseconds());
+}
+
 void Cyphal::spinTransmit() {
-    for (const CanardTxQueueItem* ti = NULL; (ti = canardTxPeek(&queue)) != NULL;) {
-        if ((0U == ti->tx_deadline_usec) || (ti->tx_deadline_usec > getCurrentMicroseconds())) {
-            if (!transport.transmit(ti)) {
-                break;
-            }
+    for (const CanardTxQueueItem* ti = nullptr; (ti = canardTxPeek(&queue)) != nullptr;) {
+        if (isTxQueueItemFresh(ti) && !transport.transmit(ti)) {
+            break;
         }
         canard_instance.memory_free(&canard_instance, canardTxPop(&queue, ti));
     }
 }
 
 int8_t Cyphal::subscribeApplication() {
-    // uavcan.node.GetInfo.Response
-    static NodeGetInfoSubscriber node_get_info_response(this, uavcan_node_GetInfo_1_0_FIXED_PORT_ID_);
     if (subscribe(&node_get_info_response,
                   uavcan_node_GetInfo_Request_1_0_EXTENT_BYTES_,
                   CanardTransferKindRequest) < 0) {
         return -1;
     }
 
-    // uavcan.register.List
-    static RegisterListRequest register_list_response(this, uavcan_register_List_1_0_FIXED_PORT_ID_);
     if (subscribe(&register_list_response,
                   uavcan_register_List_Request_1_0_EXTENT_BYTES_,
                   CanardTransferKindRequest) < 0) {
         return -1;
     }
 
-    // uavcan.register.Access
-    static RegisterAccessRequest register_access_response(this, uavcan_register_Access_1_0_FIXED_PORT_ID_);
     if (subscribe(&register_access_response,
                   uavcan_register_Access_Request_1_0_EXTENT_BYTES_,
                   CanardTransferKindRequest) < 0) {
         return -1;
     }
 
-    static ExecuteCommandSubscriber execute_cmd_response(this, uavcan_node_ExecuteCommand_1_0_FIXED_PORT_ID_);
     if (subscribe(&execute_cmd_response,
                   uavcan_node_ExecuteCommand_Request_1_0_EXTENT_BYTES_,
                   CanardTransferKindRequest) < 0) {
@@ -178,7 +167,7 @@ void Cyphal::spinReceivedFrame(const CanardMicrosecond rx_timestamp_usec,
                                          received_frame,
                                          0,
                                          &transfer,
-                                         NULL);
+                                         nullptr);
     if (result < 0) {
         error_counter++;
     } else if (result == 1) {
@@ -188,14 +177,14 @@ void Cyphal::spinReceivedFrame(const CanardMicrosecond rx_timestamp_usec,
 }
 
 
-void* memAllocate(CanardInstance* const canard, const size_t amount) {
+static void* memAllocate(CanardInstance* const canard, const size_t amount) {
     (void) canard;
     return o1heapAllocate(my_allocator, amount);
 }
-void memFree(CanardInstance* const canard, void* const pointer) {
+static void memFree(CanardInstance* const canard, void* const pointer) {
     (void) canard;
     o1heapFree(my_allocator, pointer);
 }
-uint32_t getCurrentMicroseconds() {
+static uint32_t getCurrentMicroseconds() {
     return HAL_GetTick();
 }

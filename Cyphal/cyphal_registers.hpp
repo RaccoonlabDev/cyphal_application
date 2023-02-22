@@ -14,24 +14,25 @@
 #include "cyphal_subscribers.hpp"
 #include "uavcan/_register/Access_1_0.h"
 #include "uavcan/_register/List_1_0.h"
-#include "params.hpp"
+#include "storage.h"
 
 struct RegisterListRequest: public CyphalSubscriber {
-    RegisterListRequest(Cyphal* driver_, CanardPortID port_id_) : CyphalSubscriber(driver_, port_id_) {};
+    explicit RegisterListRequest(Cyphal* driver_) :
+        CyphalSubscriber(driver_, uavcan_register_List_1_0_FIXED_PORT_ID_) {};
     void callback(const CanardRxTransfer& transfer) override;
 private:
-    uint16_t parseRequest(const CanardRxTransfer& transfer);
-    void makeResponse(const CanardRxTransfer& transfer, uint16_t index);
+    ParamIndex_t parseRequest(const CanardRxTransfer& transfer) const;
+    void makeResponse(const CanardRxTransfer& transfer, ParamIndex_t index);
 };
 
 struct RegisterAccessRequest: public CyphalSubscriber {
-    RegisterAccessRequest(Cyphal* driver_, CanardPortID port_id_);
+    explicit RegisterAccessRequest(Cyphal* driver_);
     void callback(const CanardRxTransfer& transfer) override;
 private:
-    uint16_t parseRequest(const CanardRxTransfer& transfer);
-    void makeResponse(const CanardRxTransfer& transfer, int8_t reg_index);
-    void writeParam(int8_t reg_index);
-    void readParam(uavcan_register_Access_Response_1_0& response_msg, int8_t reg_index);
+    ParamIndex_t parseRequest(const CanardRxTransfer& transfer);
+    void makeResponse(const CanardRxTransfer& transfer, ParamIndex_t reg_index);
+    void writeParam(ParamIndex_t reg_index);
+    void readParam(uavcan_register_Access_Response_1_0& response_msg, ParamIndex_t reg_index);
 
     uavcan_register_Access_Request_1_0 _request_msg;
     CanardTransferMetadata _transfer_metadata;

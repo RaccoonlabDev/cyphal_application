@@ -10,8 +10,8 @@
 
 #ifndef PARAMS_HPP_
 #define PARAMS_HPP_
-
-enum class IntParamsIndexes {
+#include "storage.h"
+enum IntParamsIndexes : ParamIndex_t {
     ID,
     BAROMETER_PRESSURE_ID,
     BAROMETER_TEMPERATURE_ID,

@@ -21,15 +21,23 @@ void CyphalPublisher::setPortId(CanardPortID port_id) {
     transfer_metadata.port_id = port_id;
 }
 
-CanardPortID CyphalPublisher::getPortId() {
+CanardPortID CyphalPublisher::getPortId() const {
     return transfer_metadata.port_id;
 }
 
 
-bool CyphalPublisher::isEnabled() {
+bool CyphalPublisher::isEnabled() const {
     constexpr uint16_t MAX_PORT_ID = 8191;
     uint16_t port_id = transfer_metadata.port_id;
     return (port_id == 0 || port_id > MAX_PORT_ID) ? false : true;
+}
+
+int32_t CyphalPublisher::push(size_t payload_size, const uint8_t* payload) {
+    if (!isEnabled()) {
+        return 0;
+    }
+
+    return driver->push(&transfer_metadata, payload_size, payload);
 }
 
 void HeartbeatPublisher::publish(const uavcan_node_Heartbeat_1_0& msg) {
@@ -37,7 +45,7 @@ void HeartbeatPublisher::publish(const uavcan_node_Heartbeat_1_0& msg) {
     size_t buffer_size = uavcan_node_Heartbeat_1_0_EXTENT_BYTES_;
     int32_t result = uavcan_node_Heartbeat_1_0_serialize_(&msg, buffer, &buffer_size);
     if (NUNAVUT_SUCCESS == result) {
-        driver->push(&transfer_metadata, buffer_size, buffer);
+        push(buffer_size, buffer);
     }
 }
 
@@ -78,7 +86,7 @@ void PortListPublisher::publish() {
     size_t buffer_size = uavcan_node_port_List_0_1_EXTENT_BYTES_;
     int32_t result = uavcan_node_port_List_0_1_serialize_(&msg, buffer, &buffer_size);
     if (NUNAVUT_SUCCESS == result) {
-        driver->push(&transfer_metadata, buffer_size, buffer);
+        push(buffer_size, buffer);
     }
 #endif  // PORT_LIST_PUBLISHER
 }
