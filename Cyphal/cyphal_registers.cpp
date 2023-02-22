@@ -105,7 +105,7 @@ void RegisterAccessRequest::readParam(uavcan_register_Access_Response_1_0& respo
         response_msg.value.natural16.value.count = 1;
         response_msg.value._tag_ = NATURAL16_TAG;
         response_msg.value.natural16.value.elements[0] = paramsGetIntegerValue(reg_index);
-    } else if (param_type == PARAM_TYPE_INTEGER) {
+    } else if (param_type == PARAM_TYPE_STRING) {
         response_msg.value._tag_ = STRING_TAG;
         auto str_param = paramsGetStringValue(reg_index);
         auto str_len = strlenSafely((const uint8_t*)str_param, MAX_STRING_LENGTH);
