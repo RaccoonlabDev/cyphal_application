@@ -30,7 +30,7 @@ void RegisterListRequest::makeResponse(const CanardRxTransfer& transfer, ParamIn
     CanardTransferMetadata _transfer_metadata;
     uavcan_register_List_Response_1_0 _response_msg = {};
 
-    if (paramsGetType(index) != CELL_TYPE_UNDEFINED) {
+    if (paramsGetType(index) != PARAM_TYPE_UNDEFINED) {
         auto param_name = (const uint8_t*)(paramsGetParamName(index));
         _response_msg.name.name.count = strlenSafely(param_name, MAX_PARAM_NAME_LENGTH);
         memcpy(_response_msg.name.name.elements, param_name, _response_msg.name.name.count);
@@ -84,12 +84,12 @@ void RegisterAccessRequest::writeParam(ParamIndex_t reg_index) {
         return;
     }
     auto param_type = paramsGetType(reg_index);
-    if (param_type == CELL_TYPE_INTEGER &&
+    if (param_type == PARAM_TYPE_INTEGER &&
             _request_msg.value._tag_ == NATURAL16_TAG &&
             _request_msg.value.natural16.value.count > 0) {
         paramsSetIntegerValue(reg_index,
                               _request_msg.value.natural16.value.elements[0]);
-    } else if (param_type == CELL_TYPE_STRING &&
+    } else if (param_type == PARAM_TYPE_INTEGER &&
             _request_msg.value._tag_ == STRING_TAG &&
             _request_msg.value._string.value.count > 0) {
         paramsSetStringValue(reg_index,
@@ -101,11 +101,11 @@ void RegisterAccessRequest::writeParam(ParamIndex_t reg_index) {
 void RegisterAccessRequest::readParam(uavcan_register_Access_Response_1_0& response_msg, ParamIndex_t reg_index) {
     auto param_type = paramsGetType(reg_index);
 
-    if (param_type == CELL_TYPE_INTEGER) {
+    if (param_type == PARAM_TYPE_INTEGER) {
         response_msg.value.natural16.value.count = 1;
         response_msg.value._tag_ = NATURAL16_TAG;
-        response_msg.value.natural16.value.elements[0] = paramsGetValue(reg_index);
-    } else if (param_type == CELL_TYPE_STRING) {
+        response_msg.value.natural16.value.elements[0] = paramsGetIntegerValue(reg_index);
+    } else if (param_type == PARAM_TYPE_INTEGER) {
         response_msg.value._tag_ = STRING_TAG;
         auto str_param = paramsGetStringValue(reg_index);
         auto str_len = strlenSafely((const uint8_t*)str_param, MAX_STRING_LENGTH);
