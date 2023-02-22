@@ -28,7 +28,7 @@ static uint32_t getCurrentMicroseconds();
 static O1HeapInstance* my_allocator;
 
 int Cyphal::init() {
-    node_id = static_cast<uint8_t>(paramsGetValue(IntParamsIndexes::ID));
+    node_id = static_cast<uint8_t>(paramsGetIntegerValue(IntParamsIndexes::ID));
     if (node_id == 0 || node_id > 126) {
         node_id = 42;
     }
