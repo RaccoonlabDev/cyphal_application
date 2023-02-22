@@ -57,10 +57,10 @@ void PortListPublisher::publish() {
     }
     next_pub_time_ms = crnt_time_ms + 5000;
 
-    static uavcan_node_port_List_0_1 msg{};
-    uavcan_node_port_List_0_1_initialize_(&msg);
-    uavcan_node_port_SubjectIDList_0_1_select_sparse_list_(&msg.publishers);
-    uavcan_node_port_SubjectIDList_0_1_select_sparse_list_(&msg.subscribers);
+    static uavcan_node_port_List_1_0 msg{};
+    uavcan_node_port_List_1_0_initialize_(&msg);
+    uavcan_node_port_SubjectIDList_1_0_select_sparse_list_(&msg.publishers);
+    uavcan_node_port_SubjectIDList_1_0_select_sparse_list_(&msg.subscribers);
 
     uint_fast8_t enabled_pub_amount = 0;
     for (uint_fast8_t pub_idx = 0; pub_idx < CyphalPublisher::publishers_amount; pub_idx++) {
@@ -82,9 +82,9 @@ void PortListPublisher::publish() {
     }
     msg.subscribers.sparse_list.count = enabled_sub_amount;
 
-    static uint8_t buffer[uavcan_node_port_List_0_1_EXTENT_BYTES_];
-    size_t buffer_size = uavcan_node_port_List_0_1_EXTENT_BYTES_;
-    int32_t result = uavcan_node_port_List_0_1_serialize_(&msg, buffer, &buffer_size);
+    static uint8_t buffer[uavcan_node_port_List_1_0_EXTENT_BYTES_];
+    size_t buffer_size = uavcan_node_port_List_1_0_EXTENT_BYTES_;
+    int32_t result = uavcan_node_port_List_1_0_serialize_(&msg, buffer, &buffer_size);
     if (NUNAVUT_SUCCESS == result) {
         push(buffer_size, buffer);
     }

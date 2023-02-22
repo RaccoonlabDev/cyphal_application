@@ -19,7 +19,7 @@
 #include "o1heap.h"
 #include "uavcan/node/GetInfo_1_0.h"
 
-#define HEAP_SIZE           (1024*3)
+#define HEAP_SIZE           (1024*5)
 
 #define CYPHAL_TRANSPORT_INIT_ERROR         2
 #define CYPHAL_HEAP_INIT_ERROR              3

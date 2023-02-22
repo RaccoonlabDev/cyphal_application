@@ -15,7 +15,7 @@
 #include "canard.h"
 #include "uavcan/node/Heartbeat_1_0.h"
 #include "uavcan/node/Health_1_0.h"
-#include "uavcan/node/port/List_0_1.h"
+#include "uavcan/node/port/List_1_0.h"
 
 class Cyphal;
 
@@ -54,7 +54,7 @@ struct HeartbeatPublisher: public CyphalPublisher {
 };
 
 struct PortListPublisher: public CyphalPublisher {
-    explicit PortListPublisher(Cyphal* driver_) : CyphalPublisher(driver_, uavcan_node_port_List_0_1_FIXED_PORT_ID_) {};
+    explicit PortListPublisher(Cyphal* driver_) : CyphalPublisher(driver_, uavcan_node_port_List_1_0_FIXED_PORT_ID_) {};
     void publish();
 #if PORT_LIST_PUBLISHER
 private:
