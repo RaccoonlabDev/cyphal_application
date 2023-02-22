@@ -49,44 +49,60 @@ void HeartbeatPublisher::publish(const uavcan_node_Heartbeat_1_0& msg) {
     }
 }
 
+/**
+ * @brief Optimized version of the default nunavut generated serialization.
+ * Nanuvut requires 10658 bytes: 2192 for msg and 8466 for serialization buffer.
+ * This approach requires only 148 + N*2 bytes where N is number of publishers + subscribers.
+ */
+size_t PortListPublisher::uavcan_node_port_List_1_0_create() {
+    // Clear
+    memset(_port_list_buffer, 0x00, PORT_LIST_BUFFER_SIZE);
+
+    // 1. Fill publishers
+    uint8_t& enabled_pub_amount = _port_list_buffer[5];
+    uint16_t* sparse_list = (uint16_t*)&_port_list_buffer[6];
+    _port_list_buffer[4] = 1;
+
+    enabled_pub_amount = 0;
+    for (uint_fast8_t pub_idx = 0; pub_idx < CyphalPublisher::publishers_amount; pub_idx++) {
+        if (CyphalPublisher::publishers[pub_idx]->isEnabled()) {
+            auto port_id = static_cast<uint16_t>(CyphalPublisher::publishers[pub_idx]->getPortId());
+            sparse_list[pub_idx] = port_id;
+            enabled_pub_amount++;
+        }
+    }
+    _port_list_buffer[0] = 2 + 2 * enabled_pub_amount;
+
+    // 2. Fill subscribers
+    size_t subs_offset = 6 + 2 * enabled_pub_amount;
+    uint8_t& enabled_sub_amount = _port_list_buffer[5 + subs_offset];
+    sparse_list = (uint16_t*)&_port_list_buffer[6 + subs_offset];
+    _port_list_buffer[4 + subs_offset] = 1;
+
+    enabled_sub_amount = 0;
+    for (uint_fast8_t sub_idx = 0; sub_idx < driver->_sub_num; sub_idx++) {
+        if (driver->_sub_info[sub_idx]->isEnabled()) {
+            auto port_id = driver->_sub_info[sub_idx]->port_id;
+            sparse_list[sub_idx] = port_id;
+            enabled_sub_amount++;
+        }
+    }
+    _port_list_buffer[0 + subs_offset] = 2 + 2 * enabled_sub_amount;
+
+    // 3. Fix services
+    _port_list_buffer[12 + (enabled_pub_amount + enabled_sub_amount) * 2] = 64;
+
+    return 148 + (enabled_pub_amount + enabled_sub_amount) * 2;
+}
+
+// #include <iostream>
 void PortListPublisher::publish() {
-#if PORT_LIST_PUBLISHER
     auto crnt_time_ms = HAL_GetTick();
     if (crnt_time_ms < next_pub_time_ms) {
         return;
     }
     next_pub_time_ms = crnt_time_ms + 5000;
 
-    static uavcan_node_port_List_1_0 msg{};
-    uavcan_node_port_List_1_0_initialize_(&msg);
-    uavcan_node_port_SubjectIDList_1_0_select_sparse_list_(&msg.publishers);
-    uavcan_node_port_SubjectIDList_1_0_select_sparse_list_(&msg.subscribers);
-
-    uint_fast8_t enabled_pub_amount = 0;
-    for (uint_fast8_t pub_idx = 0; pub_idx < CyphalPublisher::publishers_amount; pub_idx++) {
-        if (CyphalPublisher::publishers[pub_idx]->isEnabled()) {
-            auto port_id = static_cast<uint16_t>(CyphalPublisher::publishers[pub_idx]->getPortId());
-            msg.publishers.sparse_list.elements[enabled_pub_amount].value = port_id;
-            enabled_pub_amount++;
-        }
-    }
-    msg.publishers.sparse_list.count = enabled_pub_amount;
-
-    uint_fast8_t enabled_sub_amount = 0;
-    for (uint_fast8_t sub_idx = 0; sub_idx < driver->_sub_num; sub_idx++) {
-        if (driver->_sub_info[sub_idx]->isEnabled()) {
-            auto port_id = driver->_sub_info[sub_idx]->port_id;
-            msg.subscribers.sparse_list.elements[enabled_sub_amount].value = port_id;
-            enabled_sub_amount++;
-        }
-    }
-    msg.subscribers.sparse_list.count = enabled_sub_amount;
-
-    static uint8_t buffer[uavcan_node_port_List_1_0_EXTENT_BYTES_];
-    size_t buffer_size = uavcan_node_port_List_1_0_EXTENT_BYTES_;
-    int32_t result = uavcan_node_port_List_1_0_serialize_(&msg, buffer, &buffer_size);
-    if (NUNAVUT_SUCCESS == result) {
-        push(buffer_size, buffer);
-    }
-#endif  // PORT_LIST_PUBLISHER
+    size_t size = uavcan_node_port_List_1_0_create();
+    push(size, _port_list_buffer);
 }

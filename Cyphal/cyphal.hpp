@@ -38,6 +38,7 @@ public:
     int32_t push(CanardTransferMetadata* metadata, size_t payload_size, const uint8_t* payload);
     int8_t subscribe(CyphalSubscriber* sub_info, size_t size, CanardTransferKind kind);
 
+    static constexpr size_t MAX_SUB_NUM = 10;
 private:
     friend PortListPublisher;
     void spinReceivedFrame(const CanardMicrosecond rx_timestamp_usec,
@@ -65,7 +66,6 @@ private:
     RegisterAccessRequest register_access_response;
     ExecuteCommandSubscriber execute_cmd_response;
 
-    static constexpr size_t MAX_SUB_NUM = 10;
     std::array<CyphalSubscriber*, MAX_SUB_NUM> _sub_info;
     size_t _sub_num{0};
 };
