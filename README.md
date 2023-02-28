@@ -39,4 +39,5 @@ add_executable(${EXECUTABLE} ${CYPHAL_SRC})
 ## 3. Usage examples:
 
 - [Mini v2 stm32 node](https://github.com/RaccoonlabDev/mini_v2_node)
-- [ubuntu simple application](tests/ubuntu)
+- [ubuntu minimal application example](tests/ubuntu)
+- [ubuntu publisher example](tests/ubuntu_publisher_example)

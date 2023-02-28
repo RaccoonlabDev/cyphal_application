@@ -7,6 +7,7 @@
 #include "storage.h"
 enum IntParamsIndexes : ParamIndex_t {
     ID,
+    FEEDBACK,
 
     INTEGER_PARAMS_AMOUNT
 };

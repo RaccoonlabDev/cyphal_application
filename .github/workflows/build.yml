@@ -2,7 +2,10 @@ name: build
 
 on: [push]
 jobs:
-  build_cmake:
+  build:
+    strategy:
+      matrix:
+        target: [ubuntu, ubuntu_publisher_example]
     runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:
@@ -19,9 +22,9 @@ jobs:
 
       - run: ./repository/scripts/nnvg_generate_c_headers.sh
       - run: mkdir -p repository/build
-      - run: cd repository/build && cmake ../tests/ubuntu && make -s
+      - run: cd repository/build && cmake ../tests/${{ matrix.target }} && make -s
 
-  build_makefile:
+  makefile_legacy:
     runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:

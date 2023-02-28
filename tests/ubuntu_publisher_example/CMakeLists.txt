@@ -8,6 +8,7 @@ include(../../CMakeLists.txt)
 include_directories(.)
 add_executable(application
     main.cpp
+    application.cpp
     params.cpp
     ${CYPHAL_SRC}
 )
