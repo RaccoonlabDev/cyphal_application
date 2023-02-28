@@ -13,18 +13,6 @@
 #include "storage.h"
 enum IntParamsIndexes : ParamIndex_t {
     ID,
-    BAROMETER_PRESSURE_ID,
-    BAROMETER_TEMPERATURE_ID,
-    CRCT_5V_ID,
-    CRCT_VIN_ID,
-    CRCT_DEVICE_TEMPERATURE_ID,
-    GPS_POINT_ID,
-    GPS_YAW_ID,
-    GPS_SATS_ID,
-    GPS_STATUS_ID,
-    GPS_PDOP_ID,
-    GPS_SELF_TEST,
-    MAGNETOMETER_ID,
 
     INTEGER_PARAMS_AMOUNT
 };

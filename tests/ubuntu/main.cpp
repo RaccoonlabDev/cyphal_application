@@ -13,10 +13,6 @@ uint32_t HAL_GetTick() {
     auto elapsed_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - time_start).count();
     return elapsed_time_ms;
 }
-uint32_t HAL_GetUIDw0() {return 0;}
-uint32_t HAL_GetUIDw1() {return 0;}
-uint32_t HAL_GetUIDw2() {return 0;}
-void HAL_NVIC_SystemReset() {}
 
 int main (int argc, char *argv[]) {
     Cyphal cyphal;
