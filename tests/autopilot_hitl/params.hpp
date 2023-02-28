@@ -18,6 +18,9 @@ enum IntParamsIndexes : ParamIndex_t {
 
     MAGNETOMETER_ID,
 
+    IMU_ACCEL_ID,
+    IMU_GYRO_ID,
+
     INTEGER_PARAMS_AMOUNT
 };
 
