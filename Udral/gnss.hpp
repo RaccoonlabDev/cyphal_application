@@ -2,14 +2,15 @@
 /// Copyright (c) 2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
-#ifndef GNSS_HPP_
-#define GNSS_HPP_
+#ifndef UDRAL_GNSS_HPP_
+#define UDRAL_GNSS_HPP_
 
 #include "cyphal.hpp"
+#include "reg/udral/physics/kinematics/geodetic/PointStateVarTs_0_1.h"
 
 struct GpsPointPublisher: public CyphalPublisher {
     GpsPointPublisher(Cyphal* driver_, uint16_t port_id) : CyphalPublisher(driver_, port_id) {}
-    void publish();
+    void publish(const reg_udral_physics_kinematics_geodetic_PointStateVarTs_0_1& msg);
 };
 
 struct Int16Publisher: public CyphalPublisher {
@@ -17,4 +18,4 @@ struct Int16Publisher: public CyphalPublisher {
     void publish(uint16_t value);
 };
 
-#endif  // GNSS_HPP_
+#endif  // UDRAL_GNSS_HPP_

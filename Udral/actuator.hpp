@@ -2,8 +2,8 @@
 /// Copyright (c) 2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
-#ifndef ACTUATOR_HPP_
-#define ACTUATOR_HPP_
+#ifndef UDRAL_ACTUATOR_HPP_
+#define UDRAL_ACTUATOR_HPP_
 
 #include "cyphal.hpp"
 #include "reg/udral/service/actuator/common/sp/Scalar_0_1.h"
@@ -26,4 +26,4 @@ public:
     reg_udral_service_common_Readiness_0_1 msg = {};
 };
 
-#endif  // ACTUATOR_HPP_
+#endif  // UDRAL_ACTUATOR_HPP_

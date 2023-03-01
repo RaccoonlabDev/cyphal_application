@@ -2,8 +2,8 @@
 /// Copyright (c) 2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
-#ifndef MAGNETOMETER_HPP_
-#define MAGNETOMETER_HPP_
+#ifndef UDRAL_MAGNETOMETER_HPP_
+#define UDRAL_MAGNETOMETER_HPP_
 
 #include "cyphal.hpp"
 #include "uavcan/si/sample/magnetic_field_strength/Vector3_1_0.h"
@@ -13,4 +13,4 @@ struct MagneticFieldPublisher: public CyphalPublisher {
     void publish(const uavcan_si_sample_magnetic_field_strength_Vector3_1_0& msg);
 };
 
-#endif  // MAGNETOMETER_HPP_
+#endif  // UDRAL_MAGNETOMETER_HPP_

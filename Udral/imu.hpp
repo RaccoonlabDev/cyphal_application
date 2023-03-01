@@ -2,8 +2,8 @@
 /// Copyright (c) 2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
-#ifndef IMU_HPP_
-#define IMU_HPP_
+#ifndef UDRAL_IMU_HPP_
+#define UDRAL_IMU_HPP_
 
 #include "cyphal.hpp"
 #include "uavcan/si/sample/angular_velocity/Vector3_1_0.h"
@@ -19,4 +19,4 @@ struct ImuGyroPublisher: public CyphalPublisher {
     void publish(const uavcan_si_sample_angular_velocity_Vector3_1_0& msg);
 };
 
-#endif  // IMU_HPP_
+#endif  // UDRAL_IMU_HPP_

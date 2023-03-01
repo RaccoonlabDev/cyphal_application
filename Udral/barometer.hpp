@@ -2,8 +2,8 @@
 /// Copyright (c) 2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
-#ifndef BAROMETER_HPP_
-#define BAROMETER_HPP_
+#ifndef UDRAL_BAROMETER_HPP_
+#define UDRAL_BAROMETER_HPP_
 
 #include "cyphal.hpp"
 #include "uavcan/si/sample/pressure/Scalar_1_0.h"
@@ -19,4 +19,4 @@ struct BaroTemperaturePublisher: public CyphalPublisher {
     void publish(const uavcan_si_sample_temperature_Scalar_1_0& msg);
 };
 
-#endif  // BAROMETER_HPP_
+#endif  // UDRAL_BAROMETER_HPP_
