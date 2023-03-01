@@ -9,6 +9,9 @@
 IntegerDesc_t integer_desc_pool[] = {
     {(uint8_t*)"id", 120, 120, 120},
 
+    {(uint8_t*)"uavcan.sub.setpoint.id",    2000, 2000, 2000},
+    {(uint8_t*)"uavcan.sub.readiness.id",   2001, 2001, 2001},
+
     {(uint8_t*)"uavcan.pub.baro.press.id",  2020, 2020, 2020},
     {(uint8_t*)"uavcan.pub.baro.temp.id",   2021, 2021, 2021},
 
@@ -26,6 +29,9 @@ IntegerParamValue_t integer_values_pool[sizeof(integer_desc_pool) / sizeof(Integ
 
 StringDesc_t string_desc_pool[NUM_OF_STR_PARAMS] = {
     {(uint8_t*)"name", "", false},
+
+    {(uint8_t*)"uavcan.sub.setpoint.type",      "reg.udral.service.actuator.common.sp.Vector4", true},
+    {(uint8_t*)"uavcan.sub.readiness.type",     "reg.udral.service.common.Readiness", true},
 
     {(uint8_t*)"uavcan.pub.baro.press.type",    "uavcan.si.sample.pressure.Scalar", true},
     {(uint8_t*)"uavcan.pub.baro.temp.type",     "uavcan.si.sample.temperature.Scalar", true},
