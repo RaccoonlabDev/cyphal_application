@@ -27,6 +27,10 @@ void SetpointSubscriber::callback(const CanardRxTransfer& transfer) {
     reg_udral_service_actuator_common_sp_Vector4_0_1_deserialize_(&msg, payload, &payload_len);
 }
 
+const reg_udral_service_actuator_common_sp_Vector4_0_1& SetpointSubscriber::get_setpoint() const {
+    return msg;
+}
+
 ReadinessSubscriber::ReadinessSubscriber(Cyphal* driver_) :
     CyphalSubscriber(driver_, 0) {
 }

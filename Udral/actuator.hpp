@@ -10,19 +10,20 @@
 #include "reg/udral/service/actuator/common/sp/Vector4_0_1.h"
 #include "reg/udral/service/common/Readiness_0_1.h"
 
-class SetpointSubscriber: public CyphalSubscriber {
-public:
+struct SetpointSubscriber: public CyphalSubscriber {
     SetpointSubscriber(Cyphal* driver);
     int8_t init();
     void callback(const CanardRxTransfer& transfer) override;
+    const reg_udral_service_actuator_common_sp_Vector4_0_1& get_setpoint() const;
+private:
     reg_udral_service_actuator_common_sp_Vector4_0_1 msg = {};
 };
 
-class ReadinessSubscriber: public CyphalSubscriber {
-public:
+struct ReadinessSubscriber: public CyphalSubscriber {
     ReadinessSubscriber(Cyphal* driver_);
     int8_t init();
     void callback(const CanardRxTransfer& transfer) override;
+private:
     reg_udral_service_common_Readiness_0_1 msg = {};
 };
 
