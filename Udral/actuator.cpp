@@ -25,10 +25,15 @@ void SetpointSubscriber::callback(const CanardRxTransfer& transfer) {
     const uint8_t* payload = static_cast<const uint8_t*>(transfer.payload);
     size_t payload_len = transfer.payload_size;
     reg_udral_service_actuator_common_sp_Vector4_0_1_deserialize_(&msg, payload, &payload_len);
+    _recv_counter++;
 }
 
 const reg_udral_service_actuator_common_sp_Vector4_0_1& SetpointSubscriber::get_setpoint() const {
     return msg;
+}
+
+uint32_t SetpointSubscriber::get_recv_counter() const {
+    return _recv_counter;
 }
 
 ReadinessSubscriber::ReadinessSubscriber(Cyphal* driver_) :

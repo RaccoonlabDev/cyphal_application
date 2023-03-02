@@ -30,10 +30,14 @@ git submodule update --init --recursive
 In your application's cmake file specify the target, include this CMakeLists.txt and add source code to the executable:
 
 ```cmake
-set(PLATFORM bxcan) # either bxcan or fdcan or socketcan
+# 1. select either bxcan or fdcan or socketcan
+set(PLATFORM bxcan)
+
+# 2. include CMakeLists.txt
 include(<path_to_this_repo>/Cyphal/CMakeLists.txt)
 
-add_executable(${EXECUTABLE} ${CYPHAL_SRC})
+# 3. add ${CYPHAL_SRC} to our source files
+add_executable(<executable_name> ${CYPHAL_SRC})
 ```
 
 ## 3. Usage examples:

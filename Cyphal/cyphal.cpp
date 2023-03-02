@@ -55,8 +55,13 @@ int Cyphal::init() {
 
 void Cyphal::process() {
     // 1. spin recv
-    if (CanardFrame rx_frame; transport.receive(&rx_frame)) {
-        spinReceivedFrame(HAL_GetTick() * 1000, &rx_frame);
+    const uint_fast8_t CAN_RX_BUF_SIZE = 4;
+    for (uint_fast8_t rx_frame_idx = 0; rx_frame_idx < CAN_RX_BUF_SIZE; rx_frame_idx++) {
+        if (CanardFrame rx_frame; transport.receive(&rx_frame)) {
+            spinReceivedFrame(HAL_GetTick() * 1000, &rx_frame);
+        } else {
+            break;
+        }
     }
 
     // 2. spin application
