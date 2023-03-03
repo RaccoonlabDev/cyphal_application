@@ -41,6 +41,7 @@ INC += -I${NUNAVUT_BUILD_DIR} -I${BUILD_SRC_DIR}
 
 # Tests
 INC += -I${UBUNTU_TESTS_ABS_DIR}
+INC += -I${TESTS_DIR}
 
 # # user params
 # CXX+=${REPOSITORY_DIR}/tests/params.c

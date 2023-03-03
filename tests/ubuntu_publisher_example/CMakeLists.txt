@@ -6,6 +6,7 @@ set(PLATFORM socketcan)
 include(../../CMakeLists.txt)
 
 include_directories(.)
+include_directories(..)
 add_executable(application
     main.cpp
     application.cpp
