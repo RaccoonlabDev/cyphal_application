@@ -17,6 +17,7 @@ add_executable(application
     ../../Udral/imu.cpp
 
     main.cpp
+    ap_json.cpp
     hitl_application.cpp
     params.cpp
     ${CYPHAL_SRC}
