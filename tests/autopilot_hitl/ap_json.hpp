@@ -26,6 +26,7 @@ public:
     bool send_servo(const std::array<uint16_t, 16>& servo_pwm);
     bool receive_sensors();
 
+    double timestamp;
     std::array<double, 3> gyro = {0, 0, 0};
     std::array<double, 3> accel = {0, 0, 0};
     std::array<double, 3> position = {0, 0, 0};

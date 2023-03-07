@@ -35,6 +35,7 @@ public:
 
     uint32_t get_servo_pwm(std::array<uint16_t, 16>& servo_pwm);
     void clear_servo_pwm_counter();
+    void set_time_factor(double time_factor);
 private:
     Cyphal cyphal;
 
@@ -55,6 +56,7 @@ private:
     ImuGyroPublisher gyro;
 
     std::array<double, 3> home;
+    double _time_factor{1.0};
 };
 
 #endif  // HITL_APPLICATION_HPP_

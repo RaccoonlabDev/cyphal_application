@@ -3,6 +3,7 @@
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
 #include "hitl_application.hpp"
+#include <algorithm>
 #include <iostream>
 #include <chrono>
 #include "main.h"
@@ -55,9 +56,9 @@ void HitlApplication::process(const std::array<double, 3>& local_position,
         gps_point_msg.value.position.value.longitude = (home[1] + 0.000011015 * local_position[1]) * 0.017453293;
         gps_point_msg.value.position.value.altitude.meter = home[2] - local_position[2];
 
-        gps_point_msg.value.velocity.value.meter_per_second[0] = linear_vel[0];
-        gps_point_msg.value.velocity.value.meter_per_second[1] = linear_vel[1];
-        gps_point_msg.value.velocity.value.meter_per_second[2] = linear_vel[2];
+        gps_point_msg.value.velocity.value.meter_per_second[0] = linear_vel[0] * _time_factor;
+        gps_point_msg.value.velocity.value.meter_per_second[1] = linear_vel[1] * _time_factor;
+        gps_point_msg.value.velocity.value.meter_per_second[2] = linear_vel[2] * _time_factor;
         gps_point.publish(gps_point_msg);
         gps_sats.publish(10);
         gps_status.publish(3);
@@ -91,9 +92,9 @@ void HitlApplication::process(const std::array<double, 3>& local_position,
         accel.publish(accel_msg);
 
         uavcan_si_sample_angular_velocity_Vector3_1_0 gyro_msg;
-        gyro_msg.radian_per_second[0] = ang_vel[0];
-        gyro_msg.radian_per_second[1] = ang_vel[1];
-        gyro_msg.radian_per_second[2] = ang_vel[2];
+        gyro_msg.radian_per_second[0] = ang_vel[0] * _time_factor;
+        gyro_msg.radian_per_second[1] = ang_vel[1] * _time_factor;
+        gyro_msg.radian_per_second[2] = ang_vel[2] * _time_factor;
         gyro.publish(gyro_msg);
     }
 
@@ -115,4 +116,8 @@ uint32_t HitlApplication::get_servo_pwm(std::array<uint16_t, 16>& servo_pwm) {
 
 void HitlApplication::clear_servo_pwm_counter() {
     setpoint.clear_recv_counter();
+}
+
+void HitlApplication::set_time_factor(double time_factor) {
+    _time_factor = std::clamp(time_factor, 0.7, 1.0);
 }

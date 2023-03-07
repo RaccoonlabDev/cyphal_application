@@ -5,6 +5,7 @@
 #ifndef UBUNTU_MAIN_H_
 #define UBUNTU_MAIN_H_
 
+#include <stdint.h>
 
 uint32_t HAL_GetTick();
 uint32_t HAL_GetUIDw0();

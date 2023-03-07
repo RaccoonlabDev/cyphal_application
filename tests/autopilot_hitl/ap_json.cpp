@@ -76,6 +76,7 @@ bool ArdupilotJson::parse_json(const char* buffer, int size) {
 
     std::string str(buffer);
 
+    int timestamp_first_char_idx = str.find("timestamp");
     int gyro_first_char_idx = str.find("gyro");
     int accel_first_char_idx = str.find("accel_body", gyro_first_char_idx);
     int position_first_char_idx = str.find("position", accel_first_char_idx);
@@ -84,6 +85,9 @@ bool ArdupilotJson::parse_json(const char* buffer, int size) {
 
     std::vector<double> vector_3d = {0, 0, 0};
     std::vector<double> vector_4d = {0, 0, 0, 0};
+
+    auto ts_string = str.substr(timestamp_first_char_idx+11, gyro_first_char_idx - 20 - timestamp_first_char_idx);
+    timestamp = std::stof(ts_string);
 
     if (!parse_json_list(str, gyro_first_char_idx + 6, accel_first_char_idx - 3, vector_3d)) {
         std::cout << "skip gyro" << std::endl;
@@ -109,13 +113,6 @@ bool ArdupilotJson::parse_json(const char* buffer, int size) {
         std::cout << "skip velocity" << std::endl;
     }
     std::copy_n(vector_3d.begin(), 3, velocity.begin());
-
-    gyro[0] *= 0.8;
-    gyro[1] *= 0.8;
-    gyro[2] *= 0.8;
-    velocity[0] *= 0.8;
-    velocity[1] *= 0.8;
-    velocity[2] *= 0.8;
 
     return true;
 }
