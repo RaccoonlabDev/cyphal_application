@@ -34,6 +34,7 @@ public:
                  const uavcan_si_sample_magnetic_field_strength_Vector3_1_0& magnetic_field);
 
     uint32_t get_servo_pwm(std::array<uint16_t, 16>& servo_pwm);
+    void clear_servo_pwm_counter();
 private:
     Cyphal cyphal;
 

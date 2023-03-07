@@ -47,20 +47,30 @@ bool ArdupilotJson::send_servo(const std::array<uint16_t, 16>& servo_pwm) {
 bool ArdupilotJson::receive_sensors() {
     char buffer[1024];
     int buffer_size = read(_client_fd, buffer, 1024);
+    if (buffer_size < 0) {
+        return false;
+    }
+
     _servo_pkt.frame_count++;
     buffer[buffer_size] = 0;
     parse_json(buffer, buffer_size);
+
+
+    Vector3 initial_mag{232, 52, -528};
+    rotate_vector_by_quaternion(initial_mag, quaternion, mag);
+
     return true;
 }
 
+// Example:
 // {"timestamp":1131.743,
 // "imu":{"gyro":[1.138086090003379e-17,-9.26007201697338e-18,-1.7638184005081048e-18],
 // "accel_body":[3.1950471578911405e-15,-0.0000033948200292251887,-9.800000002272988]},
 // "position":[-5.123849296223462e-19,-6.754994481824757e-8,-0.19499986873364534],
 // "quaternion":[1.0,1.5628551970229893e-18,-4.2277906432607347e-19,2.0098806949291254e-19],
 // "velocity":[-3.2982527747048776e-18,-3.370127907671133e-13,-9.728853853536417e-7]}
-bool ArdupilotJson::parse_json(const char* buffer, size_t size) {
-    if (buffer == nullptr || size == 0) {
+bool ArdupilotJson::parse_json(const char* buffer, int size) {
+    if (buffer == nullptr || size <= 0) {
         return false;
     }
 
@@ -75,34 +85,50 @@ bool ArdupilotJson::parse_json(const char* buffer, size_t size) {
     std::vector<double> vector_3d = {0, 0, 0};
     std::vector<double> vector_4d = {0, 0, 0, 0};
 
-    parse_json_list(str, gyro_first_char_idx + 6,           accel_first_char_idx - 3,       vector_3d);
+    if (!parse_json_list(str, gyro_first_char_idx + 6, accel_first_char_idx - 3, vector_3d)) {
+        std::cout << "skip gyro" << std::endl;
+    }
     std::copy_n(vector_3d.begin(), 3, gyro.begin());
 
-    parse_json_list(str, accel_first_char_idx + 12,         position_first_char_idx - 4,    vector_3d);
+    if (!parse_json_list(str, accel_first_char_idx + 12, position_first_char_idx - 4, vector_3d)) {
+        std::cout << "skip accel" << std::endl;
+    }
     std::copy_n(vector_3d.begin(), 3, accel.begin());
 
-    parse_json_list(str, position_first_char_idx + 10,      quaternion_first_char_idx - 3,  vector_3d);
+    if (!parse_json_list(str, position_first_char_idx + 10, quaternion_first_char_idx - 3, vector_3d)) {
+        std::cout << "skip position" << std::endl;
+    }
     std::copy_n(vector_3d.begin(), 3, position.begin());
 
-    parse_json_list(str, quaternion_first_char_idx + 12,    velocity_first_char_idx - 3,    vector_4d);
+    if (!parse_json_list(str, quaternion_first_char_idx + 12, velocity_first_char_idx - 3, vector_4d)) {
+        std::cout << "skip quaternion" << std::endl;
+    }
     std::copy_n(vector_4d.begin(), 4, quaternion.begin());
 
-    parse_json_list(str, velocity_first_char_idx + 10,      size - 3,                       vector_3d);
+    if (!parse_json_list(str, velocity_first_char_idx + 10, size - 3, vector_3d)) {
+        std::cout << "skip velocity" << std::endl;
+    }
     std::copy_n(vector_3d.begin(), 3, velocity.begin());
+
+    gyro[0] *= 0.8;
+    gyro[1] *= 0.8;
+    gyro[2] *= 0.8;
+    velocity[0] *= 0.8;
+    velocity[1] *= 0.8;
+    velocity[2] *= 0.8;
 
     return true;
 }
 
 // 3d example: "[-5.123849296223462e-19,-6.754994481824757e-8,-0.19499986873364534]"
 // 4d example: "[1.0,1.5628551970229893e-18,-4.2277906432607347e-19,2.0098806949291254e-19]"
-void ArdupilotJson::parse_json_list(const std::string& str,
+bool ArdupilotJson::parse_json_list(const std::string& str,
                                     size_t first_idx,
                                     size_t last_idx,
                                     std::vector<double>& numbers) const {
     // std::cout << str.substr(first_idx, last_idx - first_idx + 1) << std::endl;
     if (str[first_idx] != '[' || str[last_idx] != ']' ) {
-        std::cout << "skip" << std::endl;
-        return;
+        return false;
     }
 
     first_idx++;
@@ -122,5 +148,35 @@ void ArdupilotJson::parse_json_list(const std::string& str,
 
     for (size_t number_idx = 0; number_idx < VECTOR_SIZE; number_idx++) {
         numbers[number_idx] = std::stof(str_numbers[number_idx]);
+    }
+
+    return true;
+}
+
+double dot(const Vector3& u, const Vector3& v) {
+    return u[0] * v[0] + u[1] * v[1] + u[2] * v[2];
+}
+
+Vector3 cross(const Vector3& u, const Vector3& v) {
+    return Vector3{
+        u[1] * v[2] - u[2] * v[1],
+        -(u[0] * v[2] - u[2] * v[0]),
+        u[0] * v[1] - u[1] * v[0]
+    };
+}
+Quaternion inverse_quaternion(const Quaternion& q) {
+	return Quaternion{q[0], -1.0 * q[0], -1.0 * q[1], -1.0 * q[2]};
+}
+
+// https://gamedev.stackexchange.com/questions/28395/rotating-vector3-by-a-quaternion
+void rotate_vector_by_quaternion(const Vector3& v, const Quaternion& q, Vector3& res) {
+    Vector3 u{-1.0 * q[1], -1.0 * q[2], -1.0 * q[3]};
+
+    auto dot_u_v = dot(u, v);
+    auto dot_u_u = dot(u, u);
+    auto cross_u_v = cross(u, v);
+
+    for(size_t idx = 0; idx < 3; idx++) {
+        res[idx] = 2.0f * dot_u_v * u[idx] + (q[0]*q[0] - dot_u_u) * v[idx] + 2.0f * q[0] * cross_u_v[idx];
     }
 }

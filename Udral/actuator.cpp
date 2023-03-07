@@ -36,6 +36,11 @@ uint32_t SetpointSubscriber::get_recv_counter() const {
     return _recv_counter;
 }
 
+void SetpointSubscriber::clear_recv_counter() {
+    _recv_counter = 0;
+}
+
+
 ReadinessSubscriber::ReadinessSubscriber(Cyphal* driver_) :
     CyphalSubscriber(driver_, 0) {
 }

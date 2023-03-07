@@ -16,6 +16,7 @@ struct SetpointSubscriber: public CyphalSubscriber {
     void callback(const CanardRxTransfer& transfer) override;
     const reg_udral_service_actuator_common_sp_Vector4_0_1& get_setpoint() const;
     uint32_t get_recv_counter() const;
+    void clear_recv_counter();
 private:
     reg_udral_service_actuator_common_sp_Vector4_0_1 msg = {};
     uint32_t _recv_counter{0};

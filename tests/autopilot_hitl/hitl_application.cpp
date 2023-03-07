@@ -22,7 +22,7 @@ int HitlApplication::init(double home_lat, double home_lon, double home_alt) {
     paramsLoadFromFlash();
     int init_res = cyphal.init();
     if (init_res < 0) {
-        std::cout << "Error: " << init_res << std::endl;
+        std::cout << "Cyphal Initialization Error: " << init_res << std::endl;
         return -1;
     }
 
@@ -65,9 +65,9 @@ void HitlApplication::process(const std::array<double, 3>& local_position,
 
         static float baro_noise = 0;
         baro_noise = (int)(baro_noise + 1) % 10;
-        uavcan_si_sample_pressure_Scalar_1_0 pressure{
-            .pascal = 94500 + (float)(11.3*local_position[2]) + 0.02f * baro_noise
-        };
+        uavcan_si_sample_pressure_Scalar_1_0 pressure;
+        pressure.timestamp.microsecond = HAL_GetTick() * 1000;
+        pressure.pascal = 94500 + (float)(11.3*local_position[2]) + 0.02f * baro_noise;
         baro_pressure.publish(pressure);
 
         uavcan_si_sample_temperature_Scalar_1_0 temperature{.kelvin = 312.0};
@@ -111,4 +111,8 @@ uint32_t HitlApplication::get_servo_pwm(std::array<uint16_t, 16>& servo_pwm) {
     }
 
     return setpoint.get_recv_counter();
+}
+
+void HitlApplication::clear_servo_pwm_counter() {
+    setpoint.clear_recv_counter();
 }
