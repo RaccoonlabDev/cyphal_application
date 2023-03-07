@@ -27,7 +27,6 @@ int main() {
     std::array<uint16_t, 16> servo_pwm;
     uint32_t json_sensors_recv_counter = 0;
     uint32_t last_hint_time_ms = 0;
-    uint32_t process_counter = 0;
     double prev_ts = 0.0;
 
     ap_json.send_servo(servo_pwm);
@@ -39,7 +38,6 @@ int main() {
                             ap_json.accel,
                             ap_json.quaternion,
                             ap_json.gyro);
-        process_counter++;
 
         uint32_t cyphal_servo_recv_counter = cyphal_hitl.get_servo_pwm(servo_pwm);
         ap_json.send_servo(servo_pwm);
@@ -52,13 +50,12 @@ int main() {
             last_hint_time_ms = crnt_time_ms;
             double time_factor = std::clamp(ap_json.timestamp - prev_ts, 0.7, 1.0);
             std::cout << "Status: "
-                      << "time_factor = " << (int)(100 * time_factor) << "%, "
-                      << cyphal_servo_recv_counter << " and "
-                      << json_sensors_recv_counter << " / "
-                      << process_counter << ". " << std::endl;
+                      << "gz time factor = " << (int)(100 * time_factor) << "%, "
+                      << "cyphal input = " << (int)(0.5 * cyphal_servo_recv_counter) << "%, "
+                      << "json input = " << (int)(0.1 * json_sensors_recv_counter) << "%."
+                      << std::endl;
             cyphal_hitl.clear_servo_pwm_counter();
             json_sensors_recv_counter = 0;
-            process_counter = 0;
             prev_ts = ap_json.timestamp;
         }
     }
