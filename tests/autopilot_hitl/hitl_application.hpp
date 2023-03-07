@@ -30,8 +30,7 @@ public:
                  const std::array<double, 3>& linear_vel,
                  const std::array<double, 3>& linear_accel,
                  const std::array<double, 4>& orientation_wxyz,
-                 const std::array<double, 3>& ang_vel,
-                 const uavcan_si_sample_magnetic_field_strength_Vector3_1_0& magnetic_field);
+                 const std::array<double, 3>& ang_vel);
 
     uint32_t get_servo_pwm(std::array<uint16_t, 16>& servo_pwm);
     void clear_servo_pwm_counter();

@@ -25,6 +25,7 @@ add_executable(application
     ../../Udral/imu.cpp
 
     main.cpp
+    math.cpp
     ap_json.cpp
     hitl_application.cpp
     params.cpp

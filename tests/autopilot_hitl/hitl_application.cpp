@@ -9,6 +9,7 @@
 #include "main.h"
 #include "params.hpp"
 #include "string_params.hpp"
+#include "math.hpp"
 
 uint32_t HAL_GetTick() {
     static auto time_start = std::chrono::steady_clock::now();
@@ -41,8 +42,7 @@ void HitlApplication::process(const std::array<double, 3>& local_position,
                               const std::array<double, 3>& linear_vel,
                               const std::array<double, 3>& linear_accel,
                               const std::array<double, 4>& orientation_wxyz,
-                              const std::array<double, 3>& ang_vel,
-                              const uavcan_si_sample_magnetic_field_strength_Vector3_1_0& magnetic_field) {
+                              const std::array<double, 3>& ang_vel) {
     uint32_t crnt_time_ms = HAL_GetTick();
     cyphal.process();
 
@@ -77,6 +77,14 @@ void HitlApplication::process(const std::array<double, 3>& local_position,
 
     static uint32_t pub_50_hz_prev_time_ms = 1000;
     if (crnt_time_ms >= pub_50_hz_prev_time_ms + 20) {
+        const Vector3 initial_mag{232, 52, -528};
+        Vector3 mag_rotated;
+        rotate_vector_by_quaternion(initial_mag, orientation_wxyz, mag_rotated);
+        uavcan_si_sample_magnetic_field_strength_Vector3_1_0 magnetic_field;
+        magnetic_field.tesla[0] = 1e-07 * mag_rotated[0];
+        magnetic_field.tesla[1] = 1e-07 * mag_rotated[1];
+        magnetic_field.tesla[2] = 1e-07 * mag_rotated[2];
+
         pub_50_hz_prev_time_ms = crnt_time_ms;
         magnetometer.publish(magnetic_field);
     }

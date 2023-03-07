@@ -24,13 +24,7 @@ int main() {
     }
     std::cout << "Hello, HITL." << std::endl;
 
-    uavcan_si_sample_magnetic_field_strength_Vector3_1_0 mag_tesla;
-    mag_tesla.tesla[0] = 1e-07 * 232;
-    mag_tesla.tesla[1] = 1e-07 * 52;
-    mag_tesla.tesla[2] = 1e-07 * (-528);
-
     std::array<uint16_t, 16> servo_pwm;
-
     uint32_t json_sensors_recv_counter = 0;
     uint32_t last_hint_time_ms = 0;
     uint32_t process_counter = 0;
@@ -44,17 +38,13 @@ int main() {
                             ap_json.velocity,
                             ap_json.accel,
                             ap_json.quaternion,
-                            ap_json.gyro,
-                            mag_tesla);
+                            ap_json.gyro);
         process_counter++;
 
         uint32_t cyphal_servo_recv_counter = cyphal_hitl.get_servo_pwm(servo_pwm);
         ap_json.send_servo(servo_pwm);
 
         if (ap_json.receive_sensors()) {
-            mag_tesla.tesla[0] = 1e-07 * ap_json.mag[0];
-            mag_tesla.tesla[1] = 1e-07 * ap_json.mag[1];
-            mag_tesla.tesla[2] = 1e-07 * ap_json.mag[2];
             json_sensors_recv_counter++;
         };
 
