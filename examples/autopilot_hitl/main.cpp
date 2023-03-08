@@ -12,9 +12,14 @@
 #include "hitl_application.hpp"
 #include "ap_json.hpp"
 
+static void print_log_info_periodically(uint32_t& json_sensors_recv_counter,
+                                        uint32_t cyphal_servo_recv_counter,
+                                        double crnt_ts,
+                                        HitlApplication& cyphal_hitl);
+
 int main() {
-    ArdupilotJson ap_json;
-    ap_json.init();
+    ArdupilotJson ap;
+    ap.init();
 
     HitlApplication cyphal_hitl;
     int init_res = cyphal_hitl.init(-35.3632621, +149.1652374, 584.19);
@@ -26,37 +31,62 @@ int main() {
 
     std::array<uint16_t, 16> servo_pwm;
     uint32_t json_sensors_recv_counter = 0;
-    uint32_t last_hint_time_ms = 0;
-    double prev_ts = 0.0;
 
-    ap_json.send_servo(servo_pwm);
+    ap.send_servo(servo_pwm);
 
     while(true) {
-        uint32_t crnt_time_ms = HAL_GetTick();
-        cyphal_hitl.process(ap_json.position,
-                            ap_json.velocity,
-                            ap_json.accel,
-                            ap_json.quaternion,
-                            ap_json.gyro);
+        cyphal_hitl.process(ap.position, ap.velocity, ap.accel, ap.quaternion, ap.gyro);
 
         uint32_t cyphal_servo_recv_counter = cyphal_hitl.get_servo_pwm(servo_pwm);
-        ap_json.send_servo(servo_pwm);
+        ap.send_servo(servo_pwm);
 
-        if (ap_json.receive_sensors()) {
+        if (ap.receive_sensors()) {
             json_sensors_recv_counter++;
         };
 
-        if (crnt_time_ms > last_hint_time_ms + 1000) {
-            last_hint_time_ms = crnt_time_ms;
-            double time_factor = std::clamp(ap_json.timestamp - prev_ts, 0.7, 1.0);
-            std::cout << "Status: "
-                      << "gz time factor = " << (int)(100 * time_factor) << "%, "
-                      << "cyphal input = " << (int)(0.5 * cyphal_servo_recv_counter) << "%, "
-                      << "json input = " << (int)(0.1 * json_sensors_recv_counter) << "%."
-                      << std::endl;
-            cyphal_hitl.clear_servo_pwm_counter();
-            json_sensors_recv_counter = 0;
-            prev_ts = ap_json.timestamp;
-        }
+        print_log_info_periodically(json_sensors_recv_counter,
+                                    cyphal_servo_recv_counter,
+                                    ap.timestamp,
+                                    cyphal_hitl);
     }
+}
+
+void print_log_info_periodically(uint32_t& json_sensors_recv_counter,
+                                 uint32_t cyphal_servo_recv_counter,
+                                 double crnt_ts,
+                                 HitlApplication& cyphal_hitl) {
+    uint32_t crnt_time_ms = HAL_GetTick();
+    static uint32_t last_hint_time_ms = 0;
+    if (crnt_time_ms < last_hint_time_ms + 1000) {
+        return;
+    }
+    last_hint_time_ms = crnt_time_ms;
+
+    static double prev_ts = 0.0;
+    double time_factor = std::clamp(crnt_ts - prev_ts, 0.5, 2.0);
+    std::cout << "Status: "
+              << "gz time factor = " << (int)(100 * time_factor) << "%, "
+              << "cyphal input = " << (int)(0.5 * cyphal_servo_recv_counter) << "%, "
+              << "json input = " << (int)(0.1 * json_sensors_recv_counter) << "%."
+              << std::endl;
+
+    if (time_factor < 0.8 || time_factor > 1.1) {
+        std::cout << "\033[1;31m"
+                  << "Gazebo time factor should be ~ 1.0. "
+                  << "Now it is not enough for a stable flight. "
+                  << "Try headless-rendering for gazebo."
+                  << "\033[0m\n";
+    }
+
+    if (cyphal_servo_recv_counter < 180) {
+        std::cout << "\033[1;31m"
+                  << "Setpoint rate should be ~200 Hz. "
+                  << "Don't you have a problem with transport layer?"
+                  << "\033[0m\n";
+    }
+
+    cyphal_hitl.clear_servo_pwm_counter();
+    cyphal_hitl.set_time_factor(time_factor);
+    json_sensors_recv_counter = 0;
+    prev_ts = crnt_ts;
 }
