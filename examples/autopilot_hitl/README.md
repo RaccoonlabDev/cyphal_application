@@ -1,21 +1,46 @@
 # Ardupilot HITL
 
-## 1. Usage
+## 1. Prerequisites
 
-1. Run gazebo simulator
+Hardware:
+
+- ArduPilot compatible autopilot with at least 2 MB flash memory and CAN bus
+- CAN-sniffer
+
+Software:
+
+- QGC or any other ground control station software,
+- Cyphal related utilies such as Yukon, Yakut, nunavut, etc
+
+## 2. Usage
+
+1. Install Gazebo Garden and the ArduPilot Gazebo plugin according to [the official ArduPilot instructions](https://ardupilot.org/dev/docs/sitl-with-gazebo.html#sitl-with-gazebo) and run Gazebo Simulator
 
 ```bash
 gz sim -v4 -r -s --headless-rendering iris_runway.sdf
 ```
 
+> It is recommended to use the headless mode because the simulator is very real-time sensitive.
+
 2. Connect CAN-sniffer to PC and create SLCAN
+
+An example of how you can create SLCAN:
+
+```bash
+source scripts/init.sh
+```
 
 3. Build and Run Cyphal HITL application
 
 ```bash
-# Build once
+# Clone with submodules
 git clone git@github.com:RaccoonlabDev/libcanard_cyphal_application.git --recursive
 cd libcanard_cyphal_application
+
+# Generate DSDL
+./scripts/nnvg_generate_c_headers.sh
+
+# Build
 mkdir -p build/hitl
 cd build/hitl
 cmake ../../examples/autopilot_hitl && make
@@ -26,11 +51,23 @@ cmake ../../examples/autopilot_hitl && make
 
 4. Connect an autopilot with PC and sniffer
 
-5. Fly when it is ready to fly
+> It is expected that your firmware is based on custom branch [cyphal-hitl](https://github.com/PonomarevDA/ardupilot/tree/cyphal-hitl)
 
-## 2. How does it work?
+In result your connection scheme might be as follows:
 
-## 2.1. Actuator command flow
+![](https://github.com/RaccoonlabDev/innopolis_vtol_dynamics/blob/master/docs/img/sniffer_connection.png?raw=true)
+
+> At the time of writing, only CAN1 is supported.
+
+5. Configure autopilot and reboot
+
+> A configuration script will appear here soon
+
+6. Wait until you get a message `EKF3 IMU0 is using GPS` and then fly
+
+## 3. How does it work?
+
+## 3.1. Actuator command flow
 
 ```mermaid
 flowchart LR
@@ -49,7 +86,7 @@ hitl_node --> ap_gz_plugin --> gz
 
 ```
 
-### 2.1. Sensors data flow
+### 3.1. Sensors data flow
 
 ```mermaid
 flowchart LR
@@ -72,7 +109,6 @@ hitl_node --> imu_gyro[ imu.gyro, 2041, 200 Hz] --> hw
 gz --> ap_gz_plugin --> hitl_node
 ```
 
-### 2.3. Yakut
+### 3.3. Yakut
 
 ![](../../assets/hitl/y_mon.png)
-
