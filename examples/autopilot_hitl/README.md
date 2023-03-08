@@ -18,7 +18,7 @@ git clone git@github.com:RaccoonlabDev/libcanard_cyphal_application.git --recurs
 cd libcanard_cyphal_application
 mkdir -p build/hitl
 cd build/hitl
-cmake ../../tests/autopilot_hitl && make
+cmake ../../examples/autopilot_hitl && make
 
 # Run
 ./application

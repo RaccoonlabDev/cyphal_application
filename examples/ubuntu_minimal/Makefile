@@ -6,7 +6,7 @@ UBUNTU_TESTS_ABS_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LI
 TESTS_DIR := $(patsubst %/,%,$(dir $(UBUNTU_TESTS_ABS_DIR)))
 REPOSITORY_DIR := $(patsubst %/,%,$(dir $(TESTS_DIR)))
 BUILD_DIR=$(REPOSITORY_DIR)/build
-BUILD_SRC_DIR=$(BUILD_DIR)/tests/ubuntu
+BUILD_SRC_DIR=$(BUILD_DIR)/examples/ubuntu_minimal
 NUNAVUT_BUILD_DIR=$(BUILD_DIR)/nunavut_out
 BUILD_OBJ_DIR=$(BUILD_DIR)/obj
 BUILD_EXECUTABLE_PATH=$(BUILD_DIR)/shell
@@ -44,7 +44,7 @@ INC += -I${UBUNTU_TESTS_ABS_DIR}
 INC += -I${TESTS_DIR}
 
 # # user params
-# CXX+=${REPOSITORY_DIR}/tests/params.c
+# CXX+=${REPOSITORY_DIR}/examples/params.c
 
 #
 CPP_SOURCES += params.cpp main.cpp

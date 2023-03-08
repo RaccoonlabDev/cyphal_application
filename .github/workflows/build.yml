@@ -5,7 +5,7 @@ jobs:
   build:
     strategy:
       matrix:
-        target: [ubuntu, ubuntu_publisher_example, autopilot_hitl]
+        target: [ubuntu_minimal, ubuntu_publisher_example, autopilot_hitl]
     runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:
@@ -22,7 +22,7 @@ jobs:
 
       - run: ./repository/scripts/nnvg_generate_c_headers.sh
       - run: mkdir -p repository/build
-      - run: cd repository/build && cmake ../tests/${{ matrix.target }} && make -s
+      - run: cd repository/build && cmake ../examples/${{ matrix.target }} && make -s
 
   makefile_legacy:
     runs-on: ubuntu-22.04
@@ -43,7 +43,7 @@ jobs:
           pip install -U nunavut
 
       - run: ./repository/scripts/nnvg_generate_c_headers.sh
-      - run: cd repository/tests/ubuntu && make -s build
+      - run: cd repository/examples/ubuntu_minimal && make -s build
 
       - name: Install GIT
         run: sudo apt-get update && sudo apt-get install -y git

@@ -2,7 +2,7 @@
 THIS_SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 REPO_DIR=$THIS_SCRIPT_DIR/../..
-BUILD_DIR=$REPO_DIR/build/tests/ubuntu
+BUILD_DIR=$REPO_DIR/build/examples/ubuntu_minimal
 NUNAVUT_OUT_DIR=$REPO_DIR/build/nunavut_out
 mkdir -p $BUILD_DIR
 
@@ -15,4 +15,4 @@ fi
 
 
 cd $BUILD_DIR
-cmake ../../../tests/ubuntu && make
+cmake ../../../examples/ubuntu_minimal && make
