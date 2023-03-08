@@ -38,7 +38,7 @@ void rotate_vector_by_quaternion(const Vector3& v, const Quaternion& q, Vector3&
 void local_pose_to_geodetic_point(const Vector3& home,
                                   const Vector3& local_position,
                                   reg_udral_physics_kinematics_geodetic_Point_0_1& point) {
-    point.latitude =  (home[0]  + 0.000008982 * local_position[0]) * 0.017453293;
+    point.latitude =  (home[0] + 0.000008982 * local_position[0]) * 0.017453293;
     point.longitude = (home[1] + 0.000011015 * local_position[1]) * 0.017453293;
     point.altitude.meter = home[2] - local_position[2];
 }

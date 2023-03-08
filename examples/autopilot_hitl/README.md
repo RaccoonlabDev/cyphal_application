@@ -69,7 +69,8 @@ In result your connection scheme might be as follows:
 5. Configure autopilot and reboot
 
 ```bash
-./scripts/ardupilot_gazebo_cyphal_quadcopter.py
+cd scripts
+./ardupilot_gazebo_cyphal_quadcopter.py
 ```
 
 6. Wait until you get a message `EKF3 IMU0 is using GPS` and then fly

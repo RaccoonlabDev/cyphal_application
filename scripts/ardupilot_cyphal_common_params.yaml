@@ -7,6 +7,7 @@ BRD_SAFETY_DEFLT    : 0.0         # Disabled
 FS_THR_ENABLE       : 0.0         # Disabled
 GPS_TYPE            : 26.0        # Cyphal
 ATC_RAT_RLL_P       : 0.08
+BATT_MONITOR        : 0.0         # Required for CUAV-X7
 
 # Disable board sensors
 EK3_IMU_MASK        : 1.0
