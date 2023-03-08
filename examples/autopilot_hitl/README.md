@@ -53,6 +53,13 @@ cmake ../../examples/autopilot_hitl && make
 
 > It is expected that your firmware is based on custom branch [cyphal-hitl](https://github.com/PonomarevDA/ardupilot/tree/cyphal-hitl)
 
+```bash
+cd Ardupilot
+git checkout cyphal-hitl
+./waf configure --board CUAVv5
+./waf --targets bin/arducopter --upload
+```
+
 In result your connection scheme might be as follows:
 
 ![](https://github.com/RaccoonlabDev/innopolis_vtol_dynamics/blob/master/docs/img/sniffer_connection.png?raw=true)
@@ -61,7 +68,9 @@ In result your connection scheme might be as follows:
 
 5. Configure autopilot and reboot
 
-> A configuration script will appear here soon
+```bash
+./scripts/ardupilot_gazebo_cyphal_quadcopter.py
+```
 
 6. Wait until you get a message `EKF3 IMU0 is using GPS` and then fly
 
