@@ -15,7 +15,7 @@
 
 static SocketCANFD _instance = 0;
 
-bool CyphalTransportCan::init(uint32_t can_speed, uint8_t can_driver_idx) {
+bool CyphalTransportCan::init(uint32_t, uint8_t) {
     _instance = socketcanOpen("slcan0", false);
 
     if (_instance < 0) {

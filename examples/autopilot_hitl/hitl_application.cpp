@@ -9,7 +9,6 @@
 #include "main.h"
 #include "params.hpp"
 #include "string_params.hpp"
-#include "math.hpp"
 
 uint32_t HAL_GetTick() {
     static auto time_start = std::chrono::steady_clock::now();
@@ -52,9 +51,7 @@ void HitlApplication::process(const std::array<double, 3>& local_position,
 
         reg_udral_physics_kinematics_geodetic_PointStateVarTs_0_1 gps_point_msg;
         gps_point_msg.timestamp.microsecond = HAL_GetTick() * 1000;
-        gps_point_msg.value.position.value.latitude =  (home[0]  + 0.000008982 * local_position[0]) * 0.017453293;
-        gps_point_msg.value.position.value.longitude = (home[1] + 0.000011015 * local_position[1]) * 0.017453293;
-        gps_point_msg.value.position.value.altitude.meter = home[2] - local_position[2];
+        local_pose_to_geodetic_point(home, local_position, gps_point_msg.value.position.value);
 
         gps_point_msg.value.velocity.value.meter_per_second[0] = linear_vel[0] * _time_factor;
         gps_point_msg.value.velocity.value.meter_per_second[1] = linear_vel[1] * _time_factor;
@@ -64,26 +61,25 @@ void HitlApplication::process(const std::array<double, 3>& local_position,
         gps_status.publish(3);
         gps_pdop.publish(1);
 
-        static float baro_noise = 0;
-        baro_noise = (int)(baro_noise + 1) % 10;
         uavcan_si_sample_pressure_Scalar_1_0 pressure;
         pressure.timestamp.microsecond = HAL_GetTick() * 1000;
-        pressure.pascal = 94500 + (float)(11.3*local_position[2]) + 0.02f * baro_noise;
+        pressure.pascal = local_height_to_baro_pressure_pascal(local_position[2]);
         baro_pressure.publish(pressure);
 
-        uavcan_si_sample_temperature_Scalar_1_0 temperature{.kelvin = 312.0};
+        uavcan_si_sample_temperature_Scalar_1_0 temperature;
+        temperature.kelvin = 312;
+        temperature.timestamp.microsecond = HAL_GetTick() * 1000;
         baro_temperature.publish(temperature);
     }
 
     static uint32_t pub_50_hz_prev_time_ms = 1000;
     if (crnt_time_ms >= pub_50_hz_prev_time_ms + 20) {
-        const Vector3 initial_mag{232, 52, -528};
         Vector3 mag_rotated;
-        rotate_vector_by_quaternion(initial_mag, orientation_wxyz, mag_rotated);
+        rotate_vector_by_quaternion(_initial_mag_gauss, orientation_wxyz, mag_rotated);
         uavcan_si_sample_magnetic_field_strength_Vector3_1_0 magnetic_field;
-        magnetic_field.tesla[0] = 1e-07 * mag_rotated[0];
-        magnetic_field.tesla[1] = 1e-07 * mag_rotated[1];
-        magnetic_field.tesla[2] = 1e-07 * mag_rotated[2];
+        magnetic_field.tesla[0] = 1e-04 * mag_rotated[0];
+        magnetic_field.tesla[1] = 1e-04 * mag_rotated[1];
+        magnetic_field.tesla[2] = 1e-04 * mag_rotated[2];
 
         pub_50_hz_prev_time_ms = crnt_time_ms;
         magnetometer.publish(magnetic_field);

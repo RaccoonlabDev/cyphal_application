@@ -41,7 +41,7 @@ protected:
     static uint8_t publishers_amount;
 
 private:
-    CanardTransferMetadata transfer_metadata = {
+    CanardTransferMetadata transfer_metadata{
         .priority       = CanardPriorityNominal,
         .transfer_kind  = CanardTransferKindMessage,
         .port_id        = 65535,

@@ -119,27 +119,26 @@ bool ArdupilotJson::parse_json_list(const std::string& str,
                                     size_t first_idx,
                                     size_t last_idx,
                                     std::vector<double>& numbers) const {
-    // std::cout << str.substr(first_idx, last_idx - first_idx + 1) << std::endl;
-    if (str[first_idx] != '[' || str[last_idx] != ']' ) {
+    const size_t vector_size = numbers.size();
+    if (str[first_idx] != '[' || str[last_idx] != ']' || vector_size > 4) {
         return false;
     }
 
     first_idx++;
 
-    const size_t VECTOR_SIZE = numbers.size();
-    int comma_idx[VECTOR_SIZE - 1];
-    std::string str_numbers[VECTOR_SIZE];
+    std::array<int, 3> comma_idx;
+    std::array<std::string, 4> str_numbers;
 
     comma_idx[0] = str.find(',', first_idx);
     str_numbers[0] = str.substr(first_idx, comma_idx[0] - first_idx);
-    for (size_t crnt_idx = 1; crnt_idx < VECTOR_SIZE - 1; crnt_idx++) {
+    for (size_t crnt_idx = 1; crnt_idx < vector_size - 1; crnt_idx++) {
         size_t prev_idx = crnt_idx - 1;
         comma_idx[crnt_idx] = str.find(',', comma_idx[prev_idx] + 1);
         str_numbers[crnt_idx] = str.substr(comma_idx[prev_idx] + 1, comma_idx[crnt_idx] - comma_idx[prev_idx] - 1);
     }
-    str_numbers[VECTOR_SIZE - 1] = str.substr(comma_idx[VECTOR_SIZE - 2] + 1, last_idx - comma_idx[VECTOR_SIZE - 2] - 1);
+    str_numbers[vector_size - 1] = str.substr(comma_idx[vector_size - 2] + 1, last_idx - comma_idx[vector_size - 2] - 1);
 
-    for (size_t number_idx = 0; number_idx < VECTOR_SIZE; number_idx++) {
+    for (size_t number_idx = 0; number_idx < vector_size; number_idx++) {
         numbers[number_idx] = std::stof(str_numbers[number_idx]);
     }
 

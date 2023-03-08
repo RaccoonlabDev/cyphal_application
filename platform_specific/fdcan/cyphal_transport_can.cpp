@@ -32,7 +32,7 @@ static CanDriver driver[NUM_OF_CAN_BUSES] = {
     {.handler = &hfdcan2}
 };
 
-bool CyphalTransportCan::init(uint32_t can_speed, uint8_t can_driver_idx) {
+bool CyphalTransportCan::init(uint32_t, uint8_t can_driver_idx) {
     _can_driver_idx = can_driver_idx;
     driver[can_driver_idx].tx_header.IdType = FDCAN_EXTENDED_ID;
     driver[can_driver_idx].tx_header.TxFrameType = FDCAN_DATA_FRAME;

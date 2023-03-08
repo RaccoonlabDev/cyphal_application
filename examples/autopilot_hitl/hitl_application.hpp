@@ -11,6 +11,7 @@
 #include "barometer.hpp"
 #include "magnetometer.hpp"
 #include "imu.hpp"
+#include "math.hpp"
 
 class HitlApplication {
 public:
@@ -56,6 +57,7 @@ private:
 
     std::array<double, 3> home;
     double _time_factor{1.0};
+    inline static const Vector3 _initial_mag_gauss{0.232, 0.52, -0.528};
 };
 
 #endif  // HITL_APPLICATION_HPP_

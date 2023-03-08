@@ -14,7 +14,7 @@
 #include "main.h"
 
 
-bool CyphalTransportCan::init(uint32_t can_speed, uint8_t can_driver_idx) {
+bool CyphalTransportCan::init(uint32_t can_speed, uint8_t) {
     BxCANTimings timings;
     uint32_t peripheral_clock_rate = HAL_RCC_GetPCLK1Freq();
 
