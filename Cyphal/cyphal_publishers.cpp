@@ -60,13 +60,13 @@ size_t PortListPublisher::uavcan_node_port_List_1_0_create() {
 
     // 1. Fill publishers
     uint8_t& enabled_pub_amount = _port_list_buffer[5];
-    uint16_t* sparse_list = (uint16_t*)&_port_list_buffer[6];
+    auto sparse_list = reinterpret_cast<uint16_t*>(&_port_list_buffer[6]);
     _port_list_buffer[4] = 1;
 
     enabled_pub_amount = 0;
     for (uint_fast8_t pub_idx = 0; pub_idx < CyphalPublisher::publishers_amount; pub_idx++) {
         if (CyphalPublisher::publishers[pub_idx]->isEnabled()) {
-            auto port_id = static_cast<uint16_t>(CyphalPublisher::publishers[pub_idx]->getPortId());
+            auto port_id = CyphalPublisher::publishers[pub_idx]->getPortId();
             sparse_list[pub_idx] = port_id;
             enabled_pub_amount++;
         }
@@ -95,7 +95,6 @@ size_t PortListPublisher::uavcan_node_port_List_1_0_create() {
     return 148 + (enabled_pub_amount + enabled_sub_amount) * 2;
 }
 
-// #include <iostream>
 void PortListPublisher::publish() {
     auto crnt_time_ms = HAL_GetTick();
     if (crnt_time_ms < next_pub_time_ms) {

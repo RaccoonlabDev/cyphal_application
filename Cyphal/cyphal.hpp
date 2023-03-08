@@ -19,11 +19,11 @@
 #include "o1heap.h"
 #include "uavcan/node/GetInfo_1_0.h"
 
-#define HEAP_SIZE           (1024*5)
+inline constexpr size_t HEAP_SIZE                       = 1024*5;
 
-#define CYPHAL_TRANSPORT_INIT_ERROR         2
-#define CYPHAL_HEAP_INIT_ERROR              3
-#define CYPHAL_SUB_APPLICATION_INIT_ERROR   4
+inline constexpr int CYPHAL_TRANSPORT_INIT_ERROR        = 2;
+inline constexpr int CYPHAL_HEAP_INIT_ERROR             = 3;
+inline constexpr int CYPHAL_SUB_APPLICATION_INIT_ERROR  = 4;
 
 class Cyphal {
 public:

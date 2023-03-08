@@ -71,7 +71,6 @@ void NodeGetInfoSubscriber::updateNodeName() {
         }
     }
 
-    // get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)hw_type.name, 15);
     get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)"Unknown", 15);
 }
 

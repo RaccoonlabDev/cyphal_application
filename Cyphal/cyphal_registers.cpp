@@ -76,7 +76,8 @@ ParamIndex_t RegisterAccessRequest::parseRequest(const CanardRxTransfer& transfe
     auto payload = static_cast<const uint8_t*>(transfer.payload);
     uavcan_register_Access_Request_1_0_deserialize_(&_request_msg, payload, &payload_len);
 
-    return paramsGetIndexByName(_request_msg.name.name.elements, _request_msg.name.name.count);
+    return paramsGetIndexByName(_request_msg.name.name.elements,
+                                static_cast<uint16_t>(_request_msg.name.name.count));
 }
 
 void RegisterAccessRequest::writeParam(ParamIndex_t reg_index) {
