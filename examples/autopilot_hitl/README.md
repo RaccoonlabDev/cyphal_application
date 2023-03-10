@@ -14,7 +14,41 @@ Software:
 
 ## 2. Usage
 
-1. Install Gazebo Garden and the ArduPilot Gazebo plugin according to [the official ArduPilot instructions](https://ardupilot.org/dev/docs/sitl-with-gazebo.html#sitl-with-gazebo) and run Gazebo Simulator
+**Step 1. Connect Autopilot and CAN-Sniffer**
+
+A wiring example is shown below:
+
+![](https://github.com/RaccoonlabDev/innopolis_vtol_dynamics/blob/master/docs/img/sniffer_connection.png?raw=true)
+
+> At the time of writing, only CAN1 is supported.
+
+**Step 2. Upload Cyphal Ardupilot firmware**
+
+> It is expected that your firmware is based on custom branch [cyphal-hitl](https://github.com/PonomarevDA/ardupilot/tree/cyphal-hitl)
+
+```bash
+cd Ardupilot
+git checkout cyphal-hitl
+./waf configure --board CUAV-X7 # it also tested with CUAVv5
+./waf --targets bin/arducopter --upload
+```
+
+**Step 3. Configure autopilot and reboot**
+
+Try the following script. It automatically:
+- resets the parameters to default and reboots the device,
+- then set the necessary parameters to enable Cyphal and disable all onboard sensors, and reboot the device,
+- set the Cyphal registers and reboot the device,
+- perform force calibration and reboot the last time.
+
+```bash
+cd scripts
+./ardupilot_gazebo_cyphal_quadcopter.py
+```
+
+**Step 4. Run Gazebo**
+
+Install Gazebo Garden and the ArduPilot Gazebo plugin according to [the official ArduPilot instructions](https://ardupilot.org/dev/docs/sitl-with-gazebo.html#sitl-with-gazebo) and run Gazebo Simulator.
 
 ```bash
 gz sim -v4 -r -s --headless-rendering iris_runway.sdf
@@ -22,7 +56,9 @@ gz sim -v4 -r -s --headless-rendering iris_runway.sdf
 
 > It is recommended to use the headless mode because the simulator is very real-time sensitive.
 
-2. Connect CAN-sniffer to PC and create SLCAN
+> Other simulators based on the JSON interface may also work, but have not been tested.
+
+**Step 5. Create SLCAN**
 
 An example of how you can create SLCAN:
 
@@ -30,10 +66,14 @@ An example of how you can create SLCAN:
 source scripts/init.sh
 ```
 
-3. Build and Run Cyphal HITL application
+> The script was tested only with [RL sniifer](https://docs.raccoonlab.co/guide/programmer_sniffer/)
+
+If you try `ifconfig` it should show `slcan0`.
+
+**Step 6. Run Cyphal HITL application**
 
 ```bash
-# Clone with submodules
+# Clone with submodules!
 git clone git@github.com:RaccoonlabDev/libcanard_cyphal_application.git --recursive
 cd libcanard_cyphal_application
 
@@ -49,31 +89,9 @@ cmake ../../examples/autopilot_hitl && make
 ./application
 ```
 
-4. Connect an autopilot with PC and sniffer
+**Step 7. Wait until you get a message `EKF3 IMU0 is using GPS` and then fly**
 
-> It is expected that your firmware is based on custom branch [cyphal-hitl](https://github.com/PonomarevDA/ardupilot/tree/cyphal-hitl)
-
-```bash
-cd Ardupilot
-git checkout cyphal-hitl
-./waf configure --board CUAVv5
-./waf --targets bin/arducopter --upload
-```
-
-In result your connection scheme might be as follows:
-
-![](https://github.com/RaccoonlabDev/innopolis_vtol_dynamics/blob/master/docs/img/sniffer_connection.png?raw=true)
-
-> At the time of writing, only CAN1 is supported.
-
-5. Configure autopilot and reboot
-
-```bash
-cd scripts
-./ardupilot_gazebo_cyphal_quadcopter.py
-```
-
-6. Wait until you get a message `EKF3 IMU0 is using GPS` and then fly
+> An autopilot may say "Not ready" when it begins receiving the Cyphal sensor data after initialization is complete. In this case, simply restarting the vehicle will help.
 
 ## 3. How does it work?
 
