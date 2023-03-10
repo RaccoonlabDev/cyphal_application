@@ -25,7 +25,7 @@ class ArdupilotConfigurator:
     def force_calibrate(self):
         print("")
         print("Step 4. Force calibrate")
-        time.sleep(2)
+        time.sleep(5)
         self.vehicle.force_calibrate()
         self.vehicle.reboot()
 

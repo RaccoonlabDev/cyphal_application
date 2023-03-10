@@ -79,9 +79,6 @@ class Vehicle:
         self.reboot()
         time.sleep(2)
         self.connect()
-    
-        for param_name in self.params:
-            self.read_specific_param(param_name, verbose)
 
     def _read_yaml_parameters(self, filename, verbose=False):
         with open(filename) as f:
