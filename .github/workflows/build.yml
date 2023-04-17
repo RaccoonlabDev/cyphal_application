@@ -15,6 +15,13 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Checkout libparams
+        uses: actions/checkout@v3
+        with:
+          repository: PonomarevDA/libparams
+          path: repository/Libs/libparams
+      - run: cd ./repository/Libs/libparams && git checkout 1924153
+
       - name: Install dependencies
         run: |
           sudo apt-get install -y make gcc-arm-none-eabi
@@ -36,6 +43,13 @@ jobs:
           path: 'repository'
           submodules: recursive
           fetch-depth: 0
+
+      - name: Checkout libparams
+        uses: actions/checkout@v3
+        with:
+          repository: PonomarevDA/libparams
+          path: repository/Libs/libparams
+      - run: cd ./repository/Libs/libparams && git checkout 1924153
 
       - name: Install dependencies
         run: |

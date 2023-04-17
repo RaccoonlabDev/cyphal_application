@@ -31,6 +31,9 @@ Software dependencies:
 ```bash
 git clone <this_repo> --recursive
 git submodule update --init --recursive
+
+cd Libs
+git clone git@github.com:PonomarevDA/libparams.git
 ```
 
 **Step 2. Include CMakeList.txt**
