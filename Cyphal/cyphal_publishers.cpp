@@ -67,7 +67,7 @@ size_t PortListPublisher::uavcan_node_port_List_1_0_create() {
     for (uint_fast8_t pub_idx = 0; pub_idx < CyphalPublisher::publishers_amount; pub_idx++) {
         if (CyphalPublisher::publishers[pub_idx]->isEnabled()) {
             auto port_id = CyphalPublisher::publishers[pub_idx]->getPortId();
-            sparse_list[pub_idx] = port_id;
+            sparse_list[enabled_pub_amount] = port_id;
             enabled_pub_amount++;
         }
     }
@@ -83,7 +83,7 @@ size_t PortListPublisher::uavcan_node_port_List_1_0_create() {
     for (uint_fast8_t sub_idx = 0; sub_idx < driver->_sub_num; sub_idx++) {
         if (driver->_sub_info[sub_idx]->isEnabled()) {
             auto port_id = driver->_sub_info[sub_idx]->port_id;
-            sparse_list[sub_idx] = port_id;
+            sparse_list[enabled_sub_amount] = port_id;
             enabled_sub_amount++;
         }
     }
