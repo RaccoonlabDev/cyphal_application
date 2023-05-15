@@ -49,9 +49,9 @@ bool CyphalTransportCan::init(uint32_t, uint8_t can_driver_idx) {
     sFilterConfig.FilterConfig = FDCAN_FILTER_DISABLE;
 
     if (HAL_FDCAN_ConfigFilter(driver[can_driver_idx].handler, &sFilterConfig) != HAL_OK) {
-        return -1;
+        return false;
     } else if (HAL_FDCAN_Start(driver[can_driver_idx].handler) != HAL_OK) {
-        return -1;
+        return false;
     }
 
     return true;
@@ -100,10 +100,10 @@ bool CyphalTransportCan::transmit(const CanardTxQueueItem* transfer) {
                                                               (uint8_t*)(((uint8_t*)transfer->frame.payload) + frame_idx * 8));
         if (res == HAL_OK) {
             driver[_can_driver_idx].tx_counter++;
-            return 1;
+            return true;
         } else {
             driver[_can_driver_idx].err_counter++;
-            return 0;
+            return false;
         }
 
         ///< we need to have a delay between each push
