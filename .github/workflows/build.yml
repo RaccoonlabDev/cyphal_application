@@ -20,6 +20,7 @@ jobs:
         with:
           repository: PonomarevDA/libparams
           path: repository/Libs/libparams
+          fetch-depth: 0
       - run: cd ./repository/Libs/libparams && git checkout 1924153
 
       - name: Install dependencies
@@ -49,6 +50,7 @@ jobs:
         with:
           repository: PonomarevDA/libparams
           path: repository/Libs/libparams
+          fetch-depth: 0
       - run: cd ./repository/Libs/libparams && git checkout 1924153
 
       - name: Install dependencies
