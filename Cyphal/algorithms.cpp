@@ -11,10 +11,28 @@
 #include "algorithms.hpp"
 #include <string.h>
 
+static bool isAllowedSymbol(char symbol) {
+    bool is_allowed;
+    if ((symbol >= 'A' && symbol <= 'Z') ||
+            (symbol >= 'a' && symbol <= 'z') ||
+            (symbol >= '0' && symbol <= '9') ||
+            (symbol == '-') ||
+            (symbol == '_') ||
+            (symbol == ' ') ||
+            (symbol == '.') ||
+            (symbol == '(') ||
+            (symbol == ')')) {
+        is_allowed = true;
+    } else {
+        is_allowed = false;
+    }
+    return is_allowed;
+}
+
 uint8_t strlenSafely(const uint8_t* str, uint8_t max_possible_length) {
     uint8_t length;
     for (length = 0; length < max_possible_length; length++) {
-        if (str[length] == '\0' || str[length] == 255) {
+        if (!isAllowedSymbol(str[length])) {
             break;
         }
     }
