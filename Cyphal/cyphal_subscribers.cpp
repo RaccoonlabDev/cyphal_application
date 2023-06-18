@@ -66,7 +66,7 @@ void NodeGetInfoSubscriber::updateNodeName() {
 
     if (node_name != nullptr) {
         get_info_response.name.count = strcpySafely(get_info_response.name.elements, node_name, 15);
-        if (get_info_response.name.count == 0) {
+        if (get_info_response.name.count != 0) {
             return;
         }
     }
