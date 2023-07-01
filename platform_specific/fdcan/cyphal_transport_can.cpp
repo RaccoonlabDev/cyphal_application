@@ -1,22 +1,10 @@
 /// This software is distributed under the terms of the MIT License.
-/// Copyright (c) 2022 Dmitry Ponomarev.
+/// Copyright (c) 2022-2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
-
-/**
- * @file cyphal_transport_can.cpp
- * @author d.ponomarev
- * @date Jul 07, 2022
- */
 
 #include "cyphal_transport_can.hpp"
 #include <string.h>
 #include "main.h"
-
-
-#define NUM_OF_CAN_BUSES 2
-
-extern FDCAN_HandleTypeDef hfdcan1;
-extern FDCAN_HandleTypeDef hfdcan2;
 
 typedef struct{
     FDCAN_HandleTypeDef* handler;
@@ -27,12 +15,28 @@ typedef struct{
     size_t rx_counter;
 } CanDriver;
 
-static CanDriver driver[NUM_OF_CAN_BUSES] = {
-    {.handler = &hfdcan1},
-    {.handler = &hfdcan2}
-};
+#ifndef CYPHAL_NUM_OF_CAN_BUSES
+    #error "CYPHAL_NUM_OF_CAN_BUSES must be specified!"
+#elif CYPHAL_NUM_OF_CAN_BUSES == 1
+    extern FDCAN_HandleTypeDef hfdcan1;
+    static CanDriver driver[CYPHAL_NUM_OF_CAN_BUSES] = {
+        {.handler = &hfdcan1},
+    };
+#elif CYPHAL_NUM_OF_CAN_BUSES == 2
+    extern FDCAN_HandleTypeDef hfdcan1;
+    extern FDCAN_HandleTypeDef hfdcan2;
+    static CanDriver driver[CYPHAL_NUM_OF_CAN_BUSES] = {
+        {.handler = &hfdcan1},
+        {.handler = &hfdcan2}
+    };
+#endif
+
 
 bool CyphalTransportCan::init(uint32_t, uint8_t can_driver_idx) {
+    if (can_driver_idx >= CYPHAL_NUM_OF_CAN_BUSES) {
+        return false;
+    }
+
     _can_driver_idx = can_driver_idx;
     driver[can_driver_idx].tx_header.IdType = FDCAN_EXTENDED_ID;
     driver[can_driver_idx].tx_header.TxFrameType = FDCAN_DATA_FRAME;
