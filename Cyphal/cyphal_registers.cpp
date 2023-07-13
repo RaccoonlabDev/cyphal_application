@@ -63,7 +63,7 @@ RegisterAccessRequest::RegisterAccessRequest(Cyphal* driver_) :
         CyphalSubscriber(driver_, uavcan_register_Access_1_0_FIXED_PORT_ID_) {
     _transfer_metadata.priority = CanardPriorityNominal;
     _transfer_metadata.transfer_kind = CanardTransferKindResponse;
-};
+}
 
 
 void RegisterAccessRequest::callback(const CanardRxTransfer& transfer) {

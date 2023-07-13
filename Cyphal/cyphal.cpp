@@ -92,7 +92,7 @@ int32_t Cyphal::push(CanardTransferMetadata* metadata, size_t payload_size, cons
 
 
 int8_t Cyphal::subscribe(CyphalSubscriber* sub_info, size_t size, CanardTransferKind kind) {
-    if (_sub_num >= MAX_SUB_NUM) {
+    if (_sub_num >= MAX_SUB_NUM || sub_info->port_id == 0) {
         return -1;
     }
 

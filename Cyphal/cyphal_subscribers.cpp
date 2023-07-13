@@ -58,7 +58,7 @@ NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_) :
     get_info_response.unique_id[11] = (uid_u32 >> 24) & 0xFF;
 
     get_info_response.software_vcs_revision_id = GIT_HASH;
-};
+}
 
 void NodeGetInfoSubscriber::updateNodeName() {
     auto node_name_param_idx = static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT);
