@@ -12,18 +12,19 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(PLATFORM socketcan)
 
-include(../../CMakeLists.txt)
+set(CYPHAL_REPO_DIR ../..)
+include(${CYPHAL_REPO_DIR}/CMakeLists.txt)
 
 include_directories(.)
 include_directories(..)
-include_directories(../../Udral)
-add_executable(application
+include_directories(${CYPHAL_REPO_DIR}/Udral)
 
-    ../../Udral/actuator.cpp
-    ../../Udral/barometer.cpp
-    ../../Udral/gnss.cpp
-    ../../Udral/magnetometer.cpp
-    ../../Udral/imu.cpp
+add_executable(application
+    ${CYPHAL_REPO_DIR}/Udral/actuator.cpp
+    ${CYPHAL_REPO_DIR}/Udral/barometer.cpp
+    ${CYPHAL_REPO_DIR}/Udral/gnss.cpp
+    ${CYPHAL_REPO_DIR}/Udral/magnetometer.cpp
+    ${CYPHAL_REPO_DIR}/Udral/imu.cpp
 
     main.cpp
     math.cpp

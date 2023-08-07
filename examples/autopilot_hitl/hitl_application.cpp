@@ -57,9 +57,15 @@ void HitlApplication::process(const std::array<double, 3>& local_position,
         gps_point_msg.value.velocity.value.meter_per_second[1] = linear_vel[1] * _time_factor;
         gps_point_msg.value.velocity.value.meter_per_second[2] = linear_vel[2] * _time_factor;
         gps_point.publish(gps_point_msg);
-        gps_sats.publish(10);
-        gps_status.publish(3);
-        gps_pdop.publish(1);
+
+        gps_sats.msg.value = 10;
+        gps_sats.publish();
+
+        gps_status.msg.value = 3;
+        gps_status.publish();
+
+        gps_pdop.msg.value = 1;
+        gps_pdop.publish();
 
         uavcan_si_sample_pressure_Scalar_1_0 pressure;
         pressure.timestamp.microsecond = HAL_GetTick() * 1000;
