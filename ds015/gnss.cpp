@@ -30,3 +30,12 @@ void Ds015GnssRelativePositionPublisher::publish() {
         push(buffer_size, buffer);
     }
 }
+
+void Ds015GnssTimePublisher::publish() {
+    static uint8_t buffer[uavcan_time_SynchronizedTimestamp_1_0_EXTENT_BYTES_];
+    size_t buffer_size = uavcan_time_SynchronizedTimestamp_1_0_EXTENT_BYTES_;
+    int32_t result = uavcan_time_SynchronizedTimestamp_1_0_serialize_(&msg, buffer, &buffer_size);
+    if (NUNAVUT_SUCCESS == result) {
+        push(buffer_size, buffer);
+    }
+}
