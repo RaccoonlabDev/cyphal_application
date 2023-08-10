@@ -53,7 +53,8 @@ private:
 struct HeartbeatPublisher: public CyphalPublisher {
     explicit HeartbeatPublisher(Cyphal* driver_) :
         CyphalPublisher(driver_, uavcan_node_Heartbeat_1_0_FIXED_PORT_ID_) {};
-    void publish(const uavcan_node_Heartbeat_1_0& msg);
+    void publish();
+    uavcan_node_Heartbeat_1_0 msg;
 };
 
 struct PortListPublisher: public CyphalPublisher {

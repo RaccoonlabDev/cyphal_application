@@ -28,6 +28,10 @@ static uint32_t getCurrentMicroseconds();
 static O1HeapInstance* my_allocator;
 
 int Cyphal::init() {
+    heartbeat_pub.msg.health.value = uavcan_node_Health_1_0_NOMINAL;
+    heartbeat_pub.msg.mode.value = uavcan_node_Mode_1_0_OPERATIONAL;
+    heartbeat_pub.msg.vendor_specific_status_code = 0;
+
     node_id = static_cast<uint8_t>(paramsGetIntegerValue(IntParamsIndexes::ID));
     if (node_id == 0 || node_id > 126) {
         node_id = 42;
@@ -67,12 +71,8 @@ void Cyphal::process() {
     // 2. spin application
     if (next_pub_time_ms < HAL_GetTick()) {
         next_pub_time_ms += 500;
-        uavcan_node_Heartbeat_1_0 heartbeat_msg;
-        heartbeat_msg.health.value = uavcan_node_Health_1_0_NOMINAL;
-        heartbeat_msg.mode.value = uavcan_node_Mode_1_0_OPERATIONAL;
-        heartbeat_msg.uptime = HAL_GetTick() / 1000;
-        heartbeat_msg.vendor_specific_status_code = 0;
-        heartbeat_pub.publish(heartbeat_msg);
+        heartbeat_pub.msg.uptime = HAL_GetTick() / 1000;
+        heartbeat_pub.publish();
 
         port_list_pub.publish();
     }
@@ -110,6 +110,13 @@ int8_t Cyphal::subscribe(CyphalSubscriber* sub_info, size_t size, CanardTransfer
     return res;
 }
 
+void Cyphal::setNodeHealth(uavcan_node_Health_1_0 health) {
+    heartbeat_pub.msg.health = health;
+}
+
+void Cyphal::setNodeMode(uavcan_node_Mode_1_0 mode) {
+    heartbeat_pub.msg.mode = mode;
+}
 
 void Cyphal::processReceivedTransfer([[maybe_unused]] const uint8_t redundant_interface_index,
                                      const CanardRxTransfer& transfer) const {

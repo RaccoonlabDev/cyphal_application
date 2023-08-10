@@ -40,7 +40,7 @@ int32_t CyphalPublisher::push(size_t payload_size, const uint8_t* payload) {
     return driver->push(&transfer_metadata, payload_size, payload);
 }
 
-void HeartbeatPublisher::publish(const uavcan_node_Heartbeat_1_0& msg) {
+void HeartbeatPublisher::publish() {
     static uint8_t buffer[uavcan_node_Heartbeat_1_0_EXTENT_BYTES_];
     size_t buffer_size = uavcan_node_Heartbeat_1_0_EXTENT_BYTES_;
     int32_t result = uavcan_node_Heartbeat_1_0_serialize_(&msg, buffer, &buffer_size);

@@ -18,6 +18,7 @@
 #include "canard.h"
 #include "o1heap.h"
 #include "uavcan/node/GetInfo_1_0.h"
+#include "uavcan/node/Heartbeat_1_0.h"
 
 inline constexpr size_t HEAP_SIZE                       = 1024*5;
 
@@ -37,6 +38,9 @@ public:
     void process();
     int32_t push(CanardTransferMetadata* metadata, size_t payload_size, const uint8_t* payload);
     int8_t subscribe(CyphalSubscriber* sub_info, size_t size, CanardTransferKind kind);
+
+    void setNodeHealth(uavcan_node_Health_1_0 health);
+    void setNodeMode(uavcan_node_Mode_1_0 mode);
 
     static constexpr size_t MAX_SUB_NUM = 10;
 private:
