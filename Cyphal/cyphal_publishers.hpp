@@ -34,7 +34,7 @@ public:
     bool isEnabled() const;
     int32_t push(size_t payload_size, const uint8_t* payload);
 
-    static constexpr const size_t MAX_PUB_NUM = 15;
+    static constexpr const size_t MAX_PUB_NUM = 20;
 protected:
     Cyphal* driver;
     static std::array<CyphalPublisher*, MAX_PUB_NUM> publishers;

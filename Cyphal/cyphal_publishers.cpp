@@ -13,7 +13,7 @@
 #include "main.h"
 #include "storage.h"
 
-std::array<CyphalPublisher*, 15> CyphalPublisher::publishers;
+std::array<CyphalPublisher*, CyphalPublisher::MAX_PUB_NUM> CyphalPublisher::publishers;
 uint8_t CyphalPublisher::publishers_amount{0};
 
 
