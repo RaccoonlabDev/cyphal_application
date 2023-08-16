@@ -56,7 +56,7 @@ void RegisterListRequest::makeResponse(const CanardRxTransfer& transfer, ParamIn
 
 constexpr uint8_t EMPTY_TAG = 0;
 constexpr uint8_t STRING_TAG = 1;
-constexpr uint8_t NATURAL16_TAG = 10;
+constexpr uint8_t NATURAL32_TAG = 9;
 
 
 RegisterAccessRequest::RegisterAccessRequest(Cyphal* driver_) :
@@ -86,11 +86,11 @@ void RegisterAccessRequest::writeParam(ParamIndex_t reg_index) {
     }
     auto param_type = paramsGetType(reg_index);
     if (param_type == PARAM_TYPE_INTEGER &&
-            _request_msg.value._tag_ == NATURAL16_TAG &&
-            _request_msg.value.natural16.value.count > 0) {
+            _request_msg.value._tag_ == NATURAL32_TAG &&
+            _request_msg.value.natural32.value.count > 0) {
         paramsSetIntegerValue(reg_index,
-                              _request_msg.value.natural16.value.elements[0]);
-    } else if (param_type == PARAM_TYPE_INTEGER &&
+                              _request_msg.value.natural32.value.elements[0]);
+    } else if (param_type == PARAM_TYPE_STRING &&
             _request_msg.value._tag_ == STRING_TAG &&
             _request_msg.value._string.value.count > 0) {
         paramsSetStringValue(reg_index,
@@ -103,9 +103,9 @@ void RegisterAccessRequest::readParam(uavcan_register_Access_Response_1_0& respo
     auto param_type = paramsGetType(reg_index);
 
     if (param_type == PARAM_TYPE_INTEGER) {
-        response_msg.value.natural16.value.count = 1;
-        response_msg.value._tag_ = NATURAL16_TAG;
-        response_msg.value.natural16.value.elements[0] = paramsGetIntegerValue(reg_index);
+        response_msg.value.natural32.value.count = 1;
+        response_msg.value._tag_ = NATURAL32_TAG;
+        response_msg.value.natural32.value.elements[0] = paramsGetIntegerValue(reg_index);
     } else if (param_type == PARAM_TYPE_STRING) {
         response_msg.value._tag_ = STRING_TAG;
         auto str_param = paramsGetStringValue(reg_index);
