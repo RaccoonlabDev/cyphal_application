@@ -20,7 +20,11 @@
 #include "uavcan/node/GetInfo_1_0.h"
 #include "uavcan/node/Heartbeat_1_0.h"
 
-inline constexpr size_t HEAP_SIZE                       = 1024*5;
+#ifndef CYPHAL_HEAP_SIZE
+    #define CYPHAL_HEAP_SIZE (1024*10)
+#endif
+
+inline constexpr size_t HEAP_SIZE                       = CYPHAL_HEAP_SIZE;
 
 inline constexpr int CYPHAL_TRANSPORT_INIT_ERROR        = 2;
 inline constexpr int CYPHAL_HEAP_INIT_ERROR             = 3;
