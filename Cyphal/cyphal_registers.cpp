@@ -53,6 +53,10 @@ void RegisterListRequest::makeResponse(const CanardRxTransfer& transfer, ParamIn
     }
 }
 
+bool RegisterListRequest::isService() const {
+    return true;
+}
+
 
 constexpr uint8_t EMPTY_TAG = 0;
 constexpr uint8_t STRING_TAG = 1;
@@ -159,4 +163,8 @@ void RegisterAccessRequest::makeResponse(const CanardRxTransfer& transfer, Param
     if (NUNAVUT_SUCCESS == result) {
         driver->push(&_transfer_metadata, buf_size, buf);
     }
+}
+
+bool RegisterAccessRequest::isService() const {
+    return true;
 }
