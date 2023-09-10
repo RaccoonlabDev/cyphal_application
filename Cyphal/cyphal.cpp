@@ -70,7 +70,7 @@ void Cyphal::process() {
 
     // 2. spin application
     if (next_pub_time_ms < HAL_GetTick()) {
-        next_pub_time_ms += 500;
+        next_pub_time_ms += 1000;
         heartbeat_pub.msg.uptime = HAL_GetTick() / 1000;
         heartbeat_pub.publish();
 
