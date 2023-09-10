@@ -82,9 +82,8 @@ void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
         .transfer_kind  = CanardTransferKindResponse,
         .port_id        = uavcan_node_GetInfo_1_0_FIXED_PORT_ID_,
         .remote_node_id = transfer.metadata.remote_node_id,
-        .transfer_id    = _transfer_id,
+        .transfer_id    = transfer.metadata.transfer_id,
     };
-    _transfer_id++;
 
     static uint8_t buffer[uavcan_node_GetInfo_Response_1_0_SERIALIZATION_BUFFER_SIZE_BYTES_] = {};
     size_t buffer_size = uavcan_node_GetInfo_Response_1_0_SERIALIZATION_BUFFER_SIZE_BYTES_;
