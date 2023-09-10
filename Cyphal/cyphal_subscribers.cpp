@@ -19,6 +19,8 @@ extern "C" {
 #include "git_software_version.h"
 }
 
+static const auto DEFAULT_NODE_NAME = (const uint8_t*)"co.raccoonlab.unknown_node";
+
 uavcan_node_Version_1_0 NodeGetInfoSubscriber::hw_version;
 
 bool CyphalSubscriber::isEnabled() const {
@@ -61,17 +63,18 @@ NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_) :
 }
 
 void NodeGetInfoSubscriber::updateNodeName() {
-    auto node_name_param_idx = static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT);
-    auto node_name = (const uint8_t*)paramsGetStringValue(node_name_param_idx);
+    auto param_idx = static_cast<ParamIndex_t>(IntParamsIndexes::INTEGER_PARAMS_AMOUNT);
+    auto custom_name = (const uint8_t*)paramsGetStringValue(param_idx);
+    auto& name = get_info_response.name;
 
-    if (node_name != nullptr) {
-        get_info_response.name.count = strcpySafely(get_info_response.name.elements, node_name, 15);
-        if (get_info_response.name.count != 0) {
+    if (custom_name != nullptr) {
+        name.count = strcpySafely(name.elements, custom_name, MAX_STRING_LENGTH);
+        if (name.count != 0) {
             return;
         }
     }
 
-    get_info_response.name.count = strcpySafely(get_info_response.name.elements, (const uint8_t*)"Unknown", 15);
+    name.count = strcpySafely(name.elements, DEFAULT_NODE_NAME, MAX_STRING_LENGTH);
 }
 
 void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
