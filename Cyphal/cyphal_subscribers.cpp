@@ -28,6 +28,11 @@ bool CyphalSubscriber::isEnabled() const {
     return (port_id == 0 || port_id > MAX_PORT_ID) ? false : true;
 }
 
+bool CyphalSubscriber::isService() const {
+    return false;
+}
+
+
 NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_) :
         CyphalSubscriber(driver_, uavcan_node_GetInfo_1_0_FIXED_PORT_ID_) {
     get_info_response.protocol_version.major = CANARD_CYPHAL_SPECIFICATION_VERSION_MAJOR;
@@ -102,6 +107,10 @@ void NodeGetInfoSubscriber::setHardwareVersion(uint8_t major, uint8_t minor) {
     hw_version.minor = minor;
 }
 
+bool NodeGetInfoSubscriber::isService() const {
+    return true;
+}
+
 void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
     auto payload = static_cast<const uint8_t*>(transfer.payload);
     size_t payload_len = transfer.payload_size;
@@ -149,4 +158,8 @@ void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
     if (NUNAVUT_SUCCESS == result) {
         driver->push(&transfer_metadata, buffer_size, buffer);
     }
+}
+
+bool ExecuteCommandSubscriber::isService() const {
+    return true;
 }

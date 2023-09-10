@@ -81,7 +81,7 @@ size_t PortListPublisher::uavcan_node_port_List_1_0_create() {
 
     enabled_sub_amount = 0;
     for (uint_fast8_t sub_idx = 0; sub_idx < driver->_sub_num; sub_idx++) {
-        if (driver->_sub_info[sub_idx]->isEnabled()) {
+        if (driver->_sub_info[sub_idx]->isEnabled() && !driver->_sub_info[sub_idx]->isService()) {
             auto port_id = driver->_sub_info[sub_idx]->port_id;
             sparse_list[enabled_sub_amount] = port_id;
             enabled_sub_amount++;

@@ -20,6 +20,7 @@ struct RegisterListRequest: public CyphalSubscriber {
     explicit RegisterListRequest(Cyphal* driver_) :
         CyphalSubscriber(driver_, uavcan_register_List_1_0_FIXED_PORT_ID_) {};
     void callback(const CanardRxTransfer& transfer) override;
+    bool isService() const override;
 private:
     ParamIndex_t parseRequest(const CanardRxTransfer& transfer) const;
     void makeResponse(const CanardRxTransfer& transfer, ParamIndex_t index);
@@ -28,6 +29,7 @@ private:
 struct RegisterAccessRequest: public CyphalSubscriber {
     explicit RegisterAccessRequest(Cyphal* driver_);
     void callback(const CanardRxTransfer& transfer) override;
+    bool isService() const override;
 private:
     ParamIndex_t parseRequest(const CanardRxTransfer& transfer);
     void makeResponse(const CanardRxTransfer& transfer, ParamIndex_t reg_index);
