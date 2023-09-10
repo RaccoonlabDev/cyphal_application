@@ -58,7 +58,7 @@ size_t PortListPublisher::uavcan_node_port_List_1_0_create() {
     // Clear
     memset(_port_list_buffer, 0x00, PORT_LIST_BUFFER_SIZE);
 
-    // 1. Fill publishers
+    // 1. SubjectIDList.1.0 publishers
     uint8_t& enabled_pub_amount = _port_list_buffer[5];
     auto sparse_list = reinterpret_cast<uint16_t*>(&_port_list_buffer[6]);
     _port_list_buffer[4] = 1;
@@ -73,7 +73,7 @@ size_t PortListPublisher::uavcan_node_port_List_1_0_create() {
     }
     _port_list_buffer[0] = 2 + 2 * enabled_pub_amount;
 
-    // 2. Fill subscribers
+    // 2. SubjectIDList.1.0 subscribers
     size_t subs_offset = 6 + 2 * enabled_pub_amount;
     uint8_t& enabled_sub_amount = _port_list_buffer[5 + subs_offset];
     sparse_list = (uint16_t*)&_port_list_buffer[6 + subs_offset];
@@ -89,8 +89,17 @@ size_t PortListPublisher::uavcan_node_port_List_1_0_create() {
     }
     _port_list_buffer[0 + subs_offset] = 2 + 2 * enabled_sub_amount;
 
-    // 3. Fix services
+    // 3. ServiceIDList.1.0 clients
     _port_list_buffer[12 + (enabled_pub_amount + enabled_sub_amount) * 2] = 64;
+
+    // 4. ServiceIDList.1.0 servers
+    _port_list_buffer[80 + (enabled_pub_amount + enabled_sub_amount) * 2] = 64;
+    auto servers_mask = &_port_list_buffer[84 + (enabled_pub_amount + enabled_sub_amount) * 2];
+
+    servers_mask[384 / 8] |= 1 << (384 % 8);  // uavcan.register.Access
+    servers_mask[385 / 8] |= 1 << (385 % 8);  // uavcan.register.List
+    servers_mask[430 / 8] |= 1 << (430 % 8);  // uavcan.node.GetInfo
+    servers_mask[435 / 8] |= 1 << (435 % 8);  // uavcan.node.ExecuteCommand
 
     return 148 + (enabled_pub_amount + enabled_sub_amount) * 2;
 }
