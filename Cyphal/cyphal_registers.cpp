@@ -57,7 +57,8 @@ void RegisterListRequest::makeResponse(const CanardRxTransfer& transfer, ParamIn
 constexpr uint8_t EMPTY_TAG = 0;
 constexpr uint8_t STRING_TAG = 1;
 constexpr uint8_t NATURAL32_TAG = 9;
-
+constexpr uint8_t NATURAL16_TAG = 10;
+constexpr uint8_t NATURAL8_TAG = 11;
 
 RegisterAccessRequest::RegisterAccessRequest(Cyphal* driver_) :
         CyphalSubscriber(driver_, uavcan_register_Access_1_0_FIXED_PORT_ID_) {
@@ -81,21 +82,21 @@ ParamIndex_t RegisterAccessRequest::parseRequest(const CanardRxTransfer& transfe
 }
 
 void RegisterAccessRequest::writeParam(ParamIndex_t reg_index) {
-    if (_request_msg.value._tag_ == EMPTY_TAG) {
+    const uavcan_register_Value_1_0& value = _request_msg.value;
+
+    if (value._tag_ == EMPTY_TAG) {
         return;
     }
+
     auto param_type = paramsGetType(reg_index);
-    if (param_type == PARAM_TYPE_INTEGER &&
-            _request_msg.value._tag_ == NATURAL32_TAG &&
-            _request_msg.value.natural32.value.count > 0) {
-        paramsSetIntegerValue(reg_index,
-                              _request_msg.value.natural32.value.elements[0]);
-    } else if (param_type == PARAM_TYPE_STRING &&
-            _request_msg.value._tag_ == STRING_TAG &&
-            _request_msg.value._string.value.count > 0) {
-        paramsSetStringValue(reg_index,
-                            _request_msg.value._string.value.count,
-                            _request_msg.value._string.value.elements);
+    if (param_type == PARAM_TYPE_INTEGER && value._tag_ == NATURAL32_TAG && value.natural32.value.count > 0) {
+        paramsSetIntegerValue(reg_index, value.natural32.value.elements[0]);
+    } else if (param_type == PARAM_TYPE_INTEGER && value._tag_ == NATURAL16_TAG && value.natural16.value.count > 0) {
+        paramsSetIntegerValue(reg_index, value.natural16.value.elements[0]);
+    } else if (param_type == PARAM_TYPE_INTEGER && value._tag_ == NATURAL8_TAG && value.natural8.value.count > 0) {
+        paramsSetIntegerValue(reg_index, value.natural8.value.elements[0]);
+    } else if (param_type == PARAM_TYPE_STRING && value._tag_ == STRING_TAG && value._string.value.count > 0) {
+        paramsSetStringValue(reg_index, value._string.value.count, value._string.value.elements);
     }
 }
 
@@ -103,9 +104,20 @@ void RegisterAccessRequest::readParam(uavcan_register_Access_Response_1_0& respo
     auto param_type = paramsGetType(reg_index);
 
     if (param_type == PARAM_TYPE_INTEGER) {
-        response_msg.value.natural32.value.count = 1;
-        response_msg.value._tag_ = NATURAL32_TAG;
-        response_msg.value.natural32.value.elements[0] = paramsGetIntegerValue(reg_index);
+        auto descriptor = paramsGetIntegerDesc(reg_index);
+        if (descriptor->max > 65535) {
+            response_msg.value._tag_ = NATURAL32_TAG;
+            response_msg.value.natural32.value.count = 1;
+            response_msg.value.natural32.value.elements[0] = paramsGetIntegerValue(reg_index);
+        } else if (descriptor->max > 255) {
+            response_msg.value._tag_ = NATURAL16_TAG;
+            response_msg.value.natural16.value.count = 1;
+            response_msg.value.natural16.value.elements[0] = paramsGetIntegerValue(reg_index);
+        } else {
+            response_msg.value._tag_ = NATURAL8_TAG;
+            response_msg.value.natural8.value.count = 1;
+            response_msg.value.natural8.value.elements[0] = paramsGetIntegerValue(reg_index);
+        }
     } else if (param_type == PARAM_TYPE_STRING) {
         response_msg.value._tag_ = STRING_TAG;
         auto str_param = paramsGetStringValue(reg_index);
