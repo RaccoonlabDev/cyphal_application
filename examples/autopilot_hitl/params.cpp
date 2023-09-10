@@ -7,23 +7,23 @@
 #include "storage.h"
 
 IntegerDesc_t integer_desc_pool[] = {
-    {(uint8_t*)"id", 120, 120, 120},
+    {(uint8_t*)"id", 120, 120, 120, false},
 
-    {(uint8_t*)"uavcan.sub.setpoint.id",    2000, 2000, 2000},
-    {(uint8_t*)"uavcan.sub.readiness.id",   2001, 2001, 2001},
+    {(uint8_t*)"uavcan.sub.setpoint.id",    2000, 2000, 2000, false},
+    {(uint8_t*)"uavcan.sub.readiness.id",   2001, 2001, 2001, false},
 
-    {(uint8_t*)"uavcan.pub.baro.press.id",  2020, 2020, 2020},
-    {(uint8_t*)"uavcan.pub.baro.temp.id",   2021, 2021, 2021},
+    {(uint8_t*)"uavcan.pub.baro.press.id",  2020, 2020, 2020, false},
+    {(uint8_t*)"uavcan.pub.baro.temp.id",   2021, 2021, 2021, false},
 
-    {(uint8_t*)"uavcan.pub.gps.point.id",   2010, 2010, 2010},
-    {(uint8_t*)"uavcan.pub.gps.sats.id",    2011, 2011, 2011},
-    {(uint8_t*)"uavcan.pub.gps.status.id",  2012, 2012, 2012},
-    {(uint8_t*)"uavcan.pub.gps.pdop.id",    2013, 2013, 2013},
+    {(uint8_t*)"uavcan.pub.gps.point.id",   2010, 2010, 2010, false},
+    {(uint8_t*)"uavcan.pub.gps.sats.id",    2011, 2011, 2011, false},
+    {(uint8_t*)"uavcan.pub.gps.status.id",  2012, 2012, 2012, false},
+    {(uint8_t*)"uavcan.pub.gps.pdop.id",    2013, 2013, 2013, false},
 
-    {(uint8_t*)"uavcan.pub.mag.id",         2030, 2030, 2030},
+    {(uint8_t*)"uavcan.pub.mag.id",         2030, 2030, 2030, false},
 
-    {(uint8_t*)"uavcan.pub.imu.accel.id",   2040, 2040, 2040},
-    {(uint8_t*)"uavcan.pub.imu.gyro.id",    2041, 2041, 2041},
+    {(uint8_t*)"uavcan.pub.imu.accel.id",   2040, 2040, 2040, false},
+    {(uint8_t*)"uavcan.pub.imu.gyro.id",    2041, 2041, 2041, false},
 };
 IntegerParamValue_t integer_values_pool[sizeof(integer_desc_pool) / sizeof(IntegerDesc_t)];
 

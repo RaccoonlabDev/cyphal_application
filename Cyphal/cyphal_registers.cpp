@@ -102,14 +102,20 @@ void RegisterAccessRequest::writeParam(ParamIndex_t reg_index) {
 
 void RegisterAccessRequest::readParam(uavcan_register_Access_Response_1_0& response_msg, ParamIndex_t reg_index) {
     auto param_type = paramsGetType(reg_index);
+    response_msg.persistent = true;
 
     if (param_type == PARAM_TYPE_INTEGER) {
-        auto descriptor = paramsGetIntegerDesc(reg_index);
-        if (descriptor->max > 65535) {
+        auto param_descriptor = paramsGetIntegerDesc(reg_index);
+        if (param_descriptor == nullptr) {
+            return;
+        }
+
+        response_msg._mutable = !param_descriptor->is_persistent;
+        if (param_descriptor->max > 65535) {
             response_msg.value._tag_ = NATURAL32_TAG;
             response_msg.value.natural32.value.count = 1;
             response_msg.value.natural32.value.elements[0] = paramsGetIntegerValue(reg_index);
-        } else if (descriptor->max > 255) {
+        } else if (param_descriptor->max > 255) {
             response_msg.value._tag_ = NATURAL16_TAG;
             response_msg.value.natural16.value.count = 1;
             response_msg.value.natural16.value.elements[0] = paramsGetIntegerValue(reg_index);
@@ -119,6 +125,12 @@ void RegisterAccessRequest::readParam(uavcan_register_Access_Response_1_0& respo
             response_msg.value.natural8.value.elements[0] = paramsGetIntegerValue(reg_index);
         }
     } else if (param_type == PARAM_TYPE_STRING) {
+        auto param_descriptor = paramsGetStringDesc(reg_index);
+        if (param_descriptor == nullptr) {
+            return;
+        }
+
+        response_msg._mutable = !param_descriptor->is_persistent;
         response_msg.value._tag_ = STRING_TAG;
         auto str_param = paramsGetStringValue(reg_index);
         auto str_len = strlenSafely((const uint8_t*)str_param, MAX_STRING_LENGTH);
