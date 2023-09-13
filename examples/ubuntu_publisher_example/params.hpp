@@ -6,7 +6,7 @@
 #define PARAMS_HPP_
 #include "storage.h"
 enum IntParamsIndexes : ParamIndex_t {
-    ID,
+    PARAM_NODE_ID,
     FEEDBACK,
 
     INTEGER_PARAMS_AMOUNT
