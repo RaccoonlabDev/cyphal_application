@@ -47,6 +47,7 @@ public:
     void setNodeMode(uavcan_node_Mode_1_0 mode);
 
     static constexpr size_t MAX_SUB_NUM = 10;
+    static O1HeapInstance* my_allocator;
 private:
     friend PortListPublisher;
     void spinReceivedFrame(const CanardMicrosecond rx_timestamp_usec,
@@ -76,6 +77,8 @@ private:
 
     std::array<CyphalSubscriber*, MAX_SUB_NUM> _sub_info;
     size_t _sub_num{0};
+
+
 };
 
 #endif  // CYPHAL_CYPHAL_HPP_
