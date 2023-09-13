@@ -62,18 +62,16 @@ bool CyphalTransportCan::init(uint32_t, uint8_t can_driver_idx) {
 }
 
 bool CyphalTransportCan::receive(CanardFrame* can_frame) {
-    memset(_out_payload, 0x00, 256);
+    memset(_out_payload, 0x00, 8);
     FDCAN_RxHeaderTypeDef rx_header;
+    auto& drv = driver[_can_driver_idx];
 
-    HAL_StatusTypeDef res = HAL_FDCAN_GetRxMessage(driver[_can_driver_idx].handler,
-                                                   FDCAN_RX_FIFO0,
-                                                   &rx_header,
-                                                   driver[_can_driver_idx].rx_buf);
+    auto res = HAL_FDCAN_GetRxMessage(drv.handler, FDCAN_RX_FIFO0, &rx_header, drv.rx_buf);
     if (res == HAL_OK) {
-        driver[_can_driver_idx].rx_counter++;
+        drv.rx_counter++;
         can_frame->extended_can_id = rx_header.Identifier;
         can_frame->payload_size = rx_header.DataLength >> 4*4;
-        memcpy(_out_payload, driver[_can_driver_idx].rx_buf, can_frame->payload_size);
+        memcpy(_out_payload, drv.rx_buf, can_frame->payload_size);
         can_frame->payload = _out_payload;
         return true;
     } else {
@@ -95,24 +93,20 @@ bool CyphalTransportCan::transmit(const CanardTxQueueItem* transfer) {
         num_of_frames++;
     }
 
+    auto& drv = driver[_can_driver_idx];
+
     for (size_t frame_idx = 0; frame_idx < num_of_frames; frame_idx++) {
         uint8_t payload_size = (frame_idx + 1 < num_of_frames) ? 8 : length_of_last_frame;
-        driver[_can_driver_idx].tx_header.Identifier = transfer->frame.extended_can_id;
-        driver[_can_driver_idx].tx_header.DataLength = payload_size << 4*4;
-        HAL_StatusTypeDef res = HAL_FDCAN_AddMessageToTxFifoQ(driver[_can_driver_idx].handler,
-                                                              &driver[_can_driver_idx].tx_header,
-                                                              (uint8_t*)(((uint8_t*)transfer->frame.payload) + frame_idx * 8));
+        drv.tx_header.Identifier = transfer->frame.extended_can_id;
+        drv.tx_header.DataLength = payload_size << 4*4;
+        uint8_t* pTxData = (uint8_t*)(((uint8_t*)transfer->frame.payload) + frame_idx * 8);
+        auto res = HAL_FDCAN_AddMessageToTxFifoQ(drv.handler, &drv.tx_header, pTxData);
         if (res == HAL_OK) {
-            driver[_can_driver_idx].tx_counter++;
+            drv.tx_counter++;
             return true;
         } else {
-            driver[_can_driver_idx].err_counter++;
+            drv.err_counter++;
             return false;
-        }
-
-        ///< we need to have a delay between each push
-        for (uint32_t idx = 0; idx < 1000; idx++) {
-            asm("NOP");
         }
     }
     return false;
