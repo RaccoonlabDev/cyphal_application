@@ -25,7 +25,7 @@ static void memFree(CanardInstance* const canard, void* const pointer);
 static uint32_t getCurrentMicroseconds();
 
 
-static O1HeapInstance* my_allocator;
+O1HeapInstance* Cyphal::my_allocator;
 
 int Cyphal::init() {
     heartbeat_pub.msg.health.value = uavcan_node_Health_1_0_NOMINAL;
@@ -191,11 +191,11 @@ void Cyphal::spinReceivedFrame(const CanardMicrosecond rx_timestamp_usec,
 
 static void* memAllocate(CanardInstance* const canard, const size_t amount) {
     (void) canard;
-    return o1heapAllocate(my_allocator, amount);
+    return o1heapAllocate(Cyphal::my_allocator, amount);
 }
 static void memFree(CanardInstance* const canard, void* const pointer) {
     (void) canard;
-    o1heapFree(my_allocator, pointer);
+    o1heapFree(Cyphal::my_allocator, pointer);
 }
 static uint32_t getCurrentMicroseconds() {
     return HAL_GetTick();
