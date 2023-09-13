@@ -20,7 +20,7 @@ public:
     bool receive(CanardFrame* can_frame);
     bool transmit(const CanardTxQueueItem* transfer);
 private:
-    uint8_t _out_payload[256];
+    uint8_t _out_payload[64];  ///< 8 for BXCAN, 64 for FDCAN
     uint8_t _can_driver_idx;
 };
 
