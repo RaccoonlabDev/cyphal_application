@@ -32,7 +32,7 @@ int Cyphal::init() {
     heartbeat_pub.msg.mode.value = uavcan_node_Mode_1_0_OPERATIONAL;
     heartbeat_pub.msg.vendor_specific_status_code = 0;
 
-    node_id = static_cast<uint8_t>(paramsGetIntegerValue(IntParamsIndexes::ID));
+    node_id = static_cast<uint8_t>(paramsGetIntegerValue(IntParamsIndexes::PARAM_NODE_ID));
     if (node_id == 0 || node_id > 126) {
         node_id = 42;
     }
