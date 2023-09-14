@@ -67,17 +67,17 @@ bool CyphalTransportCan::receive(CanardFrame* can_frame) {
     auto& drv = driver[_can_driver_idx];
 
     auto res = HAL_FDCAN_GetRxMessage(drv.handler, FDCAN_RX_FIFO0, &rx_header, drv.rx_buf);
-    if (res == HAL_OK) {
-        drv.rx_counter++;
-        can_frame->extended_can_id = rx_header.Identifier;
-        can_frame->payload_size = rx_header.DataLength >> 4*4;
-        memcpy(_out_payload, drv.rx_buf, can_frame->payload_size);
-        can_frame->payload = _out_payload;
-        return true;
-    } else {
+
+    if (res != HAL_OK) {
         return false;
     }
-    return false;
+
+    drv.rx_counter++;
+    can_frame->extended_can_id = rx_header.Identifier;
+    can_frame->payload_size = rx_header.DataLength >> 4*4;
+    memcpy(_out_payload, drv.rx_buf, can_frame->payload_size);
+    can_frame->payload = _out_payload;
+    return true;
 }
 
 bool CyphalTransportCan::transmit(const CanardTxQueueItem* transfer) {
@@ -108,6 +108,15 @@ bool CyphalTransportCan::transmit(const CanardTxQueueItem* transfer) {
             drv.err_counter++;
             return false;
         }
+
+        ///< we need to have a delay between each push
+        for (uint32_t idx = 0; idx < 1000; idx++) {
+            asm("NOP");
+        }
     }
     return false;
+}
+
+uint8_t CyphalTransportCan::get_rx_queue_size() {
+    return HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0);
 }

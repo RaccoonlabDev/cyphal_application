@@ -1,12 +1,6 @@
 /// This software is distributed under the terms of the MIT License.
-/// Copyright (c) 2022 Dmitry Ponomarev.
+/// Copyright (c) 2022-2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
-
-/**
- * @file cyphal.cpp
- * @author d.ponomarev
- * @date Dec 26, 2021
- */
 
 #include "cyphal.hpp"
 #include "main.h"
@@ -59,8 +53,7 @@ int Cyphal::init() {
 
 void Cyphal::process() {
     // 1. spin recv
-    const uint_fast8_t CAN_RX_BUF_SIZE = 4;
-    for (uint_fast8_t rx_frame_idx = 0; rx_frame_idx < CAN_RX_BUF_SIZE; rx_frame_idx++) {
+    for (uint_fast8_t frame_idx = 0; frame_idx < transport.get_rx_queue_size(); frame_idx++) {
         if (CanardFrame rx_frame; transport.receive(&rx_frame)) {
             spinReceivedFrame(HAL_GetTick() * 1000, &rx_frame);
         } else {
@@ -73,7 +66,7 @@ void Cyphal::process() {
         next_pub_time_ms += 1000;
         heartbeat_pub.msg.uptime = HAL_GetTick() / 1000;
         heartbeat_pub.publish();
-
+    } else {
         port_list_pub.publish();
     }
 

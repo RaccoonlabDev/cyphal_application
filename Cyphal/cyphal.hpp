@@ -1,12 +1,6 @@
 /// This software is distributed under the terms of the MIT License.
-/// Copyright (c) 2022 Dmitry Ponomarev.
+/// Copyright (c) 2022-2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
-
-/**
- * @file cyphal.h
- * @author d.ponomarev
- * @date Dec 28, 2021
- */
 
 #ifndef CYPHAL_CYPHAL_HPP_
 #define CYPHAL_CYPHAL_HPP_
@@ -45,6 +39,7 @@ public:
 
     void setNodeHealth(uavcan_node_Health_1_0 health);
     void setNodeMode(uavcan_node_Mode_1_0 mode);
+    void spinTransmit();
 
     static constexpr size_t MAX_SUB_NUM = 10;
     static O1HeapInstance* my_allocator;
@@ -52,7 +47,6 @@ private:
     friend PortListPublisher;
     void spinReceivedFrame(const CanardMicrosecond rx_timestamp_usec,
                            const CanardFrame* const received_frame);
-    void spinTransmit();
     void processReceivedTransfer(const uint8_t redundant_interface_index,
                                  const CanardRxTransfer& transfer) const;
     bool isTxQueueItemFresh(const CanardTxQueueItem* ti) const;
@@ -65,7 +59,7 @@ private:
     CanardTxQueue queue;
     uint8_t base[HEAP_SIZE] __attribute__ ((aligned (O1HEAP_ALIGNMENT)));
     uint32_t error_counter = 0;
-    uint32_t next_pub_time_ms = 50;
+    uint32_t next_pub_time_ms = 10;
     uint8_t node_id;
 
     HeartbeatPublisher heartbeat_pub;

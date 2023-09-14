@@ -1,12 +1,6 @@
 /// This software is distributed under the terms of the MIT License.
-/// Copyright (c) 2022 Dmitry Ponomarev.
+/// Copyright (c) 2022-2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
-
-/**
- * @file cyphal_transport_can.cpp
- * @author d.ponomarev
- * @date Jul 07, 2022
- */
 
 #include "cyphal_transport_can.hpp"
 #include <string.h>
@@ -78,4 +72,8 @@ bool CyphalTransportCan::transmit(const CanardTxQueueItem* transfer) {
         }
     }
     return result;
+}
+
+uint8_t CyphalTransportCan::get_rx_queue_size() {
+    return 3;
 }
