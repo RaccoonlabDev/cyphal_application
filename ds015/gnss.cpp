@@ -5,6 +5,10 @@
 #include "gnss.hpp"
 
 void Ds015GnssGnssPublisher::publish() {
+    if (!isEnabled()) {
+        return;
+    }
+
     static uint8_t buffer[ds015_service_gnss_Gnss_0_1_EXTENT_BYTES_];
     size_t buffer_size = ds015_service_gnss_Gnss_0_1_EXTENT_BYTES_;
     int32_t result = ds015_service_gnss_Gnss_0_1_serialize_(&msg, buffer, &buffer_size);
@@ -14,6 +18,10 @@ void Ds015GnssGnssPublisher::publish() {
 }
 
 void Ds015GnssCovariancePublisher::publish() {
+    if (!isEnabled()) {
+        return;
+    }
+
     static uint8_t buffer[ds015_service_gnss_Covariance_0_1_EXTENT_BYTES_];
     size_t buffer_size = ds015_service_gnss_Covariance_0_1_EXTENT_BYTES_;
     int32_t result = ds015_service_gnss_Covariance_0_1_serialize_(&msg, buffer, &buffer_size);
@@ -23,6 +31,10 @@ void Ds015GnssCovariancePublisher::publish() {
 }
 
 void Ds015GnssRelativePositionPublisher::publish() {
+    if (!isEnabled()) {
+        return;
+    }
+
     static uint8_t buffer[ds015_service_gnss_RelativePosition_0_1_EXTENT_BYTES_];
     size_t buffer_size = ds015_service_gnss_RelativePosition_0_1_EXTENT_BYTES_;
     int32_t result = ds015_service_gnss_RelativePosition_0_1_serialize_(&msg, buffer, &buffer_size);
@@ -32,6 +44,10 @@ void Ds015GnssRelativePositionPublisher::publish() {
 }
 
 void Ds015GnssTimePublisher::publish() {
+    if (!isEnabled()) {
+        return;
+    }
+
     static uint8_t buffer[uavcan_time_SynchronizedTimestamp_1_0_EXTENT_BYTES_];
     size_t buffer_size = uavcan_time_SynchronizedTimestamp_1_0_EXTENT_BYTES_;
     int32_t result = uavcan_time_SynchronizedTimestamp_1_0_serialize_(&msg, buffer, &buffer_size);

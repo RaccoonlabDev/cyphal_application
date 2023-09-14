@@ -19,6 +19,7 @@ public:
     bool init(uint32_t can_speed, uint8_t can_driver_idx);
     bool receive(CanardFrame* can_frame);
     bool transmit(const CanardTxQueueItem* transfer);
+    uint8_t get_rx_queue_size();
 private:
     uint8_t _out_payload[64];  ///< 8 for BXCAN, 64 for FDCAN
     uint8_t _can_driver_idx;

@@ -1,12 +1,6 @@
 /// This software is distributed under the terms of the MIT License.
-/// Copyright (c) 2022 Dmitry Ponomarev.
+/// Copyright (c) 2022-2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
-
-/**
- * @file cyphal_transport_can.cpp
- * @author d.ponomarev
- * @date Dec 21, 2022
- */
 
 #include "cyphal_transport_can.hpp"
 #include <string.h>
@@ -54,4 +48,8 @@ bool CyphalTransportCan::transmit(const CanardTxQueueItem* transfer) {
     const uint64_t current_time_us = HAL_GetTick() * 1000;
     int16_t res = socketcanPush(_instance, &transfer->frame, current_time_us);
     return (res > 0) ? true : false;
+}
+
+uint8_t CyphalTransportCan::get_rx_queue_size() {
+    return 3;
 }

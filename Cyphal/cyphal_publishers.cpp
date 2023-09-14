@@ -109,7 +109,7 @@ void PortListPublisher::publish() {
     if (crnt_time_ms < next_pub_time_ms) {
         return;
     }
-    next_pub_time_ms = crnt_time_ms + 5000;
+    next_pub_time_ms += 5000;
 
     size_t size = uavcan_node_port_List_1_0_create();
     push(size, _port_list_buffer);
