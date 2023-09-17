@@ -53,18 +53,20 @@ int Cyphal::init() {
 
 void Cyphal::process() {
     // 1. spin recv
+    uint32_t crnt_time_ms = HAL_GetTick();
     for (uint_fast8_t frame_idx = 0; frame_idx < transport.get_rx_queue_size(); frame_idx++) {
-        if (CanardFrame rx_frame; transport.receive(&rx_frame)) {
-            spinReceivedFrame(HAL_GetTick() * 1000, &rx_frame);
+        CanardFrame rx_frame;
+        if (transport.receive(&rx_frame)) {
+            spinReceivedFrame(crnt_time_ms * 1000, &rx_frame);
         } else {
             break;
         }
     }
 
     // 2. spin application
-    if (next_pub_time_ms < HAL_GetTick()) {
+    if (next_pub_time_ms < crnt_time_ms) {
         next_pub_time_ms += 1000;
-        heartbeat_pub.msg.uptime = HAL_GetTick() / 1000;
+        heartbeat_pub.msg.uptime = crnt_time_ms / 1000;
         heartbeat_pub.publish();
     } else {
         port_list_pub.publish();
