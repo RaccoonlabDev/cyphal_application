@@ -5,6 +5,8 @@
 #include "cyphal_transport_can.hpp"
 #include <string.h>
 #include "main.h"
+#include "ring_buffer.hpp"
+#include "params.hpp"
 
 typedef struct{
     FDCAN_HandleTypeDef* handler;
@@ -14,6 +16,14 @@ typedef struct{
     size_t tx_counter;
     size_t rx_counter;
 } CanDriver;
+
+struct CanFrame {
+    uint32_t identifier;
+    uint8_t data[8];
+    uint8_t size;
+};
+
+static RingBuffer<CanFrame, 40> ring_buffer;
 
 #ifndef CYPHAL_NUM_OF_CAN_BUSES
     #error "CYPHAL_NUM_OF_CAN_BUSES must be specified!"
@@ -31,51 +41,86 @@ typedef struct{
     };
 #endif
 
+static void configure_filters();
 
 bool CyphalTransportCan::init(uint32_t, uint8_t can_driver_idx) {
     if (can_driver_idx >= CYPHAL_NUM_OF_CAN_BUSES) {
         return false;
     }
 
+    auto& drv = driver[can_driver_idx];
+
     _can_driver_idx = can_driver_idx;
-    driver[can_driver_idx].tx_header.IdType = FDCAN_EXTENDED_ID;
-    driver[can_driver_idx].tx_header.TxFrameType = FDCAN_DATA_FRAME;
-    driver[can_driver_idx].tx_header.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-    driver[can_driver_idx].tx_header.BitRateSwitch = FDCAN_BRS_OFF;
-    driver[can_driver_idx].tx_header.FDFormat = FDCAN_CLASSIC_CAN;
-    driver[can_driver_idx].tx_header.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
-    driver[can_driver_idx].tx_header.MessageMarker = 0;
+    drv.tx_header.IdType = FDCAN_EXTENDED_ID;
+    drv.tx_header.TxFrameType = FDCAN_DATA_FRAME;
+    drv.tx_header.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+    drv.tx_header.BitRateSwitch = FDCAN_BRS_OFF;
+    drv.tx_header.FDFormat = FDCAN_CLASSIC_CAN;
+    drv.tx_header.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+    drv.tx_header.MessageMarker = 0;
 
-    FDCAN_FilterTypeDef sFilterConfig;
-    sFilterConfig.IdType = FDCAN_EXTENDED_ID;
-    sFilterConfig.FilterIndex = 0;
-    sFilterConfig.FilterType = FDCAN_FILTER_MASK;
-    sFilterConfig.FilterConfig = FDCAN_FILTER_DISABLE;
+    configure_filters();
 
-    if (HAL_FDCAN_ConfigFilter(driver[can_driver_idx].handler, &sFilterConfig) != HAL_OK) {
+    if (HAL_FDCAN_Start(drv.handler) != HAL_OK) {
         return false;
-    } else if (HAL_FDCAN_Start(driver[can_driver_idx].handler) != HAL_OK) {
+    }
+
+    if (HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK) {
         return false;
     }
 
     return true;
 }
 
-bool CyphalTransportCan::receive(CanardFrame* can_frame) {
-    memset(_out_payload, 0x00, 8);
+// Not yet
+void configure_filters() {
+    // uint32_t can_id_1 = 0x13000000 + node_id + (dest_node_id << 7) + (384 << 14);
+    // uint32_t can_id_2 = 0x13000000 + node_id + (dest_node_id << 7) + (385 << 14);
+
+    // HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
+    // FDCAN_FilterTypeDef sFilterConfig;
+    // sFilterConfig.IdType = FDCAN_EXTENDED_ID;
+    // sFilterConfig.FilterIndex = 0;
+    // sFilterConfig.FilterType = FDCAN_FILTER_DUAL;
+    // sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+    // sFilterConfig.FilterID1 = can_id_1;
+    // sFilterConfig.FilterID2 = can_id_2;
+
+    // HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig);
+}
+
+void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs) {
     FDCAN_RxHeaderTypeDef rx_header;
-    auto& drv = driver[_can_driver_idx];
+    const uint8_t fifo_size = HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0);
+    CanFrame frame;
 
-    auto res = HAL_FDCAN_GetRxMessage(drv.handler, FDCAN_RX_FIFO0, &rx_header, drv.rx_buf);
+    for (uint_fast8_t idx = 0; idx < fifo_size; idx++) {
+        HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rx_header, frame.data);
+        frame.identifier = rx_header.Identifier;
+        frame.size = rx_header.DataLength >> 4*4;
+        ring_buffer.push(frame);
+    }
+}
 
-    if (res != HAL_OK) {
+bool CyphalTransportCan::receive(CanardFrame* can_frame) {
+    if (ring_buffer.get_size() == 0) {
         return false;
     }
 
-    drv.rx_counter++;
-    can_frame->extended_can_id = rx_header.Identifier;
-    can_frame->payload_size = rx_header.DataLength >> 4*4;
-    memcpy(_out_payload, drv.rx_buf, can_frame->payload_size);
+    static uint32_t rb_max_size = 0;
+    uint32_t rb_size = ring_buffer.get_size();
+    if (rb_size > rb_max_size) {
+        rb_max_size = rb_size;
+    }
+    paramsSetIntegerValue(PARAM_BOOTLOADER_INTERNAL, rb_max_size);
+
+    driver[_can_driver_idx].rx_counter++;
+    __disable_irq();
+    CanFrame frame = ring_buffer.pop();
+    __enable_irq();
+    can_frame->extended_can_id = frame.identifier;
+    can_frame->payload_size = frame.size;
+    memcpy(_out_payload, frame.data, can_frame->payload_size);
     can_frame->payload = _out_payload;
     return true;
 }
@@ -100,7 +145,15 @@ bool CyphalTransportCan::transmit(const CanardTxQueueItem* transfer) {
         drv.tx_header.Identifier = transfer->frame.extended_can_id;
         drv.tx_header.DataLength = payload_size << 4*4;
         uint8_t* pTxData = (uint8_t*)(((uint8_t*)transfer->frame.payload) + frame_idx * 8);
+        if (HAL_FDCAN_GetTxFifoFreeLevel(drv.handler) == 0) {
+            drv.err_counter++;
+            return false;
+        }
+
+        __disable_irq();
         auto res = HAL_FDCAN_AddMessageToTxFifoQ(drv.handler, &drv.tx_header, pTxData);
+        __enable_irq();
+
         if (res == HAL_OK) {
             drv.tx_counter++;
             return true;
@@ -118,5 +171,5 @@ bool CyphalTransportCan::transmit(const CanardTxQueueItem* transfer) {
 }
 
 uint8_t CyphalTransportCan::get_rx_queue_size() {
-    return HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0);
+    return ring_buffer.get_size();
 }
