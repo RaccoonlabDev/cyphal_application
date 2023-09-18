@@ -65,6 +65,8 @@ NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_) :
     get_info_response.unique_id[11] = (uid_u32 >> 24) & 0xFF;
 
     get_info_response.software_vcs_revision_id = GIT_HASH;
+
+    updateNodeName();
 }
 
 void NodeGetInfoSubscriber::updateNodeName() {
@@ -83,8 +85,6 @@ void NodeGetInfoSubscriber::updateNodeName() {
 }
 
 void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
-    updateNodeName();
-
     CanardTransferMetadata transfer_metadata = {
         .priority       = CanardPriorityNominal,
         .transfer_kind  = CanardTransferKindResponse,
