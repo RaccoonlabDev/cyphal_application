@@ -1,2 +1,2 @@
-uavcan.node.id   : ["Integer",  "PARAM_NODE_ID",    True,   50,  0,  256]
-uavcan.node.description : ["String",   "PARAM_NODE_NAME",  False,   ""]
+uavcan.node.id   :        ["Integer",  "PARAM_NODE_ID",           "mutable",   50,  0,  256]
+system.name :             ["String",   "PARAM_NODE_NAME",         "mutable",   ""]
