@@ -21,7 +21,7 @@ jobs:
           repository: PonomarevDA/libparams
           path: repository/Libs/libparams
           fetch-depth: 0
-      - run: cd ./repository/Libs/libparams && git checkout 8496be9
+      - run: cd ./repository/Libs/libparams && git checkout ecac253
 
       - name: Install dependencies
         run: |
@@ -51,7 +51,7 @@ jobs:
           repository: PonomarevDA/libparams
           path: repository/Libs/libparams
           fetch-depth: 0
-      - run: cd ./repository/Libs/libparams && git checkout 8496be9
+      - run: cd ./repository/Libs/libparams && git checkout ecac253
 
       - name: Install dependencies
         run: |
