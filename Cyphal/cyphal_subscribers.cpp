@@ -128,14 +128,20 @@ void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
             break;
 
         case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_STORE_PERSISTENT_STATES:
-            paramsLoadToFlash();
-            cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_SUCCESS;
+            if (LIBPARAMS_OK == paramsLoadToFlash()) {
+                cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_SUCCESS;
+            } else {
+                cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_FAILURE;
+            }
             break;
 
         case uavcan_node_ExecuteCommand_Request_1_0_COMMAND_FACTORY_RESET:
             paramsResetToDefault();
-            paramsLoadToFlash();
-            cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_SUCCESS;
+            if (LIBPARAMS_OK == paramsLoadToFlash()) {
+                cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_SUCCESS;
+            } else {
+                cmd_response.status = uavcan_node_ExecuteCommand_Response_1_0_STATUS_FAILURE;
+            }
             break;
 
         default:
