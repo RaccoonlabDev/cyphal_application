@@ -31,6 +31,19 @@ void Int16Publisher::publish() {
     }
 }
 
+void Real32Publisher::publish() {
+    if (!isEnabled()) {
+        return;
+    }
+
+    uint8_t buffer[uavcan_primitive_scalar_Real32_1_0_EXTENT_BYTES_];
+    size_t buffer_size = uavcan_primitive_scalar_Real32_1_0_EXTENT_BYTES_;
+    int32_t result = uavcan_primitive_scalar_Real32_1_0_serialize_(&msg, buffer, &buffer_size);
+    if (NUNAVUT_SUCCESS == result) {
+        push(buffer_size, buffer);
+    }
+}
+
 void AngleScalarPublisher::publish(const uavcan_si_sample_angle_Scalar_1_0& msg) {
     if (!isEnabled()) {
         return;
