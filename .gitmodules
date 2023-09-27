@@ -1,9 +1,6 @@
 [submodule "Libs/platform_specific_components"]
 	path = Libs/platform_specific_components
 	url = git@github.com:OpenCyphal-Garage/platform_specific_components.git
-[submodule "Libs/o1heap"]
-	path = Libs/o1heap
-	url = git@github.com:pavel-kirienko/o1heap.git
 [submodule "Libs/libcanard"]
 	path = Libs/libcanard
 	url = https://github.com/OpenCyphal/libcanard
