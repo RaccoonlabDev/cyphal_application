@@ -12,8 +12,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: 'repository'
-          submodules: recursive
-          fetch-depth: 0
 
       - name: Checkout libparams
         uses: actions/checkout@v3
@@ -31,35 +29,3 @@ jobs:
       - run: ./repository/scripts/nnvg_generate_c_headers.sh
       - run: mkdir -p repository/build
       - run: cd repository/build && cmake ../examples/${{ matrix.target }} && make -s
-
-  makefile_legacy:
-    runs-on: ubuntu-22.04
-    timeout-minutes: 10
-    steps:
-      - name: Install GIT
-        run: sudo apt-get update && sudo apt-get install -y git
-
-      - uses: actions/checkout@v3
-        with:
-          path: 'repository'
-          submodules: recursive
-          fetch-depth: 0
-
-      - name: Checkout libparams
-        uses: actions/checkout@v3
-        with:
-          repository: PonomarevDA/libparams
-          path: repository/Libs/libparams
-          fetch-depth: 0
-      - run: cd ./repository/Libs/libparams && git checkout ecac253
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get install -y make gcc-arm-none-eabi
-          pip install -U nunavut
-
-      - run: ./repository/scripts/nnvg_generate_c_headers.sh
-      - run: cd repository/examples/ubuntu_minimal && make -s build
-
-      - name: Install GIT
-        run: sudo apt-get update && sudo apt-get install -y git
