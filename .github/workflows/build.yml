@@ -10,22 +10,19 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
-        with:
-          path: 'repository'
 
       - name: Checkout libparams
         uses: actions/checkout@v3
         with:
           repository: PonomarevDA/libparams
-          path: repository/Libs/libparams
+          path: Libs/libparams
           fetch-depth: 0
-      - run: cd ./repository/Libs/libparams && git checkout ecac253
+      - run: cd ./Libs/libparams && git checkout ecac253
 
       - name: Install dependencies
         run: |
           sudo apt-get install -y make gcc-arm-none-eabi
           pip install -U nunavut
 
-      - run: ./repository/scripts/nnvg_generate_c_headers.sh
-      - run: mkdir -p repository/build
-      - run: cd repository/build && cmake ../examples/${{ matrix.target }} && make -s
+      - run: make -s generage_dsdl
+      - run: make -s ${{ matrix.target }}
