@@ -1,11 +1,15 @@
 # Libcanard application example [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=RaccoonlabDev_libcanard_stm32_cyphal&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=RaccoonlabDev_libcanard_stm32_cyphal) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=RaccoonlabDev_libcanard_stm32_cyphal&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=RaccoonlabDev_libcanard_stm32_cyphal)
 
-The minimal sample application includes the following features:
-- [Heartbeat](https://github.com/OpenCyphal/public_regulated_data_types/blob/master/uavcan/node/7509.Heartbeat.1.0.dsdl) (send abstract node status information)
-- [GetInfo](https://github.com/OpenCyphal/public_regulated_data_types/blob/master/uavcan/node/430.GetInfo.1.0.dsdl) (return full node info)
-- [Register interface](https://github.com/OpenCyphal/public_regulated_data_types/tree/master/uavcan/register) (read and write paramters)
-- [port.List](https://github.com/OpenCyphal/public_regulated_data_types/blob/master/uavcan/node/port/7510.List.0.1.dsdl) (send all supported port id)
-- [ExecuteCommand](https://github.com/OpenCyphal/public_regulated_data_types/blob/master/uavcan/node/435.ExecuteCommand.1.0.dsdl) (handle requests on restart or save parameters commands)
+A minimal application always includes the following features:
+
+| № | Type      | Message  | Comment | Rate |
+| - | --------- | -------- | ------- | ---- |
+| 1 | pub | [uavcan.node.Heartbeat](https://github.com/OpenCyphal/public_regulated_data_types/blob/master/uavcan/node/7509.Heartbeat.1.0.dsdl) | Abstract node status info | 1 Hz |
+| 2 | pub | [uavcan.node.port.List](https://github.com/OpenCyphal/public_regulated_data_types/blob/master/uavcan/node/port/7510.List.0.1.dsdl) | Node network capabilities | 0.2 Hz |
+| 3 | RPC-service | [uavcan.node.GetInfo](https://github.com/OpenCyphal/public_regulated_data_types/blob/master/uavcan/node/430.GetInfo.1.0.dsdl) | Full node info | |
+| 4 | RPC-service | [uavcan.node.ExecuteCommand](https://github.com/OpenCyphal/public_regulated_data_types/blob/master/uavcan/node/435.ExecuteCommand.1.0.dsdl) | Restart, save or reset registers |
+| 5 | RPC-service | [uavcan.register.List](https://github.com/OpenCyphal/public_regulated_data_types/blob/master/uavcan/register/385.List.1.0.dsdl) </br> [uavcan.register.Access](https://github.com/OpenCyphal/public_regulated_data_types/blob/master/uavcan/register/384.Access.1.0.dsdl) | Register interface |
+
 
 There are also examples of the following features:
 
@@ -29,8 +33,7 @@ Software dependencies:
 **Step 1. Clone repo with submodules**
 
 ```bash
-git clone <this_repo> --recursive
-git submodule update --init --recursive
+git clone <this_repo>
 
 cd Libs
 git clone git@github.com:PonomarevDA/libparams.git
