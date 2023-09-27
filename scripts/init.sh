@@ -12,7 +12,11 @@ REG_DATA_TYPE_PATH="$REPOSITORY_PATH/Libs/public_regulated_data_types/uavcan $RE
 
 res=$(ifconfig | grep slcan0)
 if [ -z "$res" ]; then
-    $SCRIPT_DIR/create_slcan_from_serial.sh $CYPHAL_DEV_PATH_SYMLINK
+    if [ -z "$CYPHAL_DEV_PATH_SYMLINK" ]; then
+        $SCRIPT_DIR/create_slcan.sh
+    else
+        $SCRIPT_DIR/create_slcan.sh -d $CYPHAL_DEV_PATH_SYMLINK
+    fi
 fi
 
 export YAKUT_COMPILE_OUTPUT="$REPOSITORY_PATH/build/compile_output"
