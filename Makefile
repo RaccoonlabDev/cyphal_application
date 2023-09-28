@@ -2,7 +2,7 @@
 # Distributed under the MIT License, available in the file LICENSE.
 # Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
-all: autopilot_hitl ubuntu_minimal ubuntu_publisher_example
+all: ubuntu_minimal ubuntu_publisher_example
 
 define build_example
 	$(info Build example $(1)...)
@@ -10,9 +10,6 @@ define build_example
 	cd build/examples/$(1) && cmake ../../../examples/$(1) && make -s
 endef
 
-
-autopilot_hitl:
-	$(call build_example,autopilot_hitl)
 
 ubuntu_minimal:
 	$(call build_example,ubuntu_minimal)

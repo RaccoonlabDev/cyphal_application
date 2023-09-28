@@ -5,7 +5,7 @@ jobs:
   build:
     strategy:
       matrix:
-        target: [ubuntu_minimal, ubuntu_publisher_example, autopilot_hitl]
+        target: [ubuntu_minimal, ubuntu_publisher_example]
     runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:

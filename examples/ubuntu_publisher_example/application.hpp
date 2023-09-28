@@ -2,8 +2,8 @@
 /// Copyright (c) 2022 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
-#ifndef HITL_APPLICATION_HPP_
-#define HITL_APPLICATION_HPP_
+#ifndef UBUNTU_PUBLISHER_EXAMPLE_APPLICATION_HPP_
+#define UBUNTU_PUBLISHER_EXAMPLE_APPLICATION_HPP_
 
 #include "cyphal.hpp"
 
@@ -22,4 +22,4 @@ private:
     FeedbackPublisher feedback;
 };
 
-#endif  // HITL_APPLICATION_HPP_
+#endif  // UBUNTU_PUBLISHER_EXAMPLE_APPLICATION_HPP_
