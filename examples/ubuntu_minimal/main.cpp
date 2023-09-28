@@ -18,11 +18,25 @@ int main (int argc, char *argv[]) {
     Cyphal cyphal;
     int init_res = cyphal.init();
     if (init_res < 0) {
-        std::cout << "Error: " << init_res << std::endl;
-        return -1;
+        std::cout << "Error: ";
+        switch (init_res) {
+            case -CYPHAL_TRANSPORT_INIT_ERROR:
+                std::cout << "CYPHAL_TRANSPORT_INIT_ERROR";
+                break;
+            case -CYPHAL_HEAP_INIT_ERROR:
+                std::cout << "CYPHAL_HEAP_INIT_ERROR";
+                break;
+            case -CYPHAL_SUB_APPLICATION_INIT_ERROR:
+                std::cout << "CYPHAL_SUB_APPLICATION_INIT_ERROR";
+                break;
+            default:
+                break;
+        }
+        std::cout << " (" << init_res << ")" << std::endl;
+        return init_res;
     }
 
-    std::cout << "Hello, world." << std::endl;
+    std::cout << "Node with id=" << cyphal.getNodeId() << " has been started." << std::endl;
     while(true) {
         cyphal.process();
     }

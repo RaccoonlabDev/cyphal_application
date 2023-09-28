@@ -41,6 +41,8 @@ public:
     void setNodeMode(uavcan_node_Mode_1_0 mode);
     void spinTransmit();
 
+    uint16_t getNodeId() const {return node_id;}
+
     static constexpr size_t MAX_SUB_NUM = 10;
     static O1HeapInstance* my_allocator;
 private:
