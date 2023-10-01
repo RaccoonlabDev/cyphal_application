@@ -8,7 +8,7 @@
 
 SetpointSubscriber::SetpointSubscriber(Cyphal* driver_) :
     CyphalSubscriber(driver_, 0) {
-};
+}
 
 int8_t SetpointSubscriber::init() {
     port_id = paramsGetIntegerValue(IntParamsIndexes::SETPOINT_ID);
