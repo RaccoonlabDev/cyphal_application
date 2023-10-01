@@ -86,11 +86,11 @@ void NodeGetInfoSubscriber::updateNodeName() {
 
 void NodeGetInfoSubscriber::callback(const CanardRxTransfer& transfer) {
     CanardTransferMetadata transfer_metadata = {
-        .priority       = CanardPriorityNominal,
-        .transfer_kind  = CanardTransferKindResponse,
-        .port_id        = uavcan_node_GetInfo_1_0_FIXED_PORT_ID_,
-        .remote_node_id = transfer.metadata.remote_node_id,
-        .transfer_id    = transfer.metadata.transfer_id,
+        CanardPriorityNominal,
+        CanardTransferKindResponse,
+        uavcan_node_GetInfo_1_0_FIXED_PORT_ID_,
+        transfer.metadata.remote_node_id,
+        transfer.metadata.transfer_id,
     };
 
     static uint8_t buffer[uavcan_node_GetInfo_Response_1_0_SERIALIZATION_BUFFER_SIZE_BYTES_] = {};
@@ -150,11 +150,11 @@ void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
     }
 
     CanardTransferMetadata transfer_metadata = {
-        .priority       = CanardPriorityNominal,
-        .transfer_kind  = CanardTransferKindResponse,
-        .port_id        = uavcan_node_ExecuteCommand_1_0_FIXED_PORT_ID_,
-        .remote_node_id = transfer.metadata.remote_node_id,
-        .transfer_id    = transfer.metadata.transfer_id,
+        CanardPriorityNominal,
+        CanardTransferKindResponse,
+        uavcan_node_ExecuteCommand_1_0_FIXED_PORT_ID_,
+        transfer.metadata.remote_node_id,
+        transfer.metadata.transfer_id,
     };
 
     uint8_t buffer[uavcan_node_ExecuteCommand_Response_1_0_SERIALIZATION_BUFFER_SIZE_BYTES_] = {};
