@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.10.2)
-project(cyphal_example)
 
 if(NOT libparamsPath)
     set(libparamsPath ${CMAKE_CURRENT_LIST_DIR}/Libs/libparams)
