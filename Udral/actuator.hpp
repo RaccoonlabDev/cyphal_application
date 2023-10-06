@@ -25,9 +25,11 @@ private:
 struct ReadinessSubscriber: public CyphalSubscriber {
     ReadinessSubscriber(Cyphal* driver_);
     int8_t init();
-    void callback(const CanardRxTransfer& transfer) override;
+    uint8_t get_readiness();
 private:
+    void callback(const CanardRxTransfer& transfer) override;
     reg_udral_service_common_Readiness_0_1 msg = {};
+    uint32_t _last_recv_time_ms{0};
 };
 
 #endif  // UDRAL_ACTUATOR_HPP_

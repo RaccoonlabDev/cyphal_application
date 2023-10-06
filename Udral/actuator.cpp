@@ -57,8 +57,17 @@ int8_t ReadinessSubscriber::init() {
     return 0;
 }
 
+uint8_t ReadinessSubscriber::get_readiness() {
+    if (_last_recv_time_ms == 0 || HAL_GetTick() > _last_recv_time_ms + 500) {
+        return reg_udral_service_common_Readiness_0_1_SLEEP;
+    }
+
+    return msg.value;
+}
+
 void ReadinessSubscriber::callback(const CanardRxTransfer& transfer) {
     const uint8_t* payload = static_cast<const uint8_t*>(transfer.payload);
     size_t payload_len = transfer.payload_size;
     reg_udral_service_common_Readiness_0_1_deserialize_(&msg, payload, &payload_len);
+    _last_recv_time_ms = HAL_GetTick();
 }
