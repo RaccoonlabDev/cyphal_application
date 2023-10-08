@@ -71,3 +71,7 @@ void ReadinessSubscriber::callback(const CanardRxTransfer& transfer) {
     reg_udral_service_common_Readiness_0_1_deserialize_(&msg, payload, &payload_len);
     _last_recv_time_ms = HAL_GetTick();
 }
+
+void ZubaxCompactFeedbackPublisher::publish(const ZubaxCompactFeedback& msg) {
+    push(zubax_telega_CompactFeedback_0_1_SERIALIZATION_BUFFER_SIZE_BYTES, (const uint8_t*)&msg);
+}
