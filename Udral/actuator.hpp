@@ -7,7 +7,7 @@
 
 #include "cyphal.hpp"
 #include "reg/udral/service/actuator/common/sp/Scalar_0_1.h"
-#include "reg/udral/service/actuator/common/sp/Vector4_0_1.h"
+#include "reg/udral/service/actuator/common/sp/Vector31_0_1.h"
 #include "reg/udral/service/common/Readiness_0_1.h"
 
 
@@ -15,12 +15,14 @@ struct SetpointSubscriber: public CyphalSubscriber {
     SetpointSubscriber(Cyphal* driver);
     int8_t init();
     void callback(const CanardRxTransfer& transfer) override;
-    const reg_udral_service_actuator_common_sp_Vector4_0_1& get_setpoint() const;
+    const reg_udral_service_actuator_common_sp_Vector31_0_1& get_setpoint() const;
+    uint8_t get_setpoint_size() const {return _setpoint_size;};
     uint32_t get_recv_counter() const;
     void clear_recv_counter();
 private:
-    reg_udral_service_actuator_common_sp_Vector4_0_1 msg = {};
+    reg_udral_service_actuator_common_sp_Vector31_0_1 msg = {};
     uint32_t _recv_counter{0};
+    uint8_t _setpoint_size{0};
 };
 
 

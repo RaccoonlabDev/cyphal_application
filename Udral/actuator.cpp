@@ -13,7 +13,7 @@ SetpointSubscriber::SetpointSubscriber(Cyphal* driver_) :
 int8_t SetpointSubscriber::init() {
     port_id = paramsGetIntegerValue(IntParamsIndexes::SETPOINT_ID);
     if (driver->subscribe(this,
-                reg_udral_service_actuator_common_sp_Vector4_0_1_EXTENT_BYTES_,
+                reg_udral_service_actuator_common_sp_Vector31_0_1_EXTENT_BYTES_,
                 CanardTransferKindMessage) < 0) {
         return -1;
     }
@@ -24,11 +24,12 @@ int8_t SetpointSubscriber::init() {
 void SetpointSubscriber::callback(const CanardRxTransfer& transfer) {
     const uint8_t* payload = static_cast<const uint8_t*>(transfer.payload);
     size_t payload_len = transfer.payload_size;
-    reg_udral_service_actuator_common_sp_Vector4_0_1_deserialize_(&msg, payload, &payload_len);
+    reg_udral_service_actuator_common_sp_Vector31_0_1_deserialize_(&msg, payload, &payload_len);
+    _setpoint_size = payload_len / 2;
     _recv_counter++;
 }
 
-const reg_udral_service_actuator_common_sp_Vector4_0_1& SetpointSubscriber::get_setpoint() const {
+const reg_udral_service_actuator_common_sp_Vector31_0_1& SetpointSubscriber::get_setpoint() const {
     return msg;
 }
 
