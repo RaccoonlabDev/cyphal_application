@@ -1,3 +1,19 @@
-uavcan.node.id   :        ["Integer",  "PARAM_NODE_ID",           "mutable",   50,  0,  256]
-system.name :             ["String",   "PARAM_NODE_NAME",         "mutable",   ""]
-uavcan.node.description : ["String",   "PARAM_NODE_DESCRIPTION",  "mutable",   ""]
+uavcan.node.id:
+  type: Integer
+  enum: PARAM_NODE_ID
+  flags: mutable
+  default: 50
+  min: 0
+  max: 256
+
+system.name:
+  type: String
+  enum: PARAM_NODE_NAME
+  flags: mutable
+  default: ""
+
+uavcan.node.description:
+  type: String
+  enum: PARAM_NODE_DESCRIPTION
+  flags: mutable
+  default: ""

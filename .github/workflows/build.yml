@@ -16,8 +16,7 @@ jobs:
         with:
           repository: PonomarevDA/libparams
           path: Libs/libparams
-          fetch-depth: 0
-      - run: cd ./Libs/libparams && git checkout ecac253
+          ref: v0.6.7
 
       - name: Install dependencies
         run: |
