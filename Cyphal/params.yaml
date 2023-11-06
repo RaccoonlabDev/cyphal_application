@@ -1,4 +1,5 @@
 uavcan.node.id:
+  note: Defines a node-ID. Allowed values [0,127].
   type: Integer
   enum: PARAM_NODE_ID
   flags: mutable
@@ -7,12 +8,14 @@ uavcan.node.id:
   max: 256
 
 system.name:
+  note: Defines custom node name. If empty, the node will use the default name.
   type: String
   enum: PARAM_NODE_NAME
   flags: mutable
   default: ""
 
 uavcan.node.description:
+  note: User/integrator-defined, human-readable description of this specific node.
   type: String
   enum: PARAM_NODE_DESCRIPTION
   flags: mutable
