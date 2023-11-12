@@ -114,7 +114,7 @@ void RegisterAccessRequest::readParam(uavcan_register_Access_Response_1_0& respo
             return;
         }
 
-        response_msg._mutable = !param_descriptor->is_persistent;
+        response_msg._mutable = param_descriptor->is_mutable;
         if (param_descriptor->max > 65535) {
             response_msg.value._tag_ = NATURAL32_TAG;
             response_msg.value.natural32.value.count = 1;
@@ -134,7 +134,7 @@ void RegisterAccessRequest::readParam(uavcan_register_Access_Response_1_0& respo
             return;
         }
 
-        response_msg._mutable = !param_descriptor->is_persistent;
+        response_msg._mutable = param_descriptor->is_mutable;
         response_msg.value._tag_ = STRING_TAG;
         auto str_param = paramsGetStringValue(reg_index);
         auto str_len = strlenSafely((const uint8_t*)str_param, MAX_STRING_LENGTH);

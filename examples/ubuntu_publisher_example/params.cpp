@@ -3,7 +3,6 @@
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
 #include "params.hpp"
-#include "string_params.hpp"
 #include "storage.h"
 
 IntegerDesc_t integer_desc_pool[] = {

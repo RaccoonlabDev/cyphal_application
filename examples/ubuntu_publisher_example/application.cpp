@@ -9,7 +9,6 @@
 #include "reg/udral/service/actuator/common/Feedback_0_1.h"
 #include "main.h"
 #include "params.hpp"
-#include "string_params.hpp"
 
 void FeedbackPublisher::process() {
     static uint32_t prev_pub_time_ms = 1000;

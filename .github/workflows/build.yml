@@ -16,7 +16,7 @@ jobs:
         with:
           repository: PonomarevDA/libparams
           path: Libs/libparams
-          ref: v0.6.7
+          ref: v0.7.0
 
       - name: Install dependencies
         run: |
