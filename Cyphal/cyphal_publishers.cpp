@@ -106,10 +106,11 @@ size_t PortListPublisher::uavcan_node_port_List_1_0_create() {
 
 void PortListPublisher::publish() {
     auto crnt_time_ms = HAL_GetTick();
-    if (crnt_time_ms < next_pub_time_ms) {
+    if (crnt_time_ms < next_pub_time_ms && !driver->ports_updated) {
         return;
     }
-    next_pub_time_ms += 5000;
+    next_pub_time_ms = crnt_time_ms + 5000;
+    driver->ports_updated = false;
 
     size_t size = uavcan_node_port_List_1_0_create();
     push(size, _port_list_buffer);

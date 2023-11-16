@@ -43,6 +43,8 @@ public:
 
     uint16_t getNodeId() const {return node_id;}
 
+    uint32_t ports_updated{false};
+
     static constexpr size_t MAX_SUB_NUM = 10;
     static O1HeapInstance* my_allocator;
 private:

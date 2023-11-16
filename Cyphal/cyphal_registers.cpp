@@ -96,6 +96,8 @@ void RegisterAccessRequest::writeParam(ParamIndex_t reg_index) {
     if (param_type == PARAM_TYPE_INTEGER && value._tag_ == NATURAL32_TAG && value.natural32.value.count > 0) {
         paramsSetIntegerValue(reg_index, value.natural32.value.elements[0]);
     } else if (param_type == PARAM_TYPE_INTEGER && value._tag_ == NATURAL16_TAG && value.natural16.value.count > 0) {
+        // need to find better way to capture a port update
+        driver->ports_updated = true;
         paramsSetIntegerValue(reg_index, value.natural16.value.elements[0]);
     } else if (param_type == PARAM_TYPE_INTEGER && value._tag_ == NATURAL8_TAG && value.natural8.value.count > 0) {
         paramsSetIntegerValue(reg_index, value.natural8.value.elements[0]);
