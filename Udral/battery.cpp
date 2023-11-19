@@ -10,7 +10,7 @@
 #define AH_TO_COULOMB   3600
 
 void UdralBatteryPublisher::set_nominal_data(float design_capacity_ah, uint64_t unique_id, float nominal_voltage) {
-    _parameters_pub.set_nominal_data(design_capacity_ah, unique_id, nominal_voltage);
+    parameters_pub.set_nominal_data(design_capacity_ah, unique_id, nominal_voltage);
 }
 
 void UdralBatteryPublisher::publish(float voltage, float current, float temperature_kelvin, float full_capacity_ah, float remaining_capacity_ah) {
@@ -19,21 +19,21 @@ void UdralBatteryPublisher::publish(float voltage, float current, float temperat
     if (crnt_time_ms > _next_source_pub_time_ms) {
         _next_source_pub_time_ms = crnt_time_ms + 10;
 
-        float full_energy_joule = WH_TO_JOULE * full_capacity_ah * _parameters_pub.get_nominal_voltage();
+        float full_energy_joule = WH_TO_JOULE * full_capacity_ah * parameters_pub.get_nominal_voltage();
         float energy_joule = WH_TO_JOULE * remaining_capacity_ah * voltage;
-        _source_pub.publish(voltage, current, full_energy_joule, energy_joule);
+        source_pub.publish(voltage, current, full_energy_joule, energy_joule);
     }
 
     if (crnt_time_ms > _next_status_pub_time_ms) {
         _next_status_pub_time_ms = crnt_time_ms + 1000;
 
-        _status_pub.publish(voltage, temperature_kelvin);
+        status_pub.publish(voltage, temperature_kelvin);
     }
 
     if (crnt_time_ms > _next_parameters_pub_time_ms) {
         _next_parameters_pub_time_ms = crnt_time_ms + 5000;
 
-        _parameters_pub.publish();
+        parameters_pub.publish();
     }
 }
 

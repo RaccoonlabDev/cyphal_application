@@ -34,9 +34,9 @@ private:
 
 struct UdralBatteryPublisher {
     UdralBatteryPublisher(Cyphal* driver_, CanardPortID source_port, CanardPortID status_port, CanardPortID params_port) :
-        _source_pub(driver_, source_port),
-        _status_pub(driver_, status_port),
-        _parameters_pub(driver_, params_port) {
+        source_pub(driver_, source_port),
+        status_pub(driver_, status_port),
+        parameters_pub(driver_, params_port) {
     };
 
     /**
@@ -53,11 +53,11 @@ struct UdralBatteryPublisher {
      */
     void publish(float voltage, float current, float temperature_kelvin, float full_capacity_ah, float remaining_capacity_ah);
 
-private:
-    ElectricitySourcePublisher _source_pub;
-    BatteryStatusPublisher _status_pub;
-    BatteryParametersPublisher _parameters_pub;
+    ElectricitySourcePublisher source_pub;
+    BatteryStatusPublisher status_pub;
+    BatteryParametersPublisher parameters_pub;
 
+private:
     uint32_t _next_source_pub_time_ms{1000};
     uint32_t _next_status_pub_time_ms{1000};
     uint32_t _next_parameters_pub_time_ms{1000};
