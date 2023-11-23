@@ -11,6 +11,8 @@
 #include "storage.h"
 #include "params.hpp"
 
+namespace cyphal {
+
 static const constexpr size_t TX_QUEUE_FRAME_SIZE = 320;  ///< we need 314 bytes for port.List
 
 ///< wrappers
@@ -197,3 +199,5 @@ static void memFree(CanardInstance* const canard, void* const pointer) {
 static uint32_t getCurrentMicroseconds() {
     return HAL_GetTick();
 }
+
+}  // namespace cyphal

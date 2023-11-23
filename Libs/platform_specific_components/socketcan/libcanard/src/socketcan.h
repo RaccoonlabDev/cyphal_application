@@ -35,9 +35,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace cyphal {
 
 /// File descriptor alias.
 typedef int SocketCANFD;
@@ -79,8 +77,6 @@ int16_t socketcanPop(const SocketCANFD        fd,
 /// Returns 0 on success, negated errno on error.
 int16_t socketcanFilter(const SocketCANFD fd, const size_t num_configs, const CanardFilter* const configs);
 
-#ifdef __cplusplus
-}
-#endif
+}  // namespace cyphal
 
 #endif

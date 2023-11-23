@@ -2,22 +2,15 @@
 /// Copyright (c) 2022 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
-/**
- * @file cyphal_subscribers.cpp
- * @author d.ponomarev
- * @date Aug 12, 2022
- */
-
 #include "cyphal_subscribers.hpp"
 #include "cyphal.hpp"
 #include "main.h"
 #include "params.hpp"
 #include "algorithms.hpp"
 #include "storage.h"
-extern "C" {
-#include "git_hash.h"
 #include "git_software_version.h"
-}
+
+namespace cyphal {
 
 static const auto DEFAULT_NODE_NAME = (const uint8_t*)"co.raccoonlab.unknown_node";
 
@@ -172,3 +165,5 @@ void ExecuteCommandSubscriber::callback(const CanardRxTransfer& transfer) {
 bool ExecuteCommandSubscriber::isService() const {
     return true;
 }
+
+}  // namespace cyphal

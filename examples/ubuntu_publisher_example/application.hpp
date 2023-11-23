@@ -7,8 +7,8 @@
 
 #include "cyphal.hpp"
 
-struct FeedbackPublisher: public CyphalPublisher {
-    FeedbackPublisher(Cyphal* driver_) : CyphalPublisher(driver_, 2100) {}
+struct FeedbackPublisher: public cyphal::CyphalPublisher {
+    FeedbackPublisher(cyphal::Cyphal* driver_) : cyphal::CyphalPublisher(driver_, 2100) {}
     void process();
 };
 
@@ -18,7 +18,7 @@ public:
     int init();
     void process();
 private:
-    Cyphal cyphal;
+    cyphal::Cyphal cyphal;
     FeedbackPublisher feedback;
 };
 

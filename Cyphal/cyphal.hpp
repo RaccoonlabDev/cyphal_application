@@ -14,6 +14,8 @@
 #include "uavcan/node/GetInfo_1_0.h"
 #include "uavcan/node/Heartbeat_1_0.h"
 
+namespace cyphal {
+
 #ifndef CYPHAL_HEAP_SIZE
     #define CYPHAL_HEAP_SIZE (1024*10)
 #endif
@@ -31,7 +33,9 @@ public:
               node_get_info_response(this),
               register_list_response(this),
               register_access_response(this),
-              execute_cmd_response(this) {};
+              execute_cmd_response(this) {
+        _instance = this;
+    };
     int init();
     void process();
     int32_t push(CanardTransferMetadata* metadata, size_t payload_size, const uint8_t* payload);
@@ -44,6 +48,8 @@ public:
     uint16_t getNodeId() const {return node_id;}
 
     uint32_t ports_updated{false};
+
+    static Cyphal* get_instance() { return _instance; }
 
     static constexpr size_t MAX_SUB_NUM = 10;
     static O1HeapInstance* my_allocator;
@@ -75,8 +81,9 @@ private:
 
     std::array<CyphalSubscriber*, MAX_SUB_NUM> _sub_info;
     size_t _sub_num{0};
-
-
+    inline static Cyphal* _instance{nullptr};
 };
+
+}  // namespace cyphal
 
 #endif  // CYPHAL_CYPHAL_HPP_

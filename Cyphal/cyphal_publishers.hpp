@@ -2,12 +2,6 @@
 /// Copyright (c) 2022 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
-/**
- * @file cyphal_publishers.hpp
- * @author d.ponomarev
- * @date Aug 22, 2022
- */
-
 #ifndef CYPHAL_CYPHAL_PUBLISHERS_HPP_
 #define CYPHAL_CYPHAL_PUBLISHERS_HPP_
 
@@ -17,6 +11,8 @@
 #include "uavcan/node/Health_1_0.h"
 #include "uavcan/node/port/List_0_1.h"
 #include "uavcan/node/port/List_1_0.h"
+
+namespace cyphal {
 
 class Cyphal;
 
@@ -67,5 +63,7 @@ private:
     uint8_t _port_list_buffer[PORT_LIST_BUFFER_SIZE];
     uint32_t next_pub_time_ms = 1000;
 };
+
+}  // namespace cyphal
 
 #endif  // CYPHAL_CYPHAL_PUBLISHERS_HPP_

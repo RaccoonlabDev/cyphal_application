@@ -1,12 +1,6 @@
 /// This software is distributed under the terms of the MIT License.
-/// Copyright (c) 2022 Dmitry Ponomarev.
+/// Copyright (c) 2022-2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
-
-/**
- * @file algorithms.cpp
- * @author d.ponomarev
- * @date Oct 23, 2022
- */
 
 #include "algorithms.hpp"
 #include <string.h>

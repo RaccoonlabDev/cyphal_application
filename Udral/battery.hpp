@@ -10,6 +10,8 @@
 #include "reg/udral/service/battery/Status_0_2.h"
 #include "reg/udral/service/battery/Parameters_0_3.h"
 
+namespace cyphal {
+
 struct ElectricitySourcePublisher: public CyphalPublisher {
     ElectricitySourcePublisher(Cyphal* driver_, CanardPortID port_id) : CyphalPublisher(driver_, port_id) {};
     void publish(float voltage, float current, float full_energy_joule, float energy_joule);
@@ -62,5 +64,7 @@ private:
     uint32_t _next_status_pub_time_ms{1000};
     uint32_t _next_parameters_pub_time_ms{1000};
 };
+
+}  // namespace cyphal
 
 #endif  // UDRAL_BATTERY_HPP_

@@ -1,17 +1,13 @@
 /// This software is distributed under the terms of the MIT License.
-/// Copyright (c) 2022 Dmitry Ponomarev.
+/// Copyright (c) 2022-2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
-
-/**
- * @file cyphal_registers.cpp
- * @author d.ponomarev
- * @date Aug 12, 2022
- */
 
 #include "cyphal_registers.hpp"
 #include "cyphal.hpp"
 #include "algorithms.hpp"
 #include "params.hpp"
+
+namespace cyphal {
 
 void RegisterListRequest::callback(const CanardRxTransfer& transfer) {
     auto index = parseRequest(transfer);
@@ -170,3 +166,5 @@ void RegisterAccessRequest::makeResponse(const CanardRxTransfer& transfer, Param
 bool RegisterAccessRequest::isService() const {
     return true;
 }
+
+}  // namespace cyphal

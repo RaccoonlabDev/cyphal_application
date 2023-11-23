@@ -11,6 +11,8 @@
 #include "uavcan/primitive/scalar/Integer16_1_0.h"
 #include "uavcan/primitive/scalar/Real32_1_0.h"
 
+namespace cyphal {
+
 struct GpsPointPublisher: public CyphalPublisher {
     GpsPointPublisher(Cyphal* driver_, uint16_t port_id) : CyphalPublisher(driver_, port_id) {}
     void publish(const reg_udral_physics_kinematics_geodetic_PointStateVarTs_0_1& msg);
@@ -32,5 +34,7 @@ struct AngleScalarPublisher: public CyphalPublisher {
     AngleScalarPublisher(Cyphal* driver_, CanardPortID port_id) : CyphalPublisher(driver_, port_id) {};
     void publish(const uavcan_si_sample_angle_Scalar_1_0& msg);
 };
+
+}  // namespace cyphal
 
 #endif  // UDRAL_GNSS_HPP_

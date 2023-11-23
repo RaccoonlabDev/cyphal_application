@@ -8,10 +8,13 @@
 #include "cyphal.hpp"
 #include "uavcan/si/sample/pressure/Scalar_1_0.h"
 
+namespace cyphal {
+
 struct DiffPressurePublisher: public CyphalPublisher {
     DiffPressurePublisher(Cyphal* driver_, CanardPortID port_id) : CyphalPublisher(driver_, port_id) {};
     void publish(float pressure);
 };
 
+}  // namespace cyphal
 
 #endif  // UDRAL_AIRSPEED_HPP_

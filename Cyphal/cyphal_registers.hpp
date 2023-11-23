@@ -2,12 +2,6 @@
 /// Copyright (c) 2022 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
 
-/**
- * @file cyphal.h
- * @author d.ponomarev
- * @date Dec 28, 2021
- */
-
 #ifndef CYPHAL_CYPHAL_REGISTERS_HPP_
 #define CYPHAL_CYPHAL_REGISTERS_HPP_
 
@@ -15,6 +9,8 @@
 #include "uavcan/_register/Access_1_0.h"
 #include "uavcan/_register/List_1_0.h"
 #include "storage.h"
+
+namespace cyphal {
 
 struct RegisterListRequest: public CyphalSubscriber {
     explicit RegisterListRequest(Cyphal* driver_) :
@@ -40,5 +36,6 @@ private:
     CanardTransferMetadata _transfer_metadata;
 };
 
+}  // namespace cyphal
 
 #endif  // CYPHAL_CYPHAL_REGISTERS_HPP_

@@ -30,6 +30,8 @@
 #define KILO 1000L
 #define MEGA (KILO * KILO)
 
+namespace cyphal {
+
 static int16_t getNegatedErrno()
 {
     const int out = -abs(errno);
@@ -132,7 +134,7 @@ SocketCANFD socketcanOpen(const char* const iface_name, const bool can_fd)
     return getNegatedErrno();
 }
 
-int16_t socketcanPush(const SocketCANFD fd, const CanardFrame* const frame, const CanardMicrosecond timeout_usec)
+int16_t socketcanPush(const SocketCANFD fd, const cyphal::CanardFrame* const frame, const CanardMicrosecond timeout_usec)
 {
     if ((frame == NULL) || (frame->payload == NULL) || (frame->payload_size > UINT8_MAX))
     {
@@ -295,3 +297,5 @@ int16_t socketcanFilter(const SocketCANFD fd, const size_t num_configs, const Ca
 
     return (ret < 0) ? getNegatedErrno() : 0;
 }
+
+}  // namespace cyphal

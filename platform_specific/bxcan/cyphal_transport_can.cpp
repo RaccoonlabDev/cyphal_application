@@ -7,6 +7,7 @@
 #include "bxcan.h"
 #include "main.h"
 
+namespace cyphal {
 
 bool CyphalTransportCan::init(uint32_t can_speed, uint8_t) {
     BxCANTimings timings;
@@ -77,3 +78,5 @@ bool CyphalTransportCan::transmit(const CanardTxQueueItem* transfer) {
 uint8_t CyphalTransportCan::get_rx_queue_size() {
     return 3;
 }
+
+}  // namespace cyphal

@@ -9,6 +9,8 @@
 #define WH_TO_JOULE     3600
 #define AH_TO_COULOMB   3600
 
+namespace cyphal {
+
 void UdralBatteryPublisher::set_nominal_data(float design_capacity_ah, uint64_t unique_id, float nominal_voltage) {
     parameters_pub.set_nominal_data(design_capacity_ah, unique_id, nominal_voltage);
 }
@@ -99,3 +101,5 @@ void BatteryParametersPublisher::publish() {
 float BatteryParametersPublisher::get_nominal_voltage() {
     return _msg.nominal_voltage.volt;
 }
+
+}  // namespace cyphal

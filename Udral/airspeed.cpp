@@ -6,6 +6,8 @@
 #include "main.h"
 #include "params.hpp"
 
+namespace cyphal {
+
 void DiffPressurePublisher::publish(float pressure) {
     uavcan_si_sample_pressure_Scalar_1_0 msg;
     msg.pascal = pressure;
@@ -18,3 +20,5 @@ void DiffPressurePublisher::publish(float pressure) {
         push(buffer_size, buffer);
     }
 }
+
+}  // namespace cyphal
