@@ -8,6 +8,17 @@
 #include "ring_buffer.hpp"
 #include "params.hpp"
 
+#ifndef CYPHAL_NUM_OF_CAN_BUSES
+    #error "CYPHAL_NUM_OF_CAN_BUSES must be specified!"
+#elif CYPHAL_NUM_OF_CAN_BUSES == 1
+    extern FDCAN_HandleTypeDef hfdcan1;
+#elif CYPHAL_NUM_OF_CAN_BUSES == 2
+    extern FDCAN_HandleTypeDef hfdcan1;
+    extern FDCAN_HandleTypeDef hfdcan2;
+#endif
+
+namespace cyphal {
+
 typedef struct{
     FDCAN_HandleTypeDef* handler;
     FDCAN_TxHeaderTypeDef tx_header;
@@ -28,13 +39,10 @@ static RingBuffer<CanFrame, 40> ring_buffer;
 #ifndef CYPHAL_NUM_OF_CAN_BUSES
     #error "CYPHAL_NUM_OF_CAN_BUSES must be specified!"
 #elif CYPHAL_NUM_OF_CAN_BUSES == 1
-    extern FDCAN_HandleTypeDef hfdcan1;
     static CanDriver driver[CYPHAL_NUM_OF_CAN_BUSES] = {
         {.handler = &hfdcan1},
     };
 #elif CYPHAL_NUM_OF_CAN_BUSES == 2
-    extern FDCAN_HandleTypeDef hfdcan1;
-    extern FDCAN_HandleTypeDef hfdcan2;
     static CanDriver driver[CYPHAL_NUM_OF_CAN_BUSES] = {
         {.handler = &hfdcan1},
         {.handler = &hfdcan2}
@@ -89,18 +97,6 @@ void configure_filters() {
     // HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig);
 }
 
-void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs) {
-    FDCAN_RxHeaderTypeDef rx_header;
-    const uint8_t fifo_size = HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0);
-    CanFrame frame;
-
-    for (uint_fast8_t idx = 0; idx < fifo_size; idx++) {
-        HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rx_header, frame.data);
-        frame.identifier = rx_header.Identifier;
-        frame.size = rx_header.DataLength >> 4*4;
-        ring_buffer.push(frame);
-    }
-}
 
 bool CyphalTransportCan::receive(CanardFrame* can_frame) {
     if (ring_buffer.get_size() == 0) {
@@ -172,4 +168,20 @@ bool CyphalTransportCan::transmit(const CanardTxQueueItem* transfer) {
 
 uint8_t CyphalTransportCan::get_rx_queue_size() {
     return ring_buffer.get_size();
+}
+
+}  // namespace cyphal
+
+
+void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs) {
+    FDCAN_RxHeaderTypeDef rx_header;
+    const uint8_t fifo_size = HAL_FDCAN_GetRxFifoFillLevel(&hfdcan1, FDCAN_RX_FIFO0);
+    cyphal::CanFrame frame;
+
+    for (uint_fast8_t idx = 0; idx < fifo_size; idx++) {
+        HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rx_header, frame.data);
+        frame.identifier = rx_header.Identifier;
+        frame.size = rx_header.DataLength >> 4*4;
+        cyphal::ring_buffer.push(frame);
+    }
 }

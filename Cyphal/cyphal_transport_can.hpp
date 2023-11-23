@@ -1,17 +1,13 @@
 /// This software is distributed under the terms of the MIT License.
-/// Copyright (c) 2022 Dmitry Ponomarev.
+/// Copyright (c) 2022-2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
-
-/**
- * @file cyphal_transport_can.h
- * @author d.ponomarev
- * @date Jul 07, 2022
- */
 
 #ifndef CYPHAL_CYPHAL_TRANSPORT_CAN_HPP_
 #define CYPHAL_CYPHAL_TRANSPORT_CAN_HPP_
 
 #include "canard.h"
+
+namespace cyphal {
 
 class CyphalTransportCan {
 public:
@@ -24,5 +20,7 @@ private:
     uint8_t _out_payload[64];  ///< 8 for BXCAN, 64 for FDCAN
     uint8_t _can_driver_idx;
 };
+
+}  // namespace cyphal
 
 #endif  // CYPHAL_CYPHAL_TRANSPORT_CAN_HPP_

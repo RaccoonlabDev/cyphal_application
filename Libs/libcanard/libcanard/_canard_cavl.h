@@ -34,11 +34,7 @@
 #    define CAVL_ASSERT assert
 #endif
 
-#ifdef __cplusplus
-// This is, strictly speaking, useless because we do not define any functions with external linkage here,
-// but it tells static analyzers that what follows should be interpreted as C code rather than C++.
-extern "C" {
-#endif
+namespace cyphal {
 
 // ----------------------------------------         PUBLIC API SECTION         ----------------------------------------
 
@@ -332,6 +328,4 @@ static inline void cavlRemove(Cavl** const root, const Cavl* const node)
     }
 }
 
-#ifdef __cplusplus
-}
-#endif
+}  // namespace cyphal

@@ -10,6 +10,7 @@
 #include "reg/udral/service/actuator/common/sp/Vector31_0_1.h"
 #include "reg/udral/service/common/Readiness_0_1.h"
 
+namespace cyphal {
 
 struct SetpointSubscriber: public CyphalSubscriber {
     SetpointSubscriber(Cyphal* driver);
@@ -55,5 +56,7 @@ struct ZubaxCompactFeedbackPublisher: public CyphalPublisher {
 private:
     static constexpr size_t zubax_telega_CompactFeedback_0_1_SERIALIZATION_BUFFER_SIZE_BYTES = 7;
 };
+
+}  // namespace cyphal
 
 #endif  // UDRAL_ACTUATOR_HPP_

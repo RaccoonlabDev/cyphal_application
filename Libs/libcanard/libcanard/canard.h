@@ -87,9 +87,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace cyphal {
 
 /// Semantic version of this library (not the Cyphal specification).
 /// API will be backward compatible within the same major version.
@@ -693,7 +691,5 @@ CanardFilter canardMakeFilterForServices(const CanardNodeID local_node_id);
 /// in the Transport Layer chapter of the Cyphal specification.
 CanardFilter canardConsolidateFilters(const CanardFilter* const a, const CanardFilter* const b);
 
-#ifdef __cplusplus
-}
-#endif
+}  // namespace cyphal
 #endif

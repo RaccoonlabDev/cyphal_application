@@ -1,12 +1,6 @@
 /// This software is distributed under the terms of the MIT License.
-/// Copyright (c) 2022 Dmitry Ponomarev.
+/// Copyright (c) 2022-2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
-
-/**
- * @file cyphal.h
- * @author d.ponomarev
- * @date Dec 28, 2021
- */
 
 #ifndef CYPHAL_CYPHAL_SUBSCRIBERS_HPP_
 #define CYPHAL_CYPHAL_SUBSCRIBERS_HPP_
@@ -14,6 +8,8 @@
 #include "canard.h"
 #include "uavcan/node/GetInfo_1_0.h"
 #include "uavcan/node/ExecuteCommand_1_0.h"
+
+namespace cyphal {
 
 class Cyphal;
 
@@ -62,5 +58,7 @@ struct ExecuteCommandSubscriber: public CyphalSubscriber {
 private:
     uint8_t _transfer_id = 0;
 };
+
+}  // namespace cyphal
 
 #endif  // CYPHAL_CYPHAL_SUBSCRIBERS_HPP_

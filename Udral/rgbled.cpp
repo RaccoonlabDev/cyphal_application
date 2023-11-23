@@ -6,6 +6,8 @@
 #include "main.h"
 #include "params.hpp"
 
+namespace cyphal {
+
 void HighColorPublisher::publish(uint8_t red, uint8_t green, uint8_t blue) {
     reg_udral_physics_optics_HighColor_0_1 msg = {red, green, blue};
 
@@ -34,3 +36,5 @@ void HighColorSubscriber::callback(const CanardRxTransfer& transfer) {
     size_t payload_len = transfer.payload_size;
     reg_udral_physics_optics_HighColor_0_1_deserialize_(&_msg, payload, &payload_len);
 }
+
+}  // namespace cyphal

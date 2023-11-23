@@ -1,17 +1,13 @@
 /// This software is distributed under the terms of the MIT License.
-/// Copyright (c) 2022 Dmitry Ponomarev.
+/// Copyright (c) 2022-2023 Dmitry Ponomarev.
 /// Author: Dmitry Ponomarev <ponomarevda96@gmail.com>
-
-/**
- * @file cyphal_publishers.cpp
- * @author d.ponomarev
- * @date Aug 12, 2022
- */
 
 #include "cyphal_publishers.hpp"
 #include "cyphal.hpp"
 #include "main.h"
 #include "storage.h"
+
+namespace cyphal {
 
 std::array<CyphalPublisher*, CyphalPublisher::MAX_PUB_NUM> CyphalPublisher::publishers;
 uint8_t CyphalPublisher::publishers_amount{0};
@@ -115,3 +111,5 @@ void PortListPublisher::publish() {
     size_t size = uavcan_node_port_List_1_0_create();
     push(size, _port_list_buffer);
 }
+
+}  // namespace cyphal

@@ -5,6 +5,8 @@
 #include "rangefinder.hpp"
 #include "main.h"
 
+namespace cyphal {
+
 void RangefinderRangePublisher::publish(float range) {
     if (!isEnabled()) {
         return;
@@ -20,3 +22,5 @@ void RangefinderRangePublisher::publish(float range) {
         push(buffer_size, buffer);
     }
 }
+
+}  // namespace cyphal

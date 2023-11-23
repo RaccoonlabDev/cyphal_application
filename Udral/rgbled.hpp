@@ -8,6 +8,7 @@
 #include "cyphal.hpp"
 #include "reg/udral/physics/optics/HighColor_0_1.h"
 
+namespace cyphal {
 
 struct HighColorPublisher: public CyphalPublisher {
     HighColorPublisher(Cyphal* driver_, CanardPortID port_id) : CyphalPublisher(driver_, port_id) {};
@@ -22,5 +23,7 @@ struct HighColorSubscriber: public CyphalSubscriber {
 private:
     reg_udral_physics_optics_HighColor_0_1 _msg = {};
 };
+
+}  // namespace cyphal
 
 #endif  // UDRAL_RGBLED_HPP_

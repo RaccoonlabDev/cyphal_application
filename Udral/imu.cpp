@@ -6,6 +6,8 @@
 #include "main.h"
 #include "params.hpp"
 
+namespace cyphal {
+
 void ImuAccelPublisher::publish(const uavcan_si_unit_acceleration_Vector3_1_0& msg) {
     setPortId(paramsGetIntegerValue(IntParamsIndexes::IMU_ACCEL_ID));
 
@@ -49,3 +51,5 @@ void RawImuPublisher::publish(const std::array<double, 3>& accel, const std::arr
         push(buffer_size, buffer);
     }
 }
+
+}  // namespace cyphal

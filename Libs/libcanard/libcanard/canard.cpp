@@ -6,6 +6,8 @@
 #include "_canard_cavl.h"
 #include <string.h>
 
+namespace cyphal {
+
 // --------------------------------------------- BUILD CONFIGURATION ---------------------------------------------
 
 /// Define this macro to include build configuration header.
@@ -34,9 +36,9 @@
 #    define CANARD_PRIVATE static inline
 #endif
 
-#if !defined(__STDC_VERSION__) || (__STDC_VERSION__ < 199901L)
-#    error "Unsupported language: ISO C99 or a newer version is required."
-#endif
+// #if !defined(__STDC_VERSION__) || (__STDC_VERSION__ < 199901L)
+// #    error "Unsupported language: ISO C99 or a newer version is required."
+// #endif
 
 // --------------------------------------------- COMMON DEFINITIONS ---------------------------------------------
 
@@ -691,7 +693,7 @@ CANARD_PRIVATE int8_t rxSessionWritePayload(CanardInstance* const          ins,
     if ((NULL == rxs->payload) && (extent > 0U))
     {
         CANARD_ASSERT(rxs->payload_size == 0);
-        rxs->payload = ins->memory_allocate(ins, extent);
+        rxs->payload = (uint8_t*)ins->memory_allocate(ins, extent);
     }
 
     int8_t out = 0;
@@ -1275,3 +1277,4 @@ CanardFilter canardConsolidateFilters(const CanardFilter* a, const CanardFilter*
 
     return out;
 }
+}  // namespace cyphal

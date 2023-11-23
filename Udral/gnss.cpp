@@ -5,6 +5,8 @@
 #include "gnss.hpp"
 #include "uavcan/primitive/scalar/Integer16_1_0.h"
 
+namespace cyphal {
+
 void GpsPointPublisher::publish(const reg_udral_physics_kinematics_geodetic_PointStateVarTs_0_1& msg) {
     if (!isEnabled()) {
         return;
@@ -56,3 +58,5 @@ void AngleScalarPublisher::publish(const uavcan_si_sample_angle_Scalar_1_0& msg)
         push(buffer_size, buffer);
     }
 }
+
+}  // namespace cyphal

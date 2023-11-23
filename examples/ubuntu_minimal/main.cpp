@@ -15,18 +15,18 @@ uint32_t HAL_GetTick() {
 }
 
 int main (int argc, char *argv[]) {
-    Cyphal cyphal;
+    cyphal::Cyphal cyphal;
     int init_res = cyphal.init();
     if (init_res < 0) {
         std::cout << "Error: ";
         switch (init_res) {
-            case -CYPHAL_TRANSPORT_INIT_ERROR:
+            case -cyphal::CYPHAL_TRANSPORT_INIT_ERROR:
                 std::cout << "CYPHAL_TRANSPORT_INIT_ERROR";
                 break;
-            case -CYPHAL_HEAP_INIT_ERROR:
+            case -cyphal::CYPHAL_HEAP_INIT_ERROR:
                 std::cout << "CYPHAL_HEAP_INIT_ERROR";
                 break;
-            case -CYPHAL_SUB_APPLICATION_INIT_ERROR:
+            case -cyphal::CYPHAL_SUB_APPLICATION_INIT_ERROR:
                 std::cout << "CYPHAL_SUB_APPLICATION_INIT_ERROR";
                 break;
             default:

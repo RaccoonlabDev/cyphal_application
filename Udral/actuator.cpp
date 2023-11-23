@@ -6,6 +6,8 @@
 #include "main.h"
 #include "params.hpp"
 
+namespace cyphal {
+
 SetpointSubscriber::SetpointSubscriber(Cyphal* driver_) :
     CyphalSubscriber(driver_, 0) {
 }
@@ -76,3 +78,5 @@ void ReadinessSubscriber::callback(const CanardRxTransfer& transfer) {
 void ZubaxCompactFeedbackPublisher::publish(const ZubaxCompactFeedback& msg) {
     push(zubax_telega_CompactFeedback_0_1_SERIALIZATION_BUFFER_SIZE_BYTES, (const uint8_t*)&msg);
 }
+
+}  // namespace cyphal

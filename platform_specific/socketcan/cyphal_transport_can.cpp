@@ -7,6 +7,8 @@
 #include "socketcan.h"
 #include "main.h"
 
+namespace cyphal {
+
 static SocketCANFD _instance = 0;
 
 bool CyphalTransportCan::init(uint32_t, uint8_t) {
@@ -53,3 +55,5 @@ bool CyphalTransportCan::transmit(const CanardTxQueueItem* transfer) {
 uint8_t CyphalTransportCan::get_rx_queue_size() {
     return 3;
 }
+
+}  // namespace cyphal

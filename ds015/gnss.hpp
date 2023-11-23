@@ -11,6 +11,7 @@
 #include "ds015/service/gnss/RelativePosition_0_1.h"
 #include "uavcan/time/SynchronizedTimestamp_1_0.h"
 
+namespace cyphal {
 
 struct Ds015GnssGnssPublisher: public CyphalPublisher {
     Ds015GnssGnssPublisher(Cyphal* driver_, CanardPortID port_id) : CyphalPublisher(driver_, port_id) {};
@@ -35,5 +36,7 @@ struct Ds015GnssTimePublisher: public CyphalPublisher {
     void publish();
     uavcan_time_SynchronizedTimestamp_1_0 msg;
 };
+
+}  // namespace cyphal
 
 #endif  // DS015_GNSS_HPP_

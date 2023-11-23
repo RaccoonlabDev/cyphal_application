@@ -4,6 +4,8 @@
 
 #include "magnetometer.hpp"
 
+namespace cyphal {
+
 void MagneticFieldPublisher::publish(const uavcan_si_sample_magnetic_field_strength_Vector3_1_0& msg) {
     static uint8_t buffer[uavcan_si_sample_magnetic_field_strength_Vector3_1_0_EXTENT_BYTES_];
     size_t buffer_size = uavcan_si_sample_magnetic_field_strength_Vector3_1_0_EXTENT_BYTES_;
@@ -12,3 +14,5 @@ void MagneticFieldPublisher::publish(const uavcan_si_sample_magnetic_field_stren
         push(buffer_size, buffer);
     }
 }
+
+}  // namespace cyphal

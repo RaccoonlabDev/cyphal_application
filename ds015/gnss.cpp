@@ -4,6 +4,8 @@
 
 #include "gnss.hpp"
 
+namespace cyphal {
+
 void Ds015GnssGnssPublisher::publish() {
     if (!isEnabled()) {
         return;
@@ -55,3 +57,5 @@ void Ds015GnssTimePublisher::publish() {
         push(buffer_size, buffer);
     }
 }
+
+}  // namespace cyphal
