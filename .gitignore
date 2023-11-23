@@ -5,3 +5,6 @@ build/
 .vscode/.cortex-debug.registers.state.json
 null.d
 __pycache__/
+
+# External dependencies:
+Libs/libparams/
