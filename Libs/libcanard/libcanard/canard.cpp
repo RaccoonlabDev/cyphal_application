@@ -1014,25 +1014,27 @@ CanardInstance canardInit(const CanardMemoryAllocate memory_allocate, const Cana
 {
     CANARD_ASSERT(memory_allocate != NULL);
     CANARD_ASSERT(memory_free != NULL);
-    const CanardInstance out = {
-        .user_reference   = NULL,
-        .node_id          = CANARD_NODE_ID_UNSET,
-        .memory_allocate  = memory_allocate,
-        .memory_free      = memory_free,
-        .rx_subscriptions = {NULL, NULL, NULL},
-    };
+    // C++ designated initializers only available with ‘-std=c++2a’ or ‘-std=gnu++2a’ [-Werror=pedantic]
+    CanardInstance out;
+    out.user_reference      = NULL;
+    out.node_id             = CANARD_NODE_ID_UNSET;
+    out.memory_allocate     = memory_allocate;
+    out.memory_free         = memory_free;
+    out.rx_subscriptions[0] = NULL;
+    out.rx_subscriptions[1] = NULL;
+    out.rx_subscriptions[2] = NULL;
     return out;
 }
 
 CanardTxQueue canardTxInit(const size_t capacity, const size_t mtu_bytes)
 {
-    CanardTxQueue out = {
-        .capacity       = capacity,
-        .mtu_bytes      = mtu_bytes,
-        .size           = 0,
-        .root           = NULL,
-        .user_reference = NULL,
-    };
+    // C++ designated initializers only available with ‘-std=c++2a’ or ‘-std=gnu++2a’ [-Werror=pedantic]
+    CanardTxQueue out;
+    out.capacity       = capacity;
+    out.mtu_bytes      = mtu_bytes;
+    out.size           = 0;
+    out.root           = NULL;
+    out.user_reference = NULL;
     return out;
 }
 
@@ -1125,7 +1127,7 @@ int8_t canardRxAccept(CanardInstance* const        ins,
     if ((ins != NULL) && (out_transfer != NULL) && (frame != NULL) && (frame->extended_can_id <= CAN_EXT_ID_MASK) &&
         ((frame->payload != NULL) || (0 == frame->payload_size)))
     {
-        RxFrameModel model = {0};
+        RxFrameModel model = {};
         if (rxTryParseFrame(timestamp_usec, frame, &model))
         {
             if ((CANARD_NODE_ID_UNSET == model.destination_node_id) || (ins->node_id == model.destination_node_id))
@@ -1238,7 +1240,7 @@ int8_t canardRxUnsubscribe(CanardInstance* const    ins,
 
 CanardFilter canardMakeFilterForSubject(const CanardPortID subject_id)
 {
-    CanardFilter out = {0};
+    CanardFilter out = {0, 0};
 
     out.extended_can_id = ((uint32_t) subject_id) << OFFSET_SUBJECT_ID;
     out.extended_mask   = FLAG_SERVICE_NOT_MESSAGE | FLAG_RESERVED_07 | (CANARD_SUBJECT_ID_MAX << OFFSET_SUBJECT_ID);
@@ -1248,7 +1250,7 @@ CanardFilter canardMakeFilterForSubject(const CanardPortID subject_id)
 
 CanardFilter canardMakeFilterForService(const CanardPortID service_id, const CanardNodeID local_node_id)
 {
-    CanardFilter out = {0};
+    CanardFilter out = {0, 0};
 
     out.extended_can_id = FLAG_SERVICE_NOT_MESSAGE | (((uint32_t) service_id) << OFFSET_SERVICE_ID) |
                           (((uint32_t) local_node_id) << OFFSET_DST_NODE_ID);
@@ -1260,7 +1262,7 @@ CanardFilter canardMakeFilterForService(const CanardPortID service_id, const Can
 
 CanardFilter canardMakeFilterForServices(const CanardNodeID local_node_id)
 {
-    CanardFilter out = {0};
+    CanardFilter out = {0, 0};
 
     out.extended_can_id = FLAG_SERVICE_NOT_MESSAGE | (((uint32_t) local_node_id) << OFFSET_DST_NODE_ID);
     out.extended_mask   = FLAG_SERVICE_NOT_MESSAGE | FLAG_RESERVED_23 | (CANARD_NODE_ID_MAX << OFFSET_DST_NODE_ID);
@@ -1270,7 +1272,7 @@ CanardFilter canardMakeFilterForServices(const CanardNodeID local_node_id)
 
 CanardFilter canardConsolidateFilters(const CanardFilter* a, const CanardFilter* b)
 {
-    CanardFilter out = {0};
+    CanardFilter out = {0, 0};
 
     out.extended_mask   = a->extended_mask & b->extended_mask & ~(a->extended_can_id ^ b->extended_can_id);
     out.extended_can_id = a->extended_can_id & out.extended_mask;
