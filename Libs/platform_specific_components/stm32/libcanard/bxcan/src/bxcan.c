@@ -50,7 +50,7 @@ static bool g_error[2] = {false};  // NOLINT mutable global
 /// will work, as the value will be re-set to UINT64_MAX in abortExpiredTxMailboxes() and set to the
 /// required value in bxCANPush(). This way, any inadvertently busy mailboxes will still be aborted
 /// automatically, making this more robust than initializing to UINT64_MAX from the onset.
-static uint64_t g_tx_deadline[(1 + BXCAN_MAX_IFACE_INDEX) * 3] = {0};  // NOLINT mutable global
+static uint64_t g_tx_deadline[(1 + BXCAN_MAX_IFACE_INDEX) * 3] = {};  // NOLINT mutable global
 
 /// Converts an extended-ID frame format into the bxCAN TX ID register format.
 static uint32_t convertFrameIDToRegister(const uint32_t id)

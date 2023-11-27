@@ -185,13 +185,13 @@ int16_t socketcanPop(const SocketCANFD        fd,
         // Initialize the message header scatter/gather array. It is to hold a single CAN FD frame struct.
         // We use the CAN FD struct regardless of whether the CAN FD socket option is set.
         // Per the user manual, this is acceptable because they are binary compatible.
-        struct canfd_frame sockcan_frame = {0};  // CAN FD frame storage.
-        struct iovec       iov           = {
-            // Scatter/gather array items struct.
-                            .iov_base = &sockcan_frame,        // Starting address.
-                            .iov_len  = sizeof(sockcan_frame)  // Number of bytes to transfer.
+        struct canfd_frame sockcan_frame = {};  // CAN FD frame storage.
 
-        };
+        // C++ designated initializers only available with ‘-std=c++2a’ or ‘-std=gnu++2a’ [-Werror=pedantic]
+        // Scatter/gather array items struct.
+        struct iovec iov;
+        iov.iov_base = &sockcan_frame;          // Starting address.
+        iov.iov_len  = sizeof(sockcan_frame);   // Number of bytes to transfer.
 
         // Determine the size of the ancillary data and zero-initialize the buffer for it.
         // We require space for both the receive message header (implied in CMSG_SPACE) and the time stamp.
@@ -205,7 +205,7 @@ int16_t socketcanPop(const SocketCANFD        fd,
         (void) memset(control.buf, 0, sizeof(control.buf));
 
         // Initialize the message header used by recvmsg.
-        struct msghdr msg  = {0};                  // Message header struct.
+        struct msghdr msg  = {};                   // Message header struct.
         msg.msg_iov        = &iov;                 // Scatter/gather array.
         msg.msg_iovlen     = 1;                    // Number of elements in the scatter/gather array.
         msg.msg_control    = control.buf;          // Ancillary data.
@@ -250,7 +250,7 @@ int16_t socketcanPop(const SocketCANFD        fd,
         if (NULL != out_timestamp_usec)
         {
             const struct cmsghdr* cmsg = CMSG_FIRSTHDR(&msg);
-            struct timeval        tv   = {0};
+            struct timeval        tv   = {0, 0};
             assert(cmsg != NULL);
             if ((cmsg->cmsg_level == SOL_SOCKET) && (cmsg->cmsg_type == SO_TIMESTAMP))
             {
