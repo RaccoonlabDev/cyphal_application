@@ -44,6 +44,8 @@ int Cyphal::init() {
     canard_instance.node_id = node_id;
     queue = canardTxInit(TX_QUEUE_FRAME_SIZE, CANARD_MTU_CAN_CLASSIC);
 
+    node_get_info_response.init();
+
     if (subscribeApplication() < 0) {
         return -CYPHAL_SUB_APPLICATION_INIT_ERROR;
     }

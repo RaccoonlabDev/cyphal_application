@@ -28,8 +28,22 @@ public:
     CanardPortID port_id;
 };
 
-struct NodeGetInfoSubscriber: public CyphalSubscriber {
+class NodeGetInfoSubscriber: public CyphalSubscriber {
+public:
+    /**
+     * @brief Initialize the Node Info with data provided on the compile time:
+     * - software_version
+     * - software_vcs_revision_id
+     */
     explicit NodeGetInfoSubscriber(Cyphal* driver_);
+
+    /**
+     * @brief Initialize the Node Info with data provided on the initialization time:
+     * - hardware_version
+     * - unique_id
+     */
+    void init();
+
     void callback(const CanardRxTransfer& transfer) override;
     static void setHardwareVersion(uint8_t major, uint8_t minor);
     bool isService() const override;

@@ -37,13 +37,18 @@ NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_) :
         CyphalSubscriber(driver_, uavcan_node_GetInfo_1_0_FIXED_PORT_ID_) {
     get_info_response.protocol_version.major = CANARD_CYPHAL_SPECIFICATION_VERSION_MAJOR;
     get_info_response.protocol_version.minor = CANARD_CYPHAL_SPECIFICATION_VERSION_MINOR;
-
-    get_info_response.hardware_version.major = hw_version.major;
-    get_info_response.hardware_version.minor = hw_version.minor;
-
     get_info_response.software_version.major = APP_VERSION_MAJOR;
     get_info_response.software_version.minor = APP_VERSION_MINOR;
 
+#if !defined(GIT_HASH) || GIT_HASH == 0xBADC0FFEEFFF
+    #pragma message "GIT_HASH is not provided"
+    get_info_response.software_vcs_revision_id = GIT_HASH;
+#endif
+}
+
+void NodeGetInfoSubscriber::init() {
+    get_info_response.hardware_version.major = hw_version.major;
+    get_info_response.hardware_version.minor = hw_version.minor;
     get_info_response.certificate_of_authenticity.count = 0;
 
     auto uid_u32 = HAL_GetUIDw0();
@@ -63,8 +68,6 @@ NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_) :
     get_info_response.unique_id[9] = (uid_u32 >> 8) & 0xFF;
     get_info_response.unique_id[10] = (uid_u32 >> 16) & 0xFF;
     get_info_response.unique_id[11] = (uid_u32 >> 24) & 0xFF;
-
-    get_info_response.software_vcs_revision_id = GIT_HASH;
 
     updateNodeName();
 }
