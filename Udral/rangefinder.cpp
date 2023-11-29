@@ -13,6 +13,7 @@ void RangefinderRangePublisher::publish(float range) {
     }
 
     uavcan_si_sample_length_Scalar_1_0 msg;
+    msg.timestamp.microsecond = 0;
     msg.meter = range;
 
     static uint8_t buffer[uavcan_si_sample_length_Scalar_1_0_EXTENT_BYTES_];
