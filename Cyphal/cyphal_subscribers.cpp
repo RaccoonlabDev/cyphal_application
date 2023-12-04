@@ -10,6 +10,13 @@
 #include "storage.h"
 #include "git_software_version.h"
 
+#ifndef GIT_HASH
+    GIT_HASH = 0xBADC0FFEEFFF
+#endif
+#if GIT_HASH == 0xBADC0FFEEFFF
+    #pragma message "GIT_HASH is not provided"
+#endif
+
 namespace cyphal {
 
 static const auto DEFAULT_NODE_NAME = (const uint8_t*)"co.raccoonlab.unknown_node";
@@ -32,11 +39,7 @@ NodeGetInfoSubscriber::NodeGetInfoSubscriber(Cyphal* driver_) :
     get_info_response.protocol_version.minor = CANARD_CYPHAL_SPECIFICATION_VERSION_MINOR;
     get_info_response.software_version.major = APP_VERSION_MAJOR;
     get_info_response.software_version.minor = APP_VERSION_MINOR;
-
-#if !defined(GIT_HASH) || GIT_HASH == 0xBADC0FFEEFFF
-    #pragma message "GIT_HASH is not provided"
     get_info_response.software_vcs_revision_id = GIT_HASH;
-#endif
 }
 
 void NodeGetInfoSubscriber::init() {
