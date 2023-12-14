@@ -106,6 +106,10 @@ void NodeGetInfoSubscriber::setHardwareVersion(uint8_t major, uint8_t minor) {
     hw_version.minor = minor;
 }
 
+void NodeGetInfoSubscriber::setHardwareVersion(uavcan_node_Version_1_0 version) {
+    hw_version = version;
+}
+
 bool NodeGetInfoSubscriber::isService() const {
     return true;
 }
