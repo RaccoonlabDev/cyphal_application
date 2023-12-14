@@ -4,9 +4,14 @@
 
 #include "barometer.hpp"
 #include "main.h"
+#include "cyphal.hpp"
 #include "params.hpp"
 
 namespace cyphal {
+
+BaroPressurePublisher::BaroPressurePublisher() :
+    CyphalPublisher(Cyphal::get_instance(), 65535) {
+};
 
 void BaroPressurePublisher::publish(const uavcan_si_sample_pressure_Scalar_1_0& msg) {
     static uint8_t buffer[uavcan_si_sample_pressure_Scalar_1_0_EXTENT_BYTES_];
@@ -16,6 +21,10 @@ void BaroPressurePublisher::publish(const uavcan_si_sample_pressure_Scalar_1_0& 
         push(buffer_size, buffer);
     }
 }
+
+BaroTemperaturePublisher::BaroTemperaturePublisher() :
+    CyphalPublisher(Cyphal::get_instance(), 65535) {
+};
 
 void BaroTemperaturePublisher::publish(const uavcan_si_sample_temperature_Scalar_1_0& msg) {
     static uint8_t buffer[uavcan_si_sample_temperature_Scalar_1_0_EXTENT_BYTES_];
