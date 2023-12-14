@@ -43,6 +43,8 @@ public:
 
     void setNodeHealth(uavcan_node_Health_1_0 health);
     void setNodeMode(uavcan_node_Mode_1_0 mode);
+    void setVSSC(uint8_t vssc);
+
     void spinTransmit();
 
     uint16_t getNodeId() const {return node_id;}
