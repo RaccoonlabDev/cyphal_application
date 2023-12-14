@@ -42,6 +42,7 @@ public:
 
     void callback(const CanardRxTransfer& transfer) override;
     static void setHardwareVersion(uint8_t major, uint8_t minor);
+    static void setHardwareVersion(uavcan_node_Version_1_0 version);
     bool isService() const override;
 private:
     void updateNodeName();
