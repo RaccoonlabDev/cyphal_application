@@ -117,6 +117,10 @@ void Cyphal::setNodeMode(uavcan_node_Mode_1_0 mode) {
     heartbeat_pub.msg.mode = mode;
 }
 
+void Cyphal::setVSSC(uint8_t vssc) {
+    heartbeat_pub.msg.vendor_specific_status_code = vssc;
+}
+
 void Cyphal::processReceivedTransfer([[maybe_unused]] const uint8_t redundant_interface_index,
                                      const CanardRxTransfer& transfer) const {
     for (size_t sub_idx = 0; sub_idx < _sub_num; sub_idx++) {
