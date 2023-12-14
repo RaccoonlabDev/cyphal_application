@@ -5,19 +5,19 @@
 #ifndef UDRAL_BAROMETER_HPP_
 #define UDRAL_BAROMETER_HPP_
 
-#include "cyphal.hpp"
+#include "cyphal_publishers.hpp"
 #include "uavcan/si/sample/pressure/Scalar_1_0.h"
 #include "uavcan/si/sample/temperature/Scalar_1_0.h"
 
 namespace cyphal {
 
 struct BaroPressurePublisher: public CyphalPublisher {
-    BaroPressurePublisher(Cyphal* driver_, CanardPortID port_id) : CyphalPublisher(driver_, port_id) {};
+    BaroPressurePublisher();
     void publish(const uavcan_si_sample_pressure_Scalar_1_0& msg);
 };
 
 struct BaroTemperaturePublisher: public CyphalPublisher {
-    BaroTemperaturePublisher(Cyphal* driver_, CanardPortID port_id) : CyphalPublisher(driver_, port_id) {};
+    BaroTemperaturePublisher();
     void publish(const uavcan_si_sample_temperature_Scalar_1_0& msg);
 };
 
