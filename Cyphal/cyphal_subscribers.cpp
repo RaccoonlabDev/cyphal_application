@@ -11,7 +11,7 @@
 #include "git_software_version.h"
 
 #ifndef GIT_HASH
-    GIT_HASH = 0xBADC0FFEEFFF
+    #define GIT_HASH 0xBADC0FFEEFFF
 #endif
 #if GIT_HASH == 0xBADC0FFEEFFF
     #pragma message "GIT_HASH is not provided"
