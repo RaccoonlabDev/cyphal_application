@@ -19,9 +19,11 @@ struct HighColorSubscriber: public CyphalSubscriber {
     HighColorSubscriber(Cyphal* driver, CanardPortID port_id = 0) : CyphalSubscriber(driver, port_id) {}
     int8_t init();
     void callback(const CanardRxTransfer& transfer) override;
-    const reg_udral_physics_optics_HighColor_0_1& get() const {return _msg;};
+    reg_udral_physics_optics_HighColor_0_1 get() const {return _msg;};
+    uint32_t get_last_recv_ts_ms() const {return _last_recv_ts_ms;};
 private:
     reg_udral_physics_optics_HighColor_0_1 _msg = {};
+    uint32_t _last_recv_ts_ms{0};
 };
 
 }  // namespace cyphal
