@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15.3)
 project(minimal_ubuntu_example)
 
-set(PLATFORM socketcan)
+set(CAN_PLATFORM socketcan)
 
 include(../../CMakeLists.txt)
 

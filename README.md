@@ -22,8 +22,8 @@ There are also examples of the following auxilliary features:
 
 Supported platforms:
 
-| PLATFORM | Implementation details | Note |
-| -------- | ---------------------- | ---- |
+| CAN_PLATFORM | Implementation details | Note |
+| ------------ | ---------------------- | ---- |
 | bxcan | [platform_specific_components](https://github.com/OpenCyphal-Garage/platform_specific_components/tree/master/stm32/libcanard/bxcan) | Tested on stm32f103 only |
 | fdcan | STM32 HAL | Tested on stm32g0 only |
 | socketcan | [platform_specific_components](https://github.com/OpenCyphal-Garage/platform_specific_components/tree/master/socketcan/libcanard) | Tested on ubuntu 22.04 |
@@ -57,7 +57,7 @@ In your application's cmake file specify the target, include this CMakeLists.txt
 
 ```cmake
 # 1. select either bxcan or fdcan or socketcan
-set(PLATFORM bxcan)
+set(CAN_PLATFORM bxcan)
 
 # 2. include CMakeLists.txt
 include(<path_to_this_repo>/Cyphal/CMakeLists.txt)
