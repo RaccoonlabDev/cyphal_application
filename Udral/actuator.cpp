@@ -24,7 +24,7 @@ int8_t SetpointSubscriber::init() {
 }
 
 void SetpointSubscriber::callback(const CanardRxTransfer& transfer) {
-    const uint8_t* payload = static_cast<const uint8_t*>(transfer.payload);
+    auto payload = static_cast<const uint8_t*>(transfer.payload);
     size_t payload_len = transfer.payload_size;
     reg_udral_service_actuator_common_sp_Vector31_0_1_deserialize_(&msg, payload, &payload_len);
     _setpoint_size = payload_len / 2;
@@ -69,7 +69,7 @@ uint8_t ReadinessSubscriber::get_readiness() {
 }
 
 void ReadinessSubscriber::callback(const CanardRxTransfer& transfer) {
-    const uint8_t* payload = static_cast<const uint8_t*>(transfer.payload);
+    auto payload = static_cast<const uint8_t*>(transfer.payload);
     size_t payload_len = transfer.payload_size;
     reg_udral_service_common_Readiness_0_1_deserialize_(&msg, payload, &payload_len);
     _last_recv_time_ms = HAL_GetTick();

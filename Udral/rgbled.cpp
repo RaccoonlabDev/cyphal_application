@@ -32,7 +32,7 @@ int8_t HighColorSubscriber::init() {
 }
 
 void HighColorSubscriber::callback(const CanardRxTransfer& transfer) {
-    const uint8_t* payload = static_cast<const uint8_t*>(transfer.payload);
+    auto payload = static_cast<const uint8_t*>(transfer.payload);
     size_t payload_len = transfer.payload_size;
     reg_udral_physics_optics_HighColor_0_1_deserialize_(&_msg, payload, &payload_len);
     _last_recv_ts_ms = HAL_GetTick();

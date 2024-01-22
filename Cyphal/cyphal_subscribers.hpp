@@ -22,6 +22,8 @@ public:
     CanardRxSubscription subscription;
     Cyphal* driver;
     CanardPortID port_id;
+protected:
+    virtual ~CyphalSubscriber() = default;
 };
 
 class NodeGetInfoSubscriber: public CyphalSubscriber {
