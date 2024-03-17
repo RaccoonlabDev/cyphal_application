@@ -34,8 +34,8 @@ void FeedbackPublisher::process() {
 
 int Application::init() {
     romInit(0, 1);
-    paramsInit(IntParamsIndexes::INTEGER_PARAMS_AMOUNT, NUM_OF_STR_PARAMS);
-    paramsLoadFromFlash();
+    paramsInit(IntParamsIndexes::INTEGER_PARAMS_AMOUNT, NUM_OF_STR_PARAMS, -1, 1);
+    paramsLoad();
     int init_res = cyphal.init();
     if (init_res < 0) {
         std::cout << "Error: " << init_res << std::endl;
