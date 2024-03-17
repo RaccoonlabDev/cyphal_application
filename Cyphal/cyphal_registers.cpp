@@ -27,7 +27,7 @@ void RegisterListRequest::makeResponse(const CanardRxTransfer& transfer, ParamIn
     uavcan_register_List_Response_1_0 _response_msg = {};
 
     if (paramsGetType(index) != PARAM_TYPE_UNDEFINED) {
-        auto param_name = (const uint8_t*)(paramsGetParamName(index));
+        auto param_name = (const uint8_t*)(paramsGetName(index));
         _response_msg.name.name.count = strlenSafely(param_name, MAX_PARAM_NAME_LENGTH);
         memcpy(_response_msg.name.name.elements, param_name, _response_msg.name.name.count);
     } else {
@@ -77,8 +77,8 @@ ParamIndex_t RegisterAccessRequest::parseRequest(const CanardRxTransfer& transfe
     auto payload = static_cast<const uint8_t*>(transfer.payload);
     uavcan_register_Access_Request_1_0_deserialize_(&_request_msg, payload, &payload_len);
 
-    return paramsGetIndexByName(_request_msg.name.name.elements,
-                                static_cast<uint16_t>(_request_msg.name.name.count));
+    return paramsFind(_request_msg.name.name.elements,
+                      static_cast<uint16_t>(_request_msg.name.name.count));
 }
 
 void RegisterAccessRequest::writeParam(ParamIndex_t reg_index) {
