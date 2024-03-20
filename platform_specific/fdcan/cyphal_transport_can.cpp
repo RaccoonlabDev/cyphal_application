@@ -103,13 +103,6 @@ bool CyphalTransportCan::receive(CanardFrame* can_frame) {
         return false;
     }
 
-    static uint32_t rb_max_size = 0;
-    uint32_t rb_size = ring_buffer.get_size();
-    if (rb_size > rb_max_size) {
-        rb_max_size = rb_size;
-    }
-    paramsSetIntegerValue(PARAM_BOOTLOADER_INTERNAL, rb_max_size);
-
     driver[_can_driver_idx].rx_counter++;
     __disable_irq();
     CanFrame frame = ring_buffer.pop();
