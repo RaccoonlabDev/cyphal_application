@@ -1,4 +1,6 @@
-# Cyphal application template [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=RaccoonlabDev_cyphal_application&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=RaccoonlabDev_cyphal_application)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=RaccoonlabDev_cyphal_application&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=RaccoonlabDev_cyphal_application)
+
+# Cyphal application template
 
 A minimal application always includes the following features:
 
