@@ -1,4 +1,4 @@
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=RaccoonlabDev_cyphal_application&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=RaccoonlabDev_cyphal_application)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=RaccoonlabDev_cyphal_application&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=RaccoonlabDev_cyphal_application) [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=RaccoonlabDev_cyphal_application&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=RaccoonlabDev_cyphal_application) [![build](https://github.com/RaccoonlabDev/cyphal_application/actions/workflows/build.yml/badge.svg)](https://github.com/RaccoonlabDev/cyphal_application/actions/workflows/build.yml)
 
 # Cyphal application template
 
