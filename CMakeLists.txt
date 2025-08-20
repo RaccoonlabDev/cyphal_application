@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.10.2)
 
 if(NOT libparamsPath)
-set(libparamsPath ${CMAKE_CURRENT_LIST_DIR}/Libs/libparams)
+    set(libparamsPath ${CMAKE_CURRENT_LIST_DIR}/Libs/libparams)
 endif()
-message(libparamsPath ${libparamsPath})
 
 FILE(GLOB cyphalSources                         ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp)
 FILE(GLOB libcanardSources                      ${CMAKE_CURRENT_LIST_DIR}/Libs/libcanard/libcanard/*.*)
-FILE(GLOB libparamsSources                      ${libparamsPath}/libparams/*.c)
+FILE(GLOB libparamsSources                      ${libparamsPath}/src/*.c)
 FILE(GLOB o1heapSources                         ${CMAKE_CURRENT_LIST_DIR}/Libs/o1heap/o1heap/*.c)
 
 if(CAN_PLATFORM STREQUAL "bxcan")
@@ -45,6 +44,6 @@ set(CYPHAL_SRC
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/Libs/libcanard/libcanard)
-include_directories(${libparamsPath}/libparams)
+include_directories(${libparamsPath}/include/libparams)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/Libs/o1heap/o1heap)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/build/nunavut_out)
