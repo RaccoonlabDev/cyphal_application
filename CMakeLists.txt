@@ -4,6 +4,13 @@ if(NOT libparamsPath)
     set(libparamsPath ${CMAKE_CURRENT_LIST_DIR}/Libs/libparams)
 endif()
 
+if (DEFINED LIBPARAMS_PARAMS_DIR)
+else()
+    message(STATUS
+                "LIBPARAMS_PARAMS_DIR is not specified! Use default: ${CMAKE_CURRENT_BINARY_DIR}")
+    add_definitions(-DLIBPARAMS_PARAMS_DIR="${CMAKE_CURRENT_BINARY_DIR}")
+endif()
+
 FILE(GLOB cyphalSources                         ${CMAKE_CURRENT_LIST_DIR}/src/*.cpp)
 FILE(GLOB libcanardSources                      ${CMAKE_CURRENT_LIST_DIR}/Libs/libcanard/libcanard/*.*)
 FILE(GLOB libparamsSources                      ${libparamsPath}/src/*.c)
