@@ -4,10 +4,11 @@ if(NOT libparamsPath)
     set(libparamsPath ${CMAKE_CURRENT_LIST_DIR}/Libs/libparams)
 endif()
 
-if (DEFINED LIBPARAMS_PARAMS_DIR)
+get_directory_property(defs COMPILE_DEFINITIONS)
+
+if("${defs}" MATCHES "LIBPARAMS_PARAMS_DIR")
+    message(STATUS "Definition already exists")
 else()
-    message(STATUS
-                "LIBPARAMS_PARAMS_DIR is not specified! Use default: ${CMAKE_CURRENT_BINARY_DIR}")
     add_definitions(-DLIBPARAMS_PARAMS_DIR="${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
